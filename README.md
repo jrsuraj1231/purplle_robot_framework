@@ -29,8 +29,9 @@ A Robot Framework test automation suite for [Purplle.com](https://www.purplle.co
 ## Installation
 
 ```bash
-# 1. Clone or download the repository
-cd Robot_framework_project
+# 1. Clone the repository
+git clone https://github.com/jrsuraj1231/purplle_robot_framework.git
+cd purplle_robot_framework
 
 # 2. (Recommended) Create a virtual environment
 python -m venv venv
@@ -46,7 +47,7 @@ pip install -r requirements.txt
 ## Project Structure
 
 ```
-Robot_framework_project/
+purplle_robot_framework/
 │
 ├── config/
 │   ├── config.yaml               # Central config: URLs, browser, API endpoints, test data
@@ -62,7 +63,7 @@ Robot_framework_project/
 │   └── wishlist_page_locators.robot
 │
 ├── resources/
-│   ├── common_resources.robot    # Browser lifecycle; BASE_URL, TIMEOUT variables
+│   ├── common_resources.robot    # Browser lifecycle; BASE_URL, TIMEOUT, Title Should Contain
 │   └── pages/                   # Page Object keywords (one file per page/module)
 │       ├── home_page.robot
 │       ├── login_page.robot
@@ -73,7 +74,7 @@ Robot_framework_project/
 │       └── wishlist_page.robot
 │
 ├── testdata/
-│   └── purplle_search_keywords.csv   # Keywords for data-driven search tests
+│   └── purplle_search_keywords.csv   # Keywords for data-driven search tests (RF variable format)
 │
 ├── tests/
 │   ├── functional/               # Single-feature tests (one module at a time)
@@ -102,11 +103,9 @@ Robot_framework_project/
 │       ├── test_search_api.robot
 │       └── test_product_api.robot
 │
-├── outputs/                      # Test result artifacts (gitignored)
-│   ├── log.html
-│   ├── report.html
-│   └── output.xml
+├── outputs/                      # Test result artifacts (gitignored — generated at runtime)
 │
+├── .gitignore
 ├── requirements.txt
 ├── CLAUDE.md
 └── README.md
@@ -126,6 +125,10 @@ browser:
   implicit_wait: 10
 
 base_url: https://www.purplle.com
+
+urls:
+  wishlist: https://www.purplle.com/profile/myfavourites   # actual Purplle wishlist URL
+  cart:     https://www.purplle.com/cart
 ```
 
 ### Using Config Values in Tests
@@ -157,24 +160,22 @@ robot tests/api/
 
 ```bash
 robot tests/functional/test_homepage.robot
+robot tests/functional/test_datadriven_search.robot
 robot tests/integration/test_search_to_pdp_flow.robot
-robot tests/e2e/test_guest_browse_journey.robot
 robot tests/api/test_search_api.robot
 ```
 
 ### Run by Tag
 
 ```bash
-robot --tag smoke tests/               # Quick smoke tests across all layers
-robot --tag regression tests/          # Full regression suite
-robot --tag functional tests/          # All functional tests
-robot --tag integration tests/         # All integration tests
-robot --tag e2e tests/                 # All E2E journey tests
-robot --tag api tests/                 # All API tests
-robot --tag negative tests/            # Negative / error-path tests
-robot --tag login tests/               # Login-related tests only
-robot --tag search tests/              # Search-related tests only
-robot --tag cart tests/                # Cart-related tests only
+robot --include smoke tests/               # Quick smoke tests across all layers
+robot --include regression tests/          # Full regression suite
+robot --include functional tests/          # All functional tests
+robot --include integration tests/         # All integration tests
+robot --include e2e tests/                 # All E2E journey tests
+robot --include api tests/                 # All API tests
+robot --include data_driven tests/         # DataDriver CSV tests only
+robot --include negative tests/            # Negative / error-path tests
 ```
 
 ### Run in Parallel (pabot)
@@ -190,12 +191,11 @@ pabot --processes 4 tests/functional/
 robot --outputdir outputs/ tests/
 ```
 
-### Run Headless (CI / No Display)
-
-Set `headless: true` in `config/config.yaml`, then:
+### Dry Run (validate without browser)
 
 ```bash
-robot tests/
+robot --dryrun tests/
+robot --dryrun tests/functional/test_datadriven_search.robot
 ```
 
 ---
@@ -214,7 +214,7 @@ Tests a **single module in isolation**. Each file maps 1-to-1 with a page or fea
 | `test_product_listing.robot` | Category PLP | Products listed, sort, filters |
 | `test_product_detail.robot` | Product PDP | Name, price, MRP, Add to Bag, reviews |
 | `test_cart.robot` | Cart | Empty state, cart icon, continue shopping |
-| `test_wishlist.robot` | Wishlist | Empty state, URL, guest behaviour |
+| `test_wishlist.robot` | Wishlist | Empty state, URL (`/profile/myfavourites`), guest behaviour |
 | `test_navigation.robot` | Navigation | All nav links, logo, browser back |
 | `test_datadriven_search.robot` | Search (DD) | 8 keywords from CSV, each verified |
 
@@ -254,15 +254,13 @@ Tests **HTTP-level behaviour** using `RequestsLibrary` — no browser required.
 
 ## Framework Architecture Flow
 
-Shows how every component connects — from config file down to the browser and back to the report.
-
 ```
 ┌─────────────────────────────────────────────────────────────────┐
 │                        config/config.yaml                       │
 │       (browser, URLs, timeouts, API endpoints, test data)       │
-└────────────────────────────┬────────────────────────────────────┘
-                             │  read by
-                             ▼
+└────────────────────────┬────────────────────────────────────────┘
+                         │  read by
+                         ▼
 ┌─────────────────────────────────────────────────────────────────┐
 │                        config/readme.py                         │
 │          (Python RF Library — exposes config as keywords)       │
@@ -271,8 +269,8 @@ Shows how every component connects — from config file down to the browser and 
             ▼
 ┌─────────────────────────────────────────────────────────────────┐
 │               resources/common_resources.robot                  │
-│         (${BASE_URL}, ${BROWSER}, ${TIMEOUT}, ${IMPLICIT_WAIT}) │
-│                Open Application / Close Application             │
+│    ${BASE_URL}, ${BROWSER}, ${TIMEOUT}, ${IMPLICIT_WAIT}        │
+│    Open Application / Close Application / Title Should Contain  │
 └───────────┬─────────────────────────────────────────────────────┘
             │  Resource'd by
             ▼
@@ -288,88 +286,76 @@ Shows how every component connects — from config file down to the browser and 
 └───────────┬─────────────────────────────────────────────────────┘
             │  Resource'd by
             ▼
-┌──────────────────────────────────────────────────────────────────────────────────┐
-│                              tests/                                              │
-│   functional/   │   integration/   │       e2e/       │         api/            │
-│  (single page)  │  (A→B module)    │  (full journey)  │  (HTTP, no browser)     │
-└───────────┬─────────────────────────────────────────────┬────────────────────────┘
-            │  executes via                               │  executes via
-            ▼                                             ▼
-┌───────────────────────┐                  ┌───────────────────────┐
-│    SeleniumLibrary    │                  │   RequestsLibrary     │
-│  (WebDriver commands) │                  │   (HTTP GET/POST)     │
-└───────────┬───────────┘                  └───────────┬───────────┘
-            │                                          │
+┌──────────────────────────────────────────────────────────────────────────┐
+│                              tests/                                      │
+│   functional/   │   integration/   │     e2e/       │      api/          │
+│  (single page)  │  (A→B module)    │ (full journey) │ (HTTP, no browser) │
+└───────────┬──────────────────────────────────────────┬───────────────────┘
+            │  executes via                            │  executes via
             ▼                                          ▼
-┌───────────────────────┐                  ┌───────────────────────┐
-│   Chrome / Browser    │                  │  purplle.com REST API │
-│   purplle.com (UI)    │                  │   (JSON responses)    │
-└───────────┬───────────┘                  └───────────┬───────────┘
-            └──────────────────┬───────────────────────┘
+┌───────────────────────┐               ┌───────────────────────┐
+│    SeleniumLibrary    │               │   RequestsLibrary     │
+│  (WebDriver commands) │               │   (HTTP GET/POST)     │
+└───────────┬───────────┘               └───────────┬───────────┘
+            │                                       │
+            ▼                                       ▼
+┌───────────────────────┐               ┌───────────────────────┐
+│   Chrome / Browser    │               │  purplle.com REST API │
+│   purplle.com (UI)    │               │   (JSON responses)    │
+└───────────┬───────────┘               └───────────┬───────────┘
+            └──────────────────┬────────────────────┘
                                │  results written to
                                ▼
-              ┌────────────────────────────────┐
-              │           outputs/             │
+              ┌────────────────────────────────────┐
+              │             outputs/               │
               │  log.html  report.html  output.xml │
-              └────────────────────────────────┘
+              └────────────────────────────────────┘
 ```
 
 ---
 
 ## Test Execution Flow
 
-Step-by-step of what happens when you run `robot tests/functional/test_search.robot`.
-
 ```
-[1] robot tests/functional/test_search.robot
+[1] robot tests/functional/test_datadriven_search.robot
          │
          ▼
 [2] Robot Framework parses the .robot file
     └── Reads *** Settings *** (Library, Resource imports)
-    └── Loads SeleniumLibrary, common_resources, page resources, locators
+    └── DataDriver listener reads purplle_search_keywords.csv
+    └── Generates 8 test cases at suite start
          │
          ▼
 [3] Suite Setup: Open Application
     └── Opens Chrome via WebDriver
     └── Maximizes browser window
     └── Sets Implicit Wait (10s) and Timeout (15s)
-    └── Navigates to https://www.purplle.com
          │
          ▼
 [4] For each Test Case (sequential):
     │
-    ├── [4a] Test Setup: Go To <URL>
-    │         └── Navigates to the test's starting page
+    ├── [4a] Test Setup: Go To BASE_URL
     │
-    ├── [4b] Execute test keywords
-    │         └── Keyword calls SeleniumLibrary actions
-    │               └── WebDriver sends commands to Chrome
-    │                     └── Chrome interacts with purplle.com DOM
-    │                           └── RF captures result (PASS / FAIL)
+    ├── [4b] Execute template keyword: Search And Verify By Keyword
+    │         └── Search For ${keyword}
+    │               └── Navigates to /search?q=${keyword}
+    │         └── Verify Search Results Are Displayed
+    │               └── Waits for product cards (class=d-block, href=/product/)
     │
     ├── [4c] On FAIL → screenshot saved to outputs/
     │
-    └── [4d] Test result logged with timestamp
+    └── [4d] Result logged with timestamp
          │
          ▼
 [5] Suite Teardown: Close Application
-    └── Closes all browser windows
-    └── WebDriver session terminated
          │
          ▼
-[6] Robot Framework generates:
-    ├── outputs/log.html     ← detailed step-by-step log
-    ├── outputs/report.html  ← summary with PASS/FAIL counts
-    └── outputs/output.xml   ← machine-readable results
+[6] Robot Framework generates outputs/log.html, report.html, output.xml
 ```
 
 ---
 
 ## Application Module Flows
-
-Detailed step-by-step flows for every module tested on purplle.com.
-
----
 
 ### 1. Homepage Flow
 
@@ -381,7 +367,7 @@ User opens https://www.purplle.com
 │               HOMEPAGE                  │
 │                                         │
 │  [Header]                               │
-│   Logo | Search Bar | Login | Cart 🛒   │
+│   Logo | Search Bar | Profile | Cart    │
 │                                         │
 │  [Navigation Bar]                       │
 │   Makeup | Skincare | Hair | Bath &     │
@@ -399,18 +385,27 @@ User opens https://www.purplle.com
          │
          ├── Click nav link ──────────────► Product Listing Page (PLP)
          ├── Type in Search Bar ──────────► Search Results Page
-         ├── Click Login ────────────────► Login Page
+         ├── Click Profile icon ──────────► /profile  (redirects to login if guest)
          └── Click Cart 🛒 ──────────────► Cart Page
 ```
 
-**Tests covering this flow:** `tests/functional/test_homepage.robot` · `tests/functional/test_navigation.robot`
+**Key locators verified on live site:**
+
+| Element | Locator |
+|---------|---------|
+| Search input | `xpath=//input[@type='search']` |
+| Logo | `xpath=//img[@alt='Purplle Logo']` |
+| Profile/Login link | `xpath=//a[contains(@href,'/profile')]` |
+| Cart icon | `xpath=//a[contains(@href,'/cart')]` |
+
+**Tests:** `tests/functional/test_homepage.robot` · `tests/functional/test_navigation.robot`
 
 ---
 
 ### 2. Login Flow (OTP)
 
 ```
-User clicks "Login or Register"
+User clicks Profile icon in header
          │
          ▼
 https://www.purplle.com/login
@@ -430,10 +425,9 @@ https://www.purplle.com/login
     ▼                                     ▼
 OTP sent to mobile             ┌─────────────────────┐
          │                     │  Error message shown │
-         ▼                     │  "Enter valid mobile"│
-┌──────────────────┐           └─────────────────────┘
+         ▼                     └─────────────────────┘
+┌──────────────────┐
 │  [ OTP Field ]   │
-│  Enter 4/6 digit │
 │  [ VERIFY ] btn  │
 └──────────────────┘
          │
@@ -441,41 +435,30 @@ OTP sent to mobile             ┌───────────────�
     │ Correct OTP        │ Wrong OTP
     ▼                    ▼
 Logged In ✓         Error: "Invalid OTP"
-    │
-    ▼
-Redirected to Homepage / Previous Page
 ```
 
-**Tests covering this flow:** `tests/functional/test_login.robot`
-> OTP cannot be automated — tests verify form validation and UI element presence only.
+> OTP cannot be automated — tests verify form element presence and input validation only.
+
+**Tests:** `tests/functional/test_login.robot`
 
 ---
 
 ### 3. Search Flow
 
+> **Implementation note:** Purplle.com is an Angular app. Pressing Enter in the search bar does not trigger page navigation. The `Search For` keyword navigates directly to `/search?q=${keyword}`, which reliably returns the search results page.
+
 ```
-User clicks Search Bar in header
-         │
-         ▼
-Types keyword (e.g., "lipstick")
-         │
-         ▼
-Autocomplete suggestions appear
-         │
-    ┌────┴──────────────────┐
-    │ Click suggestion      │ Press ENTER
-    ▼                       ▼
-         Search Results Page
+Navigate to https://www.purplle.com/search?q=lipstick
          │
          ▼
 ┌──────────────────────────────────────────────┐
-│           SEARCH RESULTS (PLP-like)          │
+│           SEARCH RESULTS                     │
 │                                              │
-│  "X products found for 'lipstick'"           │
+│  Title: "Showing Results For lipstick"       │
 │                                              │
 │  [Sort Bar]  Popularity | Price ↑ | Price ↓  │
 │                                              │
-│  Product Cards:                              │
+│  Product Cards  (class=d-block, href=/product/...):  │
 │  ┌──────┐  ┌──────┐  ┌──────┐  ┌──────┐    │
 │  │ Img  │  │ Img  │  │ Img  │  │ Img  │    │
 │  │ Name │  │ Name │  │ Name │  │ Name │    │
@@ -484,21 +467,21 @@ Autocomplete suggestions appear
 └──────────────────────────────────────────────┘
          │
     ┌────┴──────────────────────────────────┐
-    │ Invalid / gibberish keyword           │
+    │ No results keyword                    │
     ▼                                       ▼
 Product cards displayed           "No results found"
-    │                             message displayed
+    │
     └── Click product card ──────────────────► Product Detail Page (PDP)
 ```
 
-**Tests covering this flow:** `tests/functional/test_search.robot` · `tests/functional/test_datadriven_search.robot` · `tests/integration/test_search_to_pdp_flow.robot` · `tests/integration/test_search_filter_flow.robot`
+**Tests:** `tests/functional/test_search.robot` · `tests/functional/test_datadriven_search.robot` · `tests/integration/test_search_to_pdp_flow.robot`
 
 ---
 
 ### 4. Product Listing Page (PLP) Flow
 
 ```
-User clicks a category (e.g., Makeup) OR arrives from search
+User clicks a category (e.g., Makeup) via nav bar
          │
          ▼
 https://www.purplle.com/makeup
@@ -507,40 +490,31 @@ https://www.purplle.com/makeup
 ┌───────────────────────────────────────────────────────────┐
 │                PRODUCT LISTING PAGE                       │
 │                                                           │
-│  Heading: "Makeup"                                        │
-│                                                           │
 │  ┌──────────────┐  ┌──────────────────────────────────┐  │
 │  │   FILTERS    │  │         PRODUCT GRID             │  │
-│  │              │  │  ┌──────┐ ┌──────┐ ┌──────┐     │  │
-│  │  ▶ Brand     │  │  │ Img  │ │ Img  │ │ Img  │     │  │
-│  │    □ Lakme   │  │  │ Name │ │ Name │ │ Name │     │  │
-│  │    □ MAC     │  │  │Brand │ │Brand │ │Brand │     │  │
-│  │    □ Mayb.   │  │  │ ₹XXX │ │ ₹XXX │ │ ₹XXX │     │  │
-│  │              │  │  │ ★4.2 │ │ ★3.9 │ │ ★4.5 │     │  │
-│  │  ▶ Price     │  │  └──────┘ └──────┘ └──────┘     │  │
-│  │    ₹0-₹500   │  │                                  │  │
-│  │    ₹500-₹1k  │  │  [Sort: Popularity ▼]            │  │
-│  │              │  │                                  │  │
-│  │  ▶ Rating    │  │  [ Load More ]                   │  │
-│  └──────────────┘  └──────────────────────────────────┘  │
+│  │  ▶ Brand     │  │  ┌──────┐ ┌──────┐ ┌──────┐     │  │
+│  │  ▶ Price     │  │  │ Img  │ │ Img  │ │ Img  │     │  │
+│  │  ▶ Rating    │  │  │ Name │ │ Name │ │ Name │     │  │
+│  └──────────────┘  │  │ ₹XXX │ │ ₹XXX │ │ ₹XXX │     │  │
+│                    │  └──────┘ └──────┘ └──────┘     │  │
+│                    │  [Sort: Popularity ▼]            │  │
+│                    └──────────────────────────────────┘  │
 └───────────────────────────────────────────────────────────┘
          │
-    ┌────┴──────────────────────────────────────────┐
-    │ Apply Brand filter      Apply sort (Price ↑)  │
-    ▼                         ▼                     │
-Products filtered          Products re-ordered      │
-         │                                          │
-         └── Click product card ────────────────────► PDP
+    ┌────┴────────────────────────────────┐
+    │ Apply filter / sort                 │
+    ▼                                     ▼
+Products filtered/re-ordered         Click product card → PDP
 ```
 
-**Tests covering this flow:** `tests/functional/test_product_listing.robot` · `tests/integration/test_plp_to_pdp_flow.robot` · `tests/integration/test_search_filter_flow.robot`
+**Tests:** `tests/functional/test_product_listing.robot` · `tests/integration/test_plp_to_pdp_flow.robot`
 
 ---
 
 ### 5. Product Detail Page (PDP) Flow
 
 ```
-User lands on PDP from PLP or Search
+User arrives from PLP or Search results
          │
          ▼
 https://www.purplle.com/product/<product-slug>
@@ -549,90 +523,63 @@ https://www.purplle.com/product/<product-slug>
 ┌──────────────────────────────────────────────────────────┐
 │                  PRODUCT DETAIL PAGE                     │
 │                                                          │
-│  [Breadcrumb] Home > Makeup > Lipstick > Product Name    │
+│  Product Name (h1)                                       │
+│  Brand Name  ────────────► Brand PLP                     │
+│  ★ Rating  (N Reviews)                                   │
 │                                                          │
-│  ┌──────────────┐   Product Name (h1)                   │
-│  │              │   Brand Name  ────────────► Brand PLP  │
-│  │   Product    │   ★ 4.2  (312 Reviews)                │
-│  │   Images     │                                        │
-│  │   (gallery)  │   MRP:  ₹799                          │
-│  │              │   Price: ₹599  (25% OFF)              │
-│  └──────────────┘                                        │
-│                     Shade Selector (if applicable)       │
-│                     Size Selector  (if applicable)       │
+│  MRP:  ₹799                                              │
+│  Price: ₹599  (25% OFF)                                  │
 │                                                          │
-│                     Qty: [ - ] [1] [ + ]                 │
+│  [ ♡ Add to Wishlist ]                                   │
+│  [ ADD TO BAG ]                                          │
 │                                                          │
-│                     [ ♡ Add to Wishlist ]                │
-│                     [ ADD TO BAG ]                       │
-│                                                          │
-│  ─────────────────────────────────────────────────────   │
 │  [ Description ] [ Ingredients ] [ How to Use ]         │
-│  (accordion tabs)                                        │
 │                                                          │
-│  ─────────────────────────────────────────────────────   │
 │  Ratings & Reviews                                       │
-│  ★★★★☆  4.2 overall    312 reviews                      │
-│                                                          │
-│  ─────────────────────────────────────────────────────   │
 │  Similar Products / You May Also Like                    │
 └──────────────────────────────────────────────────────────┘
          │
-    ┌────┴───────────────────────────────────────────┐
-    │ Click ADD TO BAG   │ Click ♡ Wishlist           │
-    ▼                    ▼                            │
-(Guest) → Login     (Guest) → Login   (Logged in) →  │
-(Logged in) →        (Logged in) →    Saved ✓         │
-  Cart updated ✓      Wishlist updated ✓              │
-                                                      │
-    └── Click Similar Product ────────────────────────► New PDP
+    ┌────┴────────────────────────────────────┐
+    │ Click ADD TO BAG   │ Click ♡ Wishlist   │
+    ▼                    ▼                    │
+(Guest) → Login     (Guest) → Login          │
+(Logged in) →       (Logged in) →            │
+  Cart updated ✓      Wishlist updated ✓     │
+                                             │
+    └── Click Similar Product ───────────────► New PDP
 ```
 
-**Tests covering this flow:** `tests/functional/test_product_detail.robot` · `tests/integration/test_plp_to_pdp_flow.robot` · `tests/integration/test_search_to_pdp_flow.robot`
+> Purplle uses **"ADD TO BAG"** not "Add to Cart". All locators reflect this.
+
+**Tests:** `tests/functional/test_product_detail.robot` · `tests/integration/test_plp_to_pdp_flow.robot`
 
 ---
 
 ### 6. Cart Flow
 
 ```
-User clicks Cart 🛒 icon in header  OR  clicks ADD TO BAG on PDP
+User clicks Cart icon  OR  clicks ADD TO BAG on PDP
          │
          ▼
 https://www.purplle.com/cart
          │
          ▼
-┌─────────────────────────────────────────────────────────────────┐
-│                         CART PAGE                               │
-│                                                                 │
-│  ┌──────────────────────────────────┐  ┌─────────────────────┐ │
-│  │         CART ITEMS               │  │   ORDER SUMMARY     │ │
-│  │                                  │  │                     │ │
-│  │  ┌──────┬──────────────────────┐ │  │  Subtotal:  ₹1,198  │ │
-│  │  │ Img  │ Product Name         │ │  │  Discount:  -₹200   │ │
-│  │  │      │ Brand                │ │  │  Delivery:  FREE    │ │
-│  │  │      │ ₹599                 │ │  │  ─────────────────  │ │
-│  │  │      │ Qty: [-][1][+]       │ │  │  Total:    ₹998     │ │
-│  │  │      │ [Remove]             │ │  │                     │ │
-│  │  └──────┴──────────────────────┘ │  │  [ Coupon Code ]    │ │
-│  │                                  │  │  [    APPLY    ]    │ │
-│  │  ┌──────┬──────────────────────┐ │  │                     │ │
-│  │  │ Img  │ Product Name 2 …     │ │  │ [PROCEED TO        │ │
-│  │  └──────┴──────────────────────┘ │  │  CHECKOUT]         │ │
-│  └──────────────────────────────────┘  └─────────────────────┘ │
-│                                                                 │
-│  Empty cart state:  "Your bag is empty"  [Continue Shopping]   │
-└─────────────────────────────────────────────────────────────────┘
-         │
-    ┌────┴──────────────────────────────────────────────────────┐
-    │ Update Qty        │ Remove Item    │ Proceed to Checkout  │
-    ▼                   ▼                ▼                      │
-  Total updates     Item removed      Checkout Page            │
-                    Cart refreshes     (address → payment)     │
-                                                               │
-    └── Click Continue Shopping ────────────────────────────────► Homepage
+┌──────────────────────────────────────────────────────────┐
+│                       CART PAGE                          │
+│                                                          │
+│  ┌──────────────────────────┐  ┌──────────────────────┐  │
+│  │       CART ITEMS         │  │    ORDER SUMMARY     │  │
+│  │  Product  Qty  Price     │  │  Subtotal:  ₹1,198   │  │
+│  │  [Remove]                │  │  Discount:  -₹200    │  │
+│  └──────────────────────────┘  │  Total:     ₹998     │  │
+│                                │  [PROCEED TO         │  │
+│  Empty state:                  │   CHECKOUT]          │  │
+│  "Your bag is empty"           └──────────────────────┘  │
+│  [Continue Shopping]                                     │
+└──────────────────────────────────────────────────────────┘
 ```
 
-**Tests covering this flow:** `tests/functional/test_cart.robot` · `tests/e2e/test_guest_browse_journey.robot`
+**Tests:** `tests/functional/test_cart.robot` · `tests/e2e/test_guest_browse_journey.robot`
 
 ---
 
@@ -645,9 +592,9 @@ User clicks ♡ on PDP or PLP card
     │ Not logged in             │ Logged in
     ▼                           ▼
 Login prompt shown          Item saved to Wishlist ✓
-         │                       │
-         ▼                       ▼
-User navigates to:    https://www.purplle.com/wishlist
+         │
+         ▼
+https://www.purplle.com/profile/myfavourites
          │
          ▼
 ┌─────────────────────────────────────────────────────┐
@@ -655,109 +602,40 @@ User navigates to:    https://www.purplle.com/wishlist
 │                                                     │
 │  My Wishlist  (X items)                             │
 │                                                     │
-│  ┌──────┬──────────────────────────────────────┐   │
-│  │ Img  │ Product Name                         │   │
-│  │      │ Brand                                │   │
-│  │      │ ₹599          [♡ Remove]             │   │
-│  │      │ [Move to Bag / ADD TO BAG]           │   │
-│  └──────┴──────────────────────────────────────┘   │
+│  Product Image | Name | Price                       │
+│  [Move to Bag]  [♡ Remove]                          │
 │                                                     │
 │  Empty state: "Your wishlist is empty"              │
 └─────────────────────────────────────────────────────┘
-         │
-    ┌────┴──────────────────────────────────┐
-    │ Click Move to Bag  │ Click Remove ♡   │
-    ▼                    ▼                  │
- Item added to Cart   Removed from wishlist │
- Cart count updates   Wishlist refreshes   │
 ```
 
-**Tests covering this flow:** `tests/functional/test_wishlist.robot` · `tests/e2e/test_guest_browse_journey.robot`
+> **Actual URL is `/profile/myfavourites`** — not `/wishlist`. Config and tests reflect this.
 
----
-
-### 8. Checkout Flow *(post-login, manual verification)*
-
-```
-User clicks [PROCEED TO CHECKOUT] from Cart
-         │
-         ▼
-┌──────────────────────────────────────────┐
-│           STEP 1: DELIVERY ADDRESS       │
-│                                          │
-│  Saved addresses shown                  │
-│  ○ Home   ○ Office   + Add New          │
-│                                          │
-│  [ CONTINUE ]                            │
-└──────────────────────────────────────────┘
-         │
-         ▼
-┌──────────────────────────────────────────┐
-│          STEP 2: DELIVERY OPTIONS        │
-│                                          │
-│  ○ Standard Delivery (3-5 days) FREE     │
-│  ○ Express Delivery  (1-2 days) ₹99      │
-│                                          │
-│  [ CONTINUE ]                            │
-└──────────────────────────────────────────┘
-         │
-         ▼
-┌──────────────────────────────────────────┐
-│          STEP 3: PAYMENT                 │
-│                                          │
-│  ○ UPI / QR Code                         │
-│  ○ Net Banking                           │
-│  ○ Credit / Debit Card                   │
-│  ○ Cash on Delivery (COD)                │
-│                                          │
-│  Order Summary (right panel)            │
-│  Items: ₹998  Delivery: FREE  Total:₹998 │
-│                                          │
-│  [ PLACE ORDER ]                         │
-└──────────────────────────────────────────┘
-         │
-         ▼
-┌──────────────────────────────────────────┐
-│        ORDER CONFIRMATION                │
-│                                          │
-│  ✓ Order placed successfully!            │
-│  Order ID: #PURP-XXXXXXXXXX              │
-│  Estimated delivery: DD MMM YYYY         │
-│                                          │
-│  [ Continue Shopping ]  [ Track Order ]  │
-└──────────────────────────────────────────┘
-```
-
-> This flow requires a logged-in session and live payment — **not automated** in this framework.
+**Tests:** `tests/functional/test_wishlist.robot` · `tests/e2e/test_guest_browse_journey.robot`
 
 ---
 
 ## Integration Test Flows
 
-How each integration test chains modules together.
-
 ### Search → PDP (`test_search_to_pdp_flow.robot`)
 
 ```
-Homepage
-  └─► Type in Search Bar → Press ENTER
-         └─► Search Results (PLP)
-                └─► Click First Product Card
-                       └─► PDP loads ✓
-                              └─► Verify name, price, Add to Bag
-                                     └─► Go Back → Search Results still visible ✓
+Navigate to /search?q=lipstick
+  └─► Search Results: product cards visible ✓
+         └─► Click first product card
+                └─► PDP loads ✓
+                       └─► Verify name, price, Add to Bag
+                              └─► Go Back → Search Results still visible ✓
 ```
 
-### PLP → PDP → Brand Page (`test_plp_to_pdp_flow.robot`)
+### PLP → PDP (`test_plp_to_pdp_flow.robot`)
 
 ```
 https://www.purplle.com/makeup
   └─► Products Listed ✓
-         └─► Click First Product
-                └─► PDP loads ✓
-                       └─► Verify price + Add to Bag ✓
-                              └─► Go Back → PLP still shows products ✓
-                                     └─► [Optional] Click Brand Name → Brand PLP ✓
+         └─► Click First Product → PDP loads ✓
+                └─► Verify price + Add to Bag ✓
+                       └─► Go Back → PLP still shows products ✓
 ```
 
 ### Homepage → Category (`test_homepage_to_category_flow.robot`)
@@ -767,53 +645,36 @@ Homepage (verify loaded)
   ├─► Click Makeup nav  → Makeup PLP  ✓
   ├─► Click Skincare nav → Skincare PLP ✓
   ├─► Search from homepage → Results page ✓
-  ├─► Click Login link → Login page ✓
+  ├─► Click Login link → /profile page ✓
   └─► Click Cart icon  → Cart page ✓
 ```
 
 ### Search → Sort → Filter → PDP (`test_search_filter_flow.robot`)
 
 ```
-Homepage
-  └─► Search "foundation"
-         └─► Results displayed ✓
-                ├─► Sort: Price Low→High → Results re-order ✓
-                ├─► Sort: Price High→Low → Results re-order ✓
-                └─► Category PLP: Select Brand Filter "Lakme"
-                       └─► Filtered products displayed ✓
-                              └─► Click first filtered product
-                                     └─► PDP loads + Add to Bag visible ✓
+Navigate to /search?q=foundation
+  └─► Results displayed ✓
+         ├─► Sort: Price Low→High → Results re-order ✓
+         └─► Category PLP: Select Brand Filter
+                └─► Filtered products displayed ✓
+                       └─► Click first filtered product → PDP ✓
 ```
 
 ---
 
 ## E2E Journey Flows
 
-Complete user journeys from first page to final destination.
-
 ### Journey 1 — Guest Browse (`test_guest_browse_journey.robot`)
 
 ```
 START: https://www.purplle.com
-  │
-  ▼ Homepage verified ✓
-  │
-  ▼ Click "Makeup" in nav bar
-  │
-  ▼ Makeup PLP — heading + products visible ✓
-  │
-  ▼ Click first product card
-  │
-  ▼ PDP — name, price, Add to Bag, Wishlist icon verified ✓
-  │
-  ▼ Navigate to https://www.purplle.com/cart
-  │
-  ▼ Cart Page — empty cart message displayed ✓
-  │
-  ▼ Navigate to https://www.purplle.com/wishlist
-  │
-  ▼ Wishlist Page — empty wishlist / login prompt displayed ✓
-  │
+  ▼  Homepage verified ✓
+  ▼  Click "Makeup" in nav bar → Makeup PLP ✓
+  ▼  Click first product card → PDP ✓
+  ▼  Navigate to https://www.purplle.com/cart
+  ▼  Cart Page — empty cart message displayed ✓
+  ▼  Navigate to https://www.purplle.com/profile/myfavourites
+  ▼  Wishlist Page — empty wishlist / login prompt displayed ✓
 END ✓
 ```
 
@@ -821,21 +682,12 @@ END ✓
 
 ```
 START: https://www.purplle.com
-  │
-  ▼ Homepage verified ✓
-  │
-  ▼ Search "lipstick" → Search results shown ✓
-  │
-  ▼ Sort: Price Low → High → Products re-ordered ✓
-  │
-  ▼ Click first result → PDP loads ✓
-  │
-  ▼ Verify: name (not empty), price visible, Add to Bag visible, images visible ✓
-  │
-  ▼ Go To homepage → Search "moisturizer" → Click first result → PDP loads ✓
-  │
-  ▼ Assert: product name is different from the lipstick product ✓
-  │
+  ▼  Homepage verified ✓
+  ▼  Navigate to /search?q=lipstick → Results shown ✓
+  ▼  Sort: Price Low → High → Products re-ordered ✓
+  ▼  Click first result → PDP loads ✓
+  ▼  Verify: name, price, Add to Bag, images visible ✓
+  ▼  Navigate to /search?q=moisturizer → Click first result → PDP ✓
 END ✓
 ```
 
@@ -843,23 +695,12 @@ END ✓
 
 ```
 START: https://www.purplle.com
-  │
-  ▼ Homepage verified ✓
-  │
-  ▼ Click "Makeup" nav  → Makeup PLP ✓
-  │
-  ▼ Sort: Price Low → High → re-ordered ✓
-  │
-  ▼ Click first product → PDP ✓  →  name + price captured ✓
-  │
-  ▼ Go Back → PLP still has products ✓
-  │
-  ▼ Click "Skincare" nav → Skincare PLP ✓
-  │
-  ▼ Open first Skincare product → PDP ✓
-  │
-  ▼ Navigate to Offers page via nav → Offers page loads ✓
-  │
+  ▼  Homepage verified ✓
+  ▼  Click "Makeup" nav → PLP ✓ → Click first product → PDP ✓
+  ▼  Go Back → PLP still has products ✓
+  ▼  Click "Skincare" nav → Skincare PLP ✓
+  ▼  Open first Skincare product → PDP ✓
+  ▼  Navigate to Offers page → loads ✓
 END ✓
 ```
 
@@ -867,66 +708,55 @@ END ✓
 
 ## API Test Flow
 
-No browser. HTTP requests sent directly to purplle.com endpoints.
-
 ```
-Suite Setup: Create Session "purplle"  (base URL + Accept/Content-Type headers)
+Suite Setup: Create Session "purplle"  (base URL + headers)
          │
-         ▼
 For each API Test Case:
+         ├── GET /api/search?q=lipstick  →  assert status not 5xx
+         ├── GET /api/products           →  assert status not 5xx
+         ├── GET homepage               →  assert response time < 10s
+         └── Assert HTTPS enforced      →  URL starts with https://
          │
-         ├── Build params dict  { q: "lipstick" }
-         │
-         ├── GET On Session  purplle  /api/search  params=${params}
-         │
-         ├── Assert: status_code == 200  (or non-5xx)
-         │
-         ├── Assert: response body is valid JSON  (if 200)
-         │
-         └── Log: status code + response snippet
-         │
-         ▼
 Suite Teardown: Delete All Sessions
 ```
 
-### API Assertions Pyramid
-
-```
-    /api/ endpoint responds          ← checked for all endpoints (no 5xx)
-         │
-    Response arrives < 10s          ← performance smoke check
-         │
-    Response body is JSON           ← structure check (when status == 200)
-         │
-    Site served over HTTPS          ← security check (URL starts with https)
-```
+> API endpoint paths (`/api/search`, `/api/products`, etc.) are best-guess patterns. Confirm actual paths via **Chrome DevTools → Network tab** before running `tests/api/`.
 
 ---
 
 ## Data-Driven Search Flow
 
-How `test_datadriven_search.robot` generates 8 tests from a single CSV file.
+How DataDriver generates 8 separate test cases from one CSV file.
 
 ```
 testdata/purplle_search_keywords.csv
-  ┌──────────────────┐
-  │ search_keyword   │
-  │ lipstick         │  ─────► TC 1: Search "lipstick"    → results ✓
-  │ foundation       │  ─────► TC 2: Search "foundation"  → results ✓
-  │ moisturizer      │  ─────► TC 3: Search "moisturizer" → results ✓
-  │ serum            │  ─────► TC 4: Search "serum"       → results ✓
-  │ shampoo          │  ─────► TC 5: Search "shampoo"     → results ✓
-  │ kajal            │  ─────► TC 6: Search "kajal"       → results ✓
-  │ sunscreen        │  ─────► TC 7: Search "sunscreen"   → results ✓
-  └──────────────────┘
+  ┌───────────────────┐
+  │ ${search_keyword} │   ← RF variable format required by DataDriver
+  │ lipstick          │  ─────► TC 1: Search "lipstick"    → results ✓
+  │ foundation        │  ─────► TC 2: Search "foundation"  → results ✓
+  │ moisturizer       │  ─────► TC 3: Search "moisturizer" → results ✓
+  │ serum             │  ─────► TC 4: Search "serum"       → results ✓
+  │ shampoo           │  ─────► TC 5: Search "shampoo"     → results ✓
+  │ perfume           │  ─────► TC 6: Search "perfume"     → results ✓
+  │ kajal             │  ─────► TC 7: Search "kajal"       → results ✓
+  │ sunscreen         │  ─────► TC 8: Search "sunscreen"   → results ✓
+  └───────────────────┘
 
-DataDriver reads CSV → generates 7 test cases at runtime
+DataDriver reads CSV → generates 8 test cases at runtime
 Each test case:
   [Setup]   Go To https://www.purplle.com
-  Step 1:   Search For  ${search_keyword}
-  Step 2:   Verify Search Results Are Displayed
-  [Result]  PASS if product cards appear, FAIL if no results / error
+  Step 1:   Go To https://www.purplle.com/search?q=${search_keyword}
+  Step 2:   Wait Until Element Visible  (//a[href=/product/ and class=d-block])[1]
+  [Result]  PASS if product cards appear, FAIL if no results / timeout
 ```
+
+### DataDriver + RF 7 Compatibility Notes
+
+| Requirement | Detail |
+|-------------|--------|
+| CSV column header format | Must use `${variable}` syntax (e.g., `${search_keyword}`), not plain text |
+| Template keyword location | Must be in the test file's own `*** Keywords ***` section — DataDriver cannot find keywords from imported Resource files at listener init time |
+| Template declaration | Use `Test Template` in `*** Settings ***` (global) — both global and per-test `[Template]` set `test.template` correctly in RF 7 |
 
 ---
 
@@ -964,7 +794,7 @@ Each test case:
    - Full user journey = `tests/e2e/`
    - HTTP only = `tests/api/`
 4. **Use the naming convention**: `TC_<LAYER>_<MODULE>_<NN>`
-   - Example: `TC_FUNC_HOME_11`, `TC_INT_FILTER_06`, `TC_E2E_GUEST_04`, `TC_API_SEARCH_08`
+   - `TC_FUNC_HOME_11`, `TC_INT_FILTER_06`, `TC_E2E_GUEST_04`, `TC_API_SEARCH_08`
 5. **Tag every test** with at least `functional/integration/e2e/api` + feature tag + `smoke` or `regression`
 
 ---
@@ -983,6 +813,8 @@ open outputs/report.html      # macOS
 
 ## Important Notes
 
-- **OTP Login**: Purplle uses phone OTP authentication. OTP cannot be automated, so all login tests cover only form validation and UI element presence. Any tests requiring a logged-in session must be run manually.
-- **Dynamic Locators**: Purplle.com is a React/Next.js app with JavaScript-rendered content. All element waits use `Wait Until Element Is Visible` with a 15-second timeout — never `Sleep`.
-- **"Add to Bag"**: Purplle uses this label instead of "Add to Cart". Locators in `product_detail_page_locators.robot` reflect this.
+- **OTP Login**: Purplle uses phone OTP authentication. OTP cannot be automated, so all login tests cover only form validation and UI element presence. Tests requiring a logged-in session must be run manually.
+- **Angular / Dynamic Content**: Purplle.com is an Angular app with JavaScript-rendered content. All element waits use `Wait Until Element Is Visible` with a 15-second timeout — never `Sleep`. The search bar does not respond to keyboard `ENTER` for navigation; the framework uses direct URL navigation to `/search?q=keyword` instead.
+- **Wishlist URL**: The actual wishlist page is at `/profile/myfavourites`, not `/wishlist`. Config and all tests use this correct path.
+- **"ADD TO BAG"**: Purplle uses this label instead of "Add to Cart". All locators in `product_detail_page_locators.robot` reflect this.
+- **`Title Should Contain`**: SeleniumLibrary only provides `Title Should Be` (exact match). A custom `Title Should Contain` keyword is defined in `common_resources.robot` and is available to all tests.
