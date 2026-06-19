@@ -1,11 +1,14 @@
-# Robot Framework outputs
-outputs/
+# Robot Framework outputs — track folder structure, ignore generated files
+outputs/reports/*.html
+outputs/logs/*.html
+outputs/xml/*.xml
+outputs/screenshots/*.png
+outputs/screenshots/*.jpg
+!outputs/**/.gitkeep
 results/
 output.xml
 log.html
 report.html
-*.xml
-*.html
 pabot_results/
 .pabotsuitenames
 
@@ -14,7 +17,7 @@ Venv/
 venv/
 .venv/
 
-# Screenshots
+# Screenshots (root-level strays)
 *.png
 *.jpg
 

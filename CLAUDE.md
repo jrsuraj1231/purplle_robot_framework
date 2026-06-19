@@ -22,20 +22,30 @@ robot tests/api/
 robot tests/functional/test_homepage.robot
 robot tests/api/test_search_api.robot
 
-# Run by tag
-robot --tag smoke tests/
-robot --tag regression tests/
-robot --tag functional tests/
-robot --tag integration tests/
-robot --tag e2e tests/
-robot --tag api tests/
-robot --tag negative tests/
+# Run by tag (use --include, not --tag)
+robot --include smoke tests/
+robot --include regression tests/
+robot --include functional tests/
+robot --include data_driven tests/
+
+# Run with organised outputs (reports/logs/xml in separate subfolders)
+robot --outputdir outputs --output xml/output.xml --log logs/log.html --report reports/report.html tests/
+
+# Dry run (validate keywords without launching browser)
+robot --dryrun tests/
 
 # Run all test suites in parallel
 pabot tests/
+```
 
-# Write results to outputs/
-robot --outputdir outputs/ tests/
+## Output Folder Structure
+
+```
+outputs/
+├── reports/      ← report.html  (interactive summary)
+├── logs/         ← log.html     (step-by-step detail)
+├── xml/          ← output.xml   (machine-readable results)
+└── screenshots/  ← selenium screenshots on failure (set automatically by Open Application)
 ```
 
 The application under test is **https://www.purplle.com** — an Indian beauty e-commerce website.

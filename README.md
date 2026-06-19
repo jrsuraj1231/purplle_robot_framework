@@ -185,10 +185,24 @@ pabot tests/
 pabot --processes 4 tests/functional/
 ```
 
-### Save Results to a Custom Directory
+### Save Results with Organised Output Folders
 
 ```bash
-robot --outputdir outputs/ tests/
+robot --outputdir outputs \
+      --output xml/output.xml \
+      --log logs/log.html \
+      --report reports/report.html \
+      tests/
+```
+
+This puts each artifact in its designated subfolder:
+
+```
+outputs/
+├── reports/      ← report.html   (interactive summary)
+├── logs/         ← log.html      (step-by-step detail)
+├── xml/          ← output.xml    (machine-readable results)
+└── screenshots/  ← failure screenshots (captured automatically)
 ```
 
 ### Dry Run (validate without browser)
