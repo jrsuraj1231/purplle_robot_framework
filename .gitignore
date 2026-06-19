@@ -1,5 +1,6 @@
 # Robot Framework outputs
 outputs/
+results/
 output.xml
 log.html
 report.html
@@ -7,6 +8,11 @@ report.html
 *.html
 pabot_results/
 .pabotsuitenames
+
+# Python virtual environment
+Venv/
+venv/
+.venv/
 
 # Screenshots
 *.png
