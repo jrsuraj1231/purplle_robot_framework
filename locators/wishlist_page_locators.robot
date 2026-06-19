@@ -1,0 +1,11 @@
+*** Variables ***
+${WISHLIST_PAGE_HEADING}        xpath=//h1[contains(text(),'Wishlist') or contains(text(),'wishlist') or contains(text(),'Wish List')]
+${WISHLIST_ITEMS}               xpath=//div[contains(@class,'wishlist-item') or contains(@class,'WishlistItem') or contains(@class,'wish-item')]
+${FIRST_WISHLIST_ITEM}          xpath=(//div[contains(@class,'wishlist-item') or contains(@class,'WishlistItem') or contains(@class,'wish-item')])[1]
+${WISHLIST_ITEM_NAME}           xpath=(//p[contains(@class,'product-name') or contains(@class,'name')])[1]
+${WISHLIST_ITEM_PRICE}          xpath=(//span[contains(@class,'price')])[1]
+${MOVE_TO_BAG_BTN}              xpath=//button[contains(text(),'Move to Bag') or contains(text(),'ADD TO BAG') or contains(text(),'Add to Cart')]
+${REMOVE_FROM_WISHLIST_BTN}     xpath=//button[contains(@class,'remove') or @aria-label='Remove from wishlist' or contains(text(),'Remove')]
+${EMPTY_WISHLIST_MESSAGE}       xpath=//*[contains(text(),'wishlist is empty') or contains(text(),'no items') or contains(text(),'Your wishlist is empty')]
+${LOGIN_TO_VIEW_WISHLIST}       xpath=//*[contains(text(),'Login') or contains(text(),'Sign in')] [contains(text(),'wishlist') or contains(text(),'view')]
+${WISHLIST_COUNT}               xpath=//*[contains(@class,'wishlist-count') or contains(@class,'wish-count')]

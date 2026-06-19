@@ -1,0 +1,70 @@
+# Purplle.com Test Framework Configuration
+# Edit this file to switch environments or update test settings.
+
+environment: production
+
+browser:
+  name: chrome
+  headless: false
+  timeout: 15
+  implicit_wait: 10
+
+base_url: https://www.purplle.com
+
+urls:
+  login:    https://www.purplle.com/login
+  cart:     https://www.purplle.com/cart
+  wishlist: https://www.purplle.com/profile/myfavourites
+  offers:   https://www.purplle.com/offers
+  brands:   https://www.purplle.com/brands
+  new:      https://www.purplle.com/new
+  categories:
+    makeup:    https://www.purplle.com/makeup
+    skincare:  https://www.purplle.com/skincare
+    hair:      https://www.purplle.com/hair
+    bath_body: https://www.purplle.com/bath-body
+    wellness:  https://www.purplle.com/wellness
+
+api:
+  base_url: https://www.purplle.com
+  endpoints:
+    search:       /api/search
+    autocomplete: /api/autocomplete
+    products:     /api/products
+    categories:   /api/categories
+    cart:         /api/cart
+    wishlist:     /api/wishlist
+  headers:
+    Content-Type: application/json
+    Accept: application/json
+
+# WARNING: Use dummy/test credentials only. Never commit real credentials.
+test_credentials:
+  mobile:   "9876543210"
+  email:    testuser@example.com
+  password: Test@1234
+
+test_data:
+  search_keywords:
+    - lipstick
+    - foundation
+    - moisturizer
+    - serum
+    - shampoo
+    - kajal
+    - sunscreen
+  brands:
+    - Lakme
+    - Maybelline
+    - L'Oreal
+    - MAC
+  invalid_mobile_numbers:
+    - "12345"
+    - "abcdefghij"
+    - ""
+    - "99999999999999"
+
+reporting:
+  output_dir: outputs
+  log_level: INFO
+  screenshot_on_failure: true

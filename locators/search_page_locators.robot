@@ -1,0 +1,10 @@
+*** Variables ***
+${SEARCH_INPUT}             xpath=//input[@type='search']
+${SEARCH_RESULTS_COUNT}     xpath=//*[contains(text(),'results') or contains(text(),'products') or contains(text(),'Results')]
+${PRODUCT_CARDS}            xpath=//a[contains(@href,'/product/') and contains(@class,'d-block')]
+${FIRST_PRODUCT_CARD}       xpath=(//a[contains(@href,'/product/') and contains(@class,'d-block')])[1]
+${FIRST_PRODUCT_NAME}       xpath=(//a[contains(@href,'/product/') and contains(@class,'d-block')]//div[contains(@class,'product-title')])[1]
+${FIRST_PRODUCT_PRICE}      xpath=(//a[contains(@href,'/product/') and contains(@class,'d-block')]//span[contains(@class,'price') or contains(@class,'Price')])[1]
+${NO_RESULTS_MESSAGE}       xpath=//*[contains(text(),'No results') or contains(text(),'no results') or contains(text(),'0 result')]
+${SEARCH_SUGGESTION_BOX}    xpath=//div[contains(@class,'suggestion') or contains(@class,'autocomplete') or contains(@class,'dropdown')]
+${SEARCH_SUGGESTION_ITEM}   xpath=(//div[contains(@class,'suggestion') or contains(@class,'autocomplete')]//a)[1]

@@ -1,0 +1,21 @@
+# Core Robot Framework
+robotframework==7.4.2
+
+# Selenium library for web automation
+robotframework-seleniumlibrary==6.8.0
+
+# HTTP library for API testing
+robotframework-requests==0.9.7
+
+# Parallel execution
+robotframework-pabot==5.2.2
+
+# Data-driven testing (CSV)
+robotframework-datadriver==1.11.2
+
+# Selenium WebDriver
+selenium==4.24.0
+webdriver-manager==4.0.2
+
+# Config file support
+PyYAML==6.0.2

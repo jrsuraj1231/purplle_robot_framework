@@ -1,0 +1,16 @@
+*** Variables ***
+${PRODUCT_CARDS}            xpath=//a[contains(@href,'/product/')]
+${FIRST_PRODUCT}            xpath=(//a[contains(@href,'/product/')])[1]
+${PRODUCT_COUNT_TEXT}       xpath=//*[contains(@class,'count') or (contains(text(),'product') and contains(text(),'found'))]
+${CATEGORY_HEADING}         xpath=//h1
+${FILTER_SECTION}           xpath=//div[contains(@class,'filter') or contains(@class,'Filter')]
+${BRAND_FILTER_HEADING}     xpath=//div[contains(text(),'Brand') or contains(text(),'BRAND')]
+${PRICE_FILTER_HEADING}     xpath=//div[contains(text(),'Price') or contains(text(),'PRICE')]
+${SORT_DROPDOWN}            xpath=//div[contains(@class,'sort') or contains(@class,'Sort') or contains(text(),'Sort')]
+${SORT_PRICE_LOW_HIGH}      xpath=//span[contains(text(),'Price: Low to High') or contains(text(),'Low to High')]
+${SORT_PRICE_HIGH_LOW}      xpath=//span[contains(text(),'Price: High to Low') or contains(text(),'High to Low')]
+${SORT_POPULARITY}          xpath=//span[contains(text(),'Popularity') or contains(text(),'Popular')]
+${SORT_NEWEST}              xpath=//span[contains(text(),'Newest') or contains(text(),'New Arrival')]
+${APPLY_FILTER_BTN}         xpath=//button[contains(text(),'Apply') or contains(text(),'APPLY')]
+${CLEAR_FILTER_BTN}         xpath=//button[contains(text(),'Clear') or contains(text(),'CLEAR') or contains(text(),'Reset')]
+${LOAD_MORE_BTN}            xpath=//button[contains(text(),'Load More') or contains(text(),'LOAD MORE') or contains(text(),'Show More')]

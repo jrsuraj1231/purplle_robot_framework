@@ -1,0 +1,54 @@
+# Robot Framework outputs
+outputs/
+output.xml
+log.html
+report.html
+*.xml
+*.html
+pabot_results/
+.pabotsuitenames
+
+# Screenshots
+*.png
+*.jpg
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+.eggs/
+*.egg
+venv/
+.venv/
+env/
+.env
+
+# IDE
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+
+# WebDriver cache
+.wdm/
+
+# Temp / diagnostic scripts
+diagnose_*.py
+debug_*.py
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Misc leftover files from previous framework
+myntra_drissionpage.py
+testdata/login_credentials_sauce_demo.xlsx
+testdata/*.xlsx
+testdata/*.xls
