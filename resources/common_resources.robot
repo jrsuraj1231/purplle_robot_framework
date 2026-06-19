@@ -7,13 +7,19 @@ ${BROWSER}              chrome
 ${BASE_URL}             https://www.purplle.com
 ${TIMEOUT}              15s
 ${IMPLICIT_WAIT}        10s
+${HEADLESS}             false
 ${OUTPUT_DIR}           ${CURDIR}${/}..${/}outputs
 ${SCREENSHOT_DIR}       ${OUTPUT_DIR}${/}screenshots
 
 *** Keywords ***
 Open Application
     [Arguments]    ${url}=${BASE_URL}
-    Open Browser    ${url}    ${BROWSER}
+    IF    '${HEADLESS}' == 'true'
+        Open Browser    ${url}    ${BROWSER}
+        ...    options=add_argument("--headless=new");add_argument("--no-sandbox");add_argument("--disable-dev-shm-usage");add_argument("--disable-gpu")
+    ELSE
+        Open Browser    ${url}    ${BROWSER}
+    END
     Maximize Browser Window
     Set Selenium Implicit Wait    ${IMPLICIT_WAIT}
     Set Selenium Timeout    ${TIMEOUT}

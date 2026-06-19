@@ -35,8 +35,12 @@ cd purplle_robot_framework
 
 # 2. (Recommended) Create a virtual environment
 python -m venv venv
-venv\Scripts\activate        # Windows
-# source venv/bin/activate   # macOS / Linux
+
+# Windows
+venv\Scripts\activate
+
+# macOS / Linux
+source venv/bin/activate
 
 # 3. Install all dependencies
 pip install -r requirements.txt
@@ -178,9 +182,16 @@ robot -d outputs --include data_driven tests/         # DataDriver CSV tests onl
 robot -d outputs --include negative tests/            # Negative / error-path tests
 ```
 
+### Headless Mode (Linux CI / no display)
+
+```bash
+robot -d outputs -v HEADLESS:true tests/
+robot -d outputs -v HEADLESS:true tests/functional/test_homepage.robot
+```
+
 ### Run in Parallel (pabot)
 
-```powershell
+```bash
 pabot tests/
 pabot --processes 4 tests/functional/
 ```
@@ -813,11 +824,15 @@ Each test case:
 
 ## Test Reports
 
-After a run, open `outputs/reports/report.html` in a browser for an interactive summary.
+After a run, open `outputs/report.html` in a browser for an interactive summary.
 
-```powershell
+```bash
 robot -d outputs tests/
-start outputs\reports\report.html     # Windows
+
+# Open the report
+start outputs\report.html          # Windows
+open outputs/report.html           # macOS
+xdg-open outputs/report.html      # Linux
 ```
 
 ---

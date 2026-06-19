@@ -28,6 +28,9 @@ robot -d outputs --include regression tests/
 robot -d outputs --include functional tests/
 robot -d outputs --include data_driven tests/
 
+# Headless mode — required on Linux CI / servers without a display
+robot -d outputs -v HEADLESS:true tests/
+
 # Dry run (validate keywords without launching browser)
 robot -d outputs --dryrun tests/
 
