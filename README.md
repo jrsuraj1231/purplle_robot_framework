@@ -149,38 +149,38 @@ ${mobile}=     Get Test Credential    mobile
 
 ### Run an Entire Layer
 
-```bash
-robot tests/functional/
-robot tests/integration/
-robot tests/e2e/
-robot tests/api/
+```powershell
+.\run.ps1 tests/functional/
+.\run.ps1 tests/integration/
+.\run.ps1 tests/e2e/
+.\run.ps1 tests/api/
 ```
 
 ### Run a Single File
 
-```bash
-robot tests/functional/test_homepage.robot
-robot tests/functional/test_datadriven_search.robot
-robot tests/integration/test_search_to_pdp_flow.robot
-robot tests/api/test_search_api.robot
+```powershell
+.\run.ps1 tests/functional/test_homepage.robot
+.\run.ps1 tests/functional/test_datadriven_search.robot
+.\run.ps1 tests/integration/test_search_to_pdp_flow.robot
+.\run.ps1 tests/api/test_search_api.robot
 ```
 
 ### Run by Tag
 
-```bash
-robot --include smoke tests/               # Quick smoke tests across all layers
-robot --include regression tests/          # Full regression suite
-robot --include functional tests/          # All functional tests
-robot --include integration tests/         # All integration tests
-robot --include e2e tests/                 # All E2E journey tests
-robot --include api tests/                 # All API tests
-robot --include data_driven tests/         # DataDriver CSV tests only
-robot --include negative tests/            # Negative / error-path tests
+```powershell
+.\run.ps1 --include smoke tests/               # Quick smoke tests across all layers
+.\run.ps1 --include regression tests/          # Full regression suite
+.\run.ps1 --include functional tests/          # All functional tests
+.\run.ps1 --include integration tests/         # All integration tests
+.\run.ps1 --include e2e tests/                 # All E2E journey tests
+.\run.ps1 --include api tests/                 # All API tests
+.\run.ps1 --include data_driven tests/         # DataDriver CSV tests only
+.\run.ps1 --include negative tests/            # Negative / error-path tests
 ```
 
 ### Run in Parallel (pabot)
 
-```bash
+```powershell
 pabot tests/
 pabot --processes 4 tests/functional/
 ```
@@ -825,10 +825,9 @@ Each test case:
 
 After a run, open `outputs/reports/report.html` in a browser for an interactive summary.
 
-```bash
-robot tests/
+```powershell
+.\run.ps1 tests/
 start outputs\reports\report.html     # Windows
-open outputs/reports/report.html      # macOS
 ```
 
 ---

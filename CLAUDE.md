@@ -31,25 +31,27 @@ After this, a plain `robot tests/` command routes everything to `outputs/` autom
 
 ## Running Tests
 
-```bash
+Always use `.\run.ps1` instead of `robot` directly — it wires the output flags so results go to `outputs/` subfolders automatically.
+
+```powershell
 # Run an entire category
-robot tests/functional/
-robot tests/integration/
-robot tests/e2e/
-robot tests/api/
+.\run.ps1 tests/functional/
+.\run.ps1 tests/integration/
+.\run.ps1 tests/e2e/
+.\run.ps1 tests/api/
 
 # Run a single file
-robot tests/functional/test_homepage.robot
-robot tests/api/test_search_api.robot
+.\run.ps1 tests/functional/test_homepage.robot
+.\run.ps1 tests/api/test_search_api.robot
 
 # Run by tag (use --include, not --tag)
-robot --include smoke tests/
-robot --include regression tests/
-robot --include functional tests/
-robot --include data_driven tests/
+.\run.ps1 --include smoke tests/
+.\run.ps1 --include regression tests/
+.\run.ps1 --include functional tests/
+.\run.ps1 --include data_driven tests/
 
 # Dry run (validate keywords without launching browser)
-robot --dryrun tests/
+.\run.ps1 --dryrun tests/
 
 # Run all test suites in parallel
 pabot tests/
