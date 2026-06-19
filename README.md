@@ -185,17 +185,25 @@ pabot tests/
 pabot --processes 4 tests/functional/
 ```
 
-### Save Results with Organised Output Folders
+### Automatic Output Routing (one-time setup)
 
-```bash
-robot --outputdir outputs \
-      --output xml/output.xml \
-      --log logs/log.html \
-      --report reports/report.html \
-      tests/
+Robot Framework reads `ROBOT_OPTIONS` before every run. Set it once and output files always go to the right subfolders without any extra flags:
+
+**Windows (PowerShell — persists across sessions):**
+```powershell
+[System.Environment]::SetEnvironmentVariable(
+  "ROBOT_OPTIONS",
+  "--outputdir outputs --output xml/output.xml --log logs/log.html --report reports/report.html",
+  "User"
+)
 ```
 
-This puts each artifact in its designated subfolder:
+**macOS / Linux (add to `~/.bashrc` or `~/.zshrc`):**
+```bash
+export ROBOT_OPTIONS="--outputdir outputs --output xml/output.xml --log logs/log.html --report reports/report.html"
+```
+
+After this, a plain `robot tests/` routes everything to:
 
 ```
 outputs/
@@ -815,12 +823,12 @@ Each test case:
 
 ## Test Reports
 
-After a run, open `outputs/report.html` in a browser for an interactive summary.
+After a run, open `outputs/reports/report.html` in a browser for an interactive summary.
 
 ```bash
-robot --outputdir outputs/ tests/
-start outputs\report.html     # Windows
-open outputs/report.html      # macOS
+robot tests/
+start outputs\reports\report.html     # Windows
+open outputs/reports/report.html      # macOS
 ```
 
 ---

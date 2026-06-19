@@ -9,6 +9,26 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 pip install -r requirements.txt
 ```
 
+## One-time Output Setup
+
+Robot Framework reads the `ROBOT_OPTIONS` environment variable before every run. Set it once so all output files always land in the right subfolders without passing flags every time:
+
+**Windows (PowerShell — persists across sessions):**
+```powershell
+[System.Environment]::SetEnvironmentVariable(
+  "ROBOT_OPTIONS",
+  "--outputdir outputs --output xml/output.xml --log logs/log.html --report reports/report.html",
+  "User"
+)
+```
+
+**macOS / Linux (add to `~/.bashrc` or `~/.zshrc`):**
+```bash
+export ROBOT_OPTIONS="--outputdir outputs --output xml/output.xml --log logs/log.html --report reports/report.html"
+```
+
+After this, a plain `robot tests/` command routes everything to `outputs/` automatically.
+
 ## Running Tests
 
 ```bash
@@ -27,9 +47,6 @@ robot --include smoke tests/
 robot --include regression tests/
 robot --include functional tests/
 robot --include data_driven tests/
-
-# Run with organised outputs (reports/logs/xml in separate subfolders)
-robot --outputdir outputs --output xml/output.xml --log logs/log.html --report reports/report.html tests/
 
 # Dry run (validate keywords without launching browser)
 robot --dryrun tests/
