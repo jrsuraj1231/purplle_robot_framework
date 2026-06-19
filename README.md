@@ -150,32 +150,32 @@ ${mobile}=     Get Test Credential    mobile
 ### Run an Entire Layer
 
 ```powershell
-.\run.ps1 tests/functional/
-.\run.ps1 tests/integration/
-.\run.ps1 tests/e2e/
-.\run.ps1 tests/api/
+robot -d outputs tests/functional/
+robot -d outputs tests/integration/
+robot -d outputs tests/e2e/
+robot -d outputs tests/api/
 ```
 
 ### Run a Single File
 
 ```powershell
-.\run.ps1 tests/functional/test_homepage.robot
-.\run.ps1 tests/functional/test_datadriven_search.robot
-.\run.ps1 tests/integration/test_search_to_pdp_flow.robot
-.\run.ps1 tests/api/test_search_api.robot
+robot -d outputs tests/functional/test_homepage.robot
+robot -d outputs tests/functional/test_datadriven_search.robot
+robot -d outputs tests/integration/test_search_to_pdp_flow.robot
+robot -d outputs tests/api/test_search_api.robot
 ```
 
 ### Run by Tag
 
 ```powershell
-.\run.ps1 --include smoke tests/               # Quick smoke tests across all layers
-.\run.ps1 --include regression tests/          # Full regression suite
-.\run.ps1 --include functional tests/          # All functional tests
-.\run.ps1 --include integration tests/         # All integration tests
-.\run.ps1 --include e2e tests/                 # All E2E journey tests
-.\run.ps1 --include api tests/                 # All API tests
-.\run.ps1 --include data_driven tests/         # DataDriver CSV tests only
-.\run.ps1 --include negative tests/            # Negative / error-path tests
+robot -d outputs --include smoke tests/               # Quick smoke tests across all layers
+robot -d outputs --include regression tests/          # Full regression suite
+robot -d outputs --include functional tests/          # All functional tests
+robot -d outputs --include integration tests/         # All integration tests
+robot -d outputs --include e2e tests/                 # All E2E journey tests
+robot -d outputs --include api tests/                 # All API tests
+robot -d outputs --include data_driven tests/         # DataDriver CSV tests only
+robot -d outputs --include negative tests/            # Negative / error-path tests
 ```
 
 ### Run in Parallel (pabot)
@@ -185,31 +185,21 @@ pabot tests/
 pabot --processes 4 tests/functional/
 ```
 
-### Automatic Output Routing (one-time setup)
+### Output Directory
 
-Robot Framework reads `ROBOT_OPTIONS` before every run. Set it once and output files always go to the right subfolders without any extra flags:
+Always pass `-d outputs` so all result files go to the `outputs/` folder instead of the project root:
 
-**Windows (PowerShell — persists across sessions):**
-```powershell
-[System.Environment]::SetEnvironmentVariable(
-  "ROBOT_OPTIONS",
-  "--outputdir outputs --output xml/output.xml --log logs/log.html --report reports/report.html",
-  "User"
-)
-```
-
-**macOS / Linux (add to `~/.bashrc` or `~/.zshrc`):**
 ```bash
-export ROBOT_OPTIONS="--outputdir outputs --output xml/output.xml --log logs/log.html --report reports/report.html"
+robot -d outputs tests/
 ```
 
-After this, a plain `robot tests/` routes everything to:
+Output files land in:
 
 ```
 outputs/
-├── reports/      ← report.html   (interactive summary)
-├── logs/         ← log.html      (step-by-step detail)
-├── xml/          ← output.xml    (machine-readable results)
+├── output.xml    ← machine-readable results
+├── log.html      ← step-by-step detail
+├── report.html   ← interactive summary
 └── screenshots/  ← failure screenshots (captured automatically)
 ```
 
@@ -826,7 +816,7 @@ Each test case:
 After a run, open `outputs/reports/report.html` in a browser for an interactive summary.
 
 ```powershell
-.\run.ps1 tests/
+robot -d outputs tests/
 start outputs\reports\report.html     # Windows
 ```
 

@@ -1,10 +1,9 @@
-# Robot Framework outputs — track folder structure, ignore generated files
-outputs/reports/*.html
-outputs/logs/*.html
-outputs/xml/*.xml
+# Robot Framework outputs — ignore generated files, keep screenshots folder
+outputs/*.html
+outputs/*.xml
 outputs/screenshots/*.png
 outputs/screenshots/*.jpg
-!outputs/**/.gitkeep
+!outputs/screenshots/.gitkeep
 results/
 output.xml
 log.html

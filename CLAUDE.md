@@ -9,49 +9,27 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 pip install -r requirements.txt
 ```
 
-## One-time Output Setup
-
-Robot Framework reads the `ROBOT_OPTIONS` environment variable before every run. Set it once so all output files always land in the right subfolders without passing flags every time:
-
-**Windows (PowerShell — persists across sessions):**
-```powershell
-[System.Environment]::SetEnvironmentVariable(
-  "ROBOT_OPTIONS",
-  "--outputdir outputs --output xml/output.xml --log logs/log.html --report reports/report.html",
-  "User"
-)
-```
-
-**macOS / Linux (add to `~/.bashrc` or `~/.zshrc`):**
-```bash
-export ROBOT_OPTIONS="--outputdir outputs --output xml/output.xml --log logs/log.html --report reports/report.html"
-```
-
-After this, a plain `robot tests/` command routes everything to `outputs/` automatically.
-
 ## Running Tests
 
-Always use `.\run.ps1` instead of `robot` directly — it wires the output flags so results go to `outputs/` subfolders automatically.
-
-```powershell
+```bash
 # Run an entire category
-.\run.ps1 tests/functional/
-.\run.ps1 tests/integration/
-.\run.ps1 tests/e2e/
-.\run.ps1 tests/api/
+robot -d outputs tests/functional/
+robot -d outputs tests/integration/
+robot -d outputs tests/e2e/
+robot -d outputs tests/api/
 
 # Run a single file
-.\run.ps1 tests/functional/test_homepage.robot
-.\run.ps1 tests/api/test_search_api.robot
+robot -d outputs tests/functional/test_homepage.robot
+robot -d outputs tests/api/test_search_api.robot
 
 # Run by tag (use --include, not --tag)
-.\run.ps1 --include smoke tests/
-.\run.ps1 --include regression tests/
-.\run.ps1 --include functional tests/
-.\run.ps1 --include data_driven tests/
+robot -d outputs --include smoke tests/
+robot -d outputs --include regression tests/
+robot -d outputs --include functional tests/
+robot -d outputs --include data_driven tests/
 
 # Dry run (validate keywords without launching browser)
-.\run.ps1 --dryrun tests/
+robot -d outputs --dryrun tests/
 
 # Run all test suites in parallel
 pabot tests/
@@ -61,9 +39,9 @@ pabot tests/
 
 ```
 outputs/
-├── reports/      ← report.html  (interactive summary)
-├── logs/         ← log.html     (step-by-step detail)
-├── xml/          ← output.xml   (machine-readable results)
+├── output.xml    ← machine-readable results
+├── log.html      ← step-by-step detail
+├── report.html   ← interactive summary
 └── screenshots/  ← selenium screenshots on failure (set automatically by Open Application)
 ```
 
