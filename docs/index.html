@@ -1,0 +1,1838 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Purplle.com — Robot Framework Test Automation</title>
+<style>
+  :root {
+    --purple: #7c3aed;
+    --purple-light: #a78bfa;
+    --purple-dark: #4c1d95;
+    --pink: #ec4899;
+    --pink-light: #f9a8d4;
+    --bg: #0f0a1e;
+    --bg2: #1a1030;
+    --bg3: #231840;
+    --card: #1e1535;
+    --card2: #2a1d4a;
+    --border: #3d2d6e;
+    --text: #e2d9f3;
+    --text-muted: #9b87c0;
+    --green: #10b981;
+    --blue: #3b82f6;
+    --orange: #f59e0b;
+    --red: #ef4444;
+    --cyan: #06b6d4;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* ── Animated Background ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 20% 20%, rgba(124,58,237,.18) 0%, transparent 55%),
+      radial-gradient(ellipse at 80% 80%, rgba(236,72,153,.12) 0%, transparent 55%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── Layout ── */
+  #sidebar {
+    position: fixed;
+    top: 0; left: 0;
+    width: 260px; height: 100vh;
+    background: rgba(26,16,48,.95);
+    border-right: 1px solid var(--border);
+    overflow-y: auto;
+    z-index: 100;
+    backdrop-filter: blur(12px);
+    transition: transform .3s;
+  }
+  #sidebar::-webkit-scrollbar { width: 4px; }
+  #sidebar::-webkit-scrollbar-track { background: transparent; }
+  #sidebar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+  .sidebar-logo {
+    padding: 24px 20px 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .sidebar-logo h2 {
+    font-size: 1rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--purple-light), var(--pink));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: .5px;
+  }
+  .sidebar-logo p { font-size: .72rem; color: var(--text-muted); margin-top: 2px; }
+
+  .nav-section { padding: 12px 0; }
+  .nav-label {
+    padding: 4px 20px;
+    font-size: .65rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--purple-light);
+    opacity: .7;
+  }
+  .nav-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 20px;
+    font-size: .82rem;
+    color: var(--text-muted);
+    text-decoration: none;
+    border-left: 2px solid transparent;
+    transition: all .2s;
+  }
+  .nav-link:hover, .nav-link.active {
+    color: var(--purple-light);
+    background: rgba(124,58,237,.1);
+    border-left-color: var(--purple);
+  }
+  .nav-link .icon { width: 16px; opacity: .8; flex-shrink: 0; }
+
+  #main {
+    margin-left: 260px;
+    padding: 0 40px 80px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ── Hero ── */
+  .hero {
+    padding: 64px 0 48px;
+    text-align: center;
+  }
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(124,58,237,.2);
+    border: 1px solid rgba(124,58,237,.4);
+    border-radius: 999px;
+    padding: 6px 18px;
+    font-size: .78rem;
+    color: var(--purple-light);
+    margin-bottom: 24px;
+  }
+  .hero h1 {
+    font-size: 3rem;
+    font-weight: 800;
+    line-height: 1.1;
+    background: linear-gradient(135deg, #fff 0%, var(--purple-light) 50%, var(--pink) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 16px;
+  }
+  .hero p {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    max-width: 600px;
+    margin: 0 auto 32px;
+  }
+  .hero-stats {
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+    flex-wrap: wrap;
+  }
+  .stat {
+    text-align: center;
+    padding: 16px 24px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    min-width: 110px;
+  }
+  .stat-num {
+    font-size: 1.8rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--purple-light), var(--pink));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .stat-label { font-size: .72rem; color: var(--text-muted); margin-top: 2px; }
+
+  /* ── Sections ── */
+  section { padding: 56px 0 0; }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 32px;
+  }
+  .section-icon {
+    width: 40px; height: 40px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.2rem;
+    flex-shrink: 0;
+  }
+  .section-header h2 {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #fff;
+  }
+  .section-header p { font-size: .88rem; color: var(--text-muted); }
+
+  /* ── Cards ── */
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 24px;
+    transition: border-color .2s, transform .2s;
+  }
+  .card:hover { border-color: var(--purple); transform: translateY(-2px); }
+
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+
+  /* ── Tech Stack ── */
+  .tech-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+    transition: all .25s;
+    position: relative;
+    overflow: hidden;
+  }
+  .tech-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--purple), var(--pink));
+    transform: scaleX(0);
+    transition: transform .25s;
+  }
+  .tech-card:hover { border-color: var(--purple); transform: translateY(-3px); }
+  .tech-card:hover::before { transform: scaleX(1); }
+  .tech-icon { font-size: 2rem; margin-bottom: 10px; }
+  .tech-name { font-size: .95rem; font-weight: 700; color: #fff; }
+  .tech-version {
+    display: inline-block;
+    margin-top: 6px;
+    padding: 2px 10px;
+    background: rgba(124,58,237,.2);
+    border-radius: 999px;
+    font-size: .72rem;
+    color: var(--purple-light);
+  }
+  .tech-desc { font-size: .78rem; color: var(--text-muted); margin-top: 6px; }
+
+  /* ── Code blocks ── */
+  .code-block {
+    background: #0d0a1a;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    margin: 16px 0;
+  }
+  .code-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 16px;
+    background: rgba(255,255,255,.04);
+    border-bottom: 1px solid var(--border);
+  }
+  .code-lang {
+    font-size: .72rem;
+    color: var(--purple-light);
+    font-weight: 600;
+    letter-spacing: .5px;
+  }
+  .copy-btn {
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 3px 10px;
+    font-size: .7rem;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all .2s;
+  }
+  .copy-btn:hover { border-color: var(--purple); color: var(--purple-light); }
+  pre {
+    padding: 18px 20px;
+    overflow-x: auto;
+    font-size: .82rem;
+    line-height: 1.7;
+    font-family: 'Consolas', 'Fira Code', monospace;
+  }
+  pre::-webkit-scrollbar { height: 4px; }
+  pre::-webkit-scrollbar-track { background: transparent; }
+  pre::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+  .kw { color: #c084fc; }
+  .str { color: #86efac; }
+  .cmt { color: #4b5563; font-style: italic; }
+  .cmd { color: #67e8f9; }
+  .flag { color: #fbbf24; }
+  .path { color: #f9a8d4; }
+  .var { color: #a5f3fc; }
+
+  /* ── Architecture Flow ── */
+  .arch-flow {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+    padding: 16px 0;
+  }
+  .flow-node {
+    width: 100%;
+    max-width: 620px;
+    background: var(--card2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px 24px;
+    position: relative;
+    transition: all .25s;
+  }
+  .flow-node:hover { border-color: var(--purple); background: rgba(124,58,237,.12); }
+  .flow-node-title {
+    font-size: .9rem;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 4px;
+  }
+  .flow-node-sub { font-size: .78rem; color: var(--text-muted); }
+  .flow-node-badge {
+    position: absolute;
+    top: -10px; right: 16px;
+    padding: 2px 12px;
+    border-radius: 999px;
+    font-size: .68rem;
+    font-weight: 700;
+    letter-spacing: .5px;
+  }
+  .flow-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 36px;
+    color: var(--purple-light);
+    font-size: .72rem;
+    gap: 6px;
+    opacity: .8;
+  }
+  .flow-arrow::before, .flow-arrow::after {
+    content: '';
+    display: block;
+    width: 1px;
+    height: 14px;
+    background: linear-gradient(to bottom, transparent, var(--purple));
+  }
+  .flow-arrow::after {
+    background: linear-gradient(to bottom, var(--purple), transparent);
+  }
+  .arrow-down {
+    width: 0; height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 7px solid var(--purple);
+  }
+
+  /* ── Test Layer Cards ── */
+  .layer-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 24px;
+    border-top: 3px solid;
+    transition: all .25s;
+  }
+  .layer-card:hover { transform: translateY(-3px); }
+  .layer-func { border-top-color: var(--blue); }
+  .layer-int  { border-top-color: var(--purple); }
+  .layer-e2e  { border-top-color: var(--pink); }
+  .layer-api  { border-top-color: var(--green); }
+
+  .layer-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+  .layer-icon {
+    width: 36px; height: 36px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.1rem;
+  }
+  .layer-name { font-size: 1rem; font-weight: 700; color: #fff; }
+  .layer-path { font-size: .72rem; color: var(--text-muted); font-family: monospace; }
+  .layer-desc { font-size: .84rem; color: var(--text-muted); margin-bottom: 14px; }
+  .layer-tests { display: flex; flex-direction: column; gap: 6px; }
+  .test-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 7px 12px;
+    background: rgba(255,255,255,.03);
+    border-radius: 7px;
+    font-size: .78rem;
+    color: var(--text);
+  }
+  .test-item::before {
+    content: '▸';
+    color: var(--purple-light);
+    flex-shrink: 0;
+  }
+
+  /* ── App Flow Diagrams ── */
+  .app-flow {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 24px;
+    margin-bottom: 20px;
+  }
+  .app-flow h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .page-box {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    margin: 0 auto;
+    max-width: 480px;
+  }
+  .page-header {
+    padding: 10px 16px;
+    font-size: .75rem;
+    font-weight: 700;
+    letter-spacing: .5px;
+    text-transform: uppercase;
+  }
+  .page-body { padding: 14px 16px; }
+  .page-section {
+    margin-bottom: 10px;
+    font-size: .8rem;
+  }
+  .page-section-label {
+    font-size: .65rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-muted);
+    margin-bottom: 4px;
+  }
+  .page-elements {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .el-chip {
+    padding: 3px 10px;
+    border-radius: 6px;
+    font-size: .72rem;
+    border: 1px solid;
+    font-family: monospace;
+  }
+
+  .flow-branches {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+  }
+  .branch {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+  }
+  .branch-arrow {
+    width: 2px;
+    height: 24px;
+    background: linear-gradient(to bottom, var(--purple), transparent);
+  }
+  .branch-label {
+    font-size: .72rem;
+    color: var(--text-muted);
+    text-align: center;
+    max-width: 120px;
+  }
+  .branch-dest {
+    padding: 7px 14px;
+    border-radius: 8px;
+    font-size: .78rem;
+    font-weight: 600;
+    text-align: center;
+  }
+
+  /* ── Tags ── */
+  .tag-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .tag-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 14px;
+    border-radius: 8px;
+    font-size: .8rem;
+    font-weight: 600;
+    border: 1px solid;
+    cursor: default;
+    transition: transform .15s;
+  }
+  .tag-badge:hover { transform: scale(1.05); }
+
+  /* ── Tabs ── */
+  .tabs { display: flex; gap: 4px; margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 0; }
+  .tab-btn {
+    padding: 9px 18px;
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    color: var(--text-muted);
+    font-size: .84rem;
+    cursor: pointer;
+    transition: all .2s;
+    margin-bottom: -1px;
+  }
+  .tab-btn.active, .tab-btn:hover { color: var(--purple-light); border-bottom-color: var(--purple); }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  /* ── Journey Steps ── */
+  .journey {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    position: relative;
+    padding-left: 28px;
+  }
+  .journey::before {
+    content: '';
+    position: absolute;
+    left: 10px; top: 8px; bottom: 8px;
+    width: 2px;
+    background: linear-gradient(to bottom, var(--purple), var(--pink), transparent);
+  }
+  .journey-step {
+    position: relative;
+    padding: 12px 0 12px 20px;
+  }
+  .journey-step::before {
+    content: '';
+    position: absolute;
+    left: -18px; top: 18px;
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    background: var(--purple);
+    border: 2px solid var(--bg);
+    box-shadow: 0 0 8px rgba(124,58,237,.6);
+  }
+  .journey-step-title {
+    font-size: .88rem;
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 2px;
+  }
+  .journey-step-desc { font-size: .78rem; color: var(--text-muted); }
+  .journey-step-result {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    margin-top: 4px;
+    padding: 2px 10px;
+    border-radius: 999px;
+    font-size: .7rem;
+    font-weight: 600;
+  }
+
+  /* ── Command Groups ── */
+  .cmd-group { margin-bottom: 20px; }
+  .cmd-group-title {
+    font-size: .78rem;
+    font-weight: 700;
+    color: var(--purple-light);
+    letter-spacing: .5px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .cmd-group-title::before {
+    content: '';
+    display: block;
+    width: 16px; height: 2px;
+    background: var(--purple);
+    border-radius: 1px;
+  }
+
+  /* ── Table ── */
+  table { width: 100%; border-collapse: collapse; font-size: .84rem; }
+  th {
+    padding: 10px 14px;
+    text-align: left;
+    background: rgba(124,58,237,.15);
+    color: var(--purple-light);
+    font-size: .72rem;
+    font-weight: 700;
+    letter-spacing: .5px;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--border);
+  }
+  td {
+    padding: 10px 14px;
+    border-bottom: 1px solid rgba(61,45,110,.4);
+    color: var(--text);
+  }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(124,58,237,.06); }
+  .mono { font-family: monospace; font-size: .8rem; color: var(--purple-light); }
+
+  /* ── Conventions ── */
+  .convention-list { display: flex; flex-direction: column; gap: 12px; }
+  .convention {
+    display: flex;
+    gap: 14px;
+    padding: 14px 18px;
+    background: rgba(255,255,255,.03);
+    border-left: 3px solid var(--purple);
+    border-radius: 0 8px 8px 0;
+  }
+  .convention-icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 1px; }
+  .convention-title { font-size: .88rem; font-weight: 600; color: #fff; margin-bottom: 2px; }
+  .convention-desc { font-size: .8rem; color: var(--text-muted); }
+
+  /* ── Data-driven flow ── */
+  .csv-table {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    font-family: monospace;
+    font-size: .82rem;
+    margin: 16px auto;
+    max-width: 340px;
+  }
+  .csv-header {
+    background: rgba(124,58,237,.25);
+    padding: 8px 16px;
+    color: var(--purple-light);
+    font-weight: 700;
+    border-bottom: 1px solid var(--border);
+  }
+  .csv-row {
+    padding: 7px 16px;
+    border-bottom: 1px solid rgba(61,45,110,.3);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--text);
+    transition: background .15s;
+  }
+  .csv-row:last-child { border-bottom: none; }
+  .csv-row:hover { background: rgba(124,58,237,.08); }
+  .csv-num {
+    width: 20px;
+    font-size: .7rem;
+    color: var(--text-muted);
+    flex-shrink: 0;
+  }
+  .csv-kw { flex: 1; }
+  .csv-pass {
+    font-size: .7rem;
+    color: var(--green);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  /* ── Output structure ── */
+  .output-tree {
+    font-family: monospace;
+    font-size: .84rem;
+    line-height: 2;
+    padding: 20px 24px;
+    background: #0d0a1a;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+  }
+  .tree-dir { color: var(--purple-light); font-weight: 700; }
+  .tree-file { color: var(--text); }
+  .tree-comment { color: var(--text-muted); }
+
+  /* ── Alert / Note ── */
+  .note {
+    display: flex;
+    gap: 12px;
+    padding: 14px 18px;
+    border-radius: 10px;
+    margin: 16px 0;
+    font-size: .84rem;
+  }
+  .note-warn { background: rgba(245,158,11,.08); border: 1px solid rgba(245,158,11,.25); }
+  .note-info { background: rgba(59,130,246,.08); border: 1px solid rgba(59,130,246,.25); }
+  .note-success { background: rgba(16,185,129,.08); border: 1px solid rgba(16,185,129,.25); }
+  .note-icon { font-size: 1.1rem; flex-shrink: 0; }
+  .note-title { font-weight: 700; margin-bottom: 3px; }
+  .note-warn .note-title { color: var(--orange); }
+  .note-info .note-title { color: var(--blue); }
+  .note-success .note-title { color: var(--green); }
+
+  /* ── Scrollbar main ── */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+  /* ── Mobile hamburger ── */
+  #hamburger {
+    display: none;
+    position: fixed;
+    top: 14px; left: 14px;
+    z-index: 200;
+    background: var(--card2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 10px;
+    cursor: pointer;
+    color: var(--purple-light);
+    font-size: 1.1rem;
+  }
+
+  @media (max-width: 900px) {
+    #sidebar { transform: translateX(-100%); }
+    #sidebar.open { transform: translateX(0); }
+    #main { margin-left: 0; padding: 60px 20px 80px; }
+    .hero h1 { font-size: 2rem; }
+    .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+    #hamburger { display: flex; }
+  }
+
+  /* ── Animations ── */
+  @keyframes fadeUp {
+    from { opacity:0; transform:translateY(20px); }
+    to   { opacity:1; transform:translateY(0); }
+  }
+  .fade-up { animation: fadeUp .5s ease both; }
+
+  @keyframes pulse-glow {
+    0%, 100% { box-shadow: 0 0 6px rgba(124,58,237,.3); }
+    50%       { box-shadow: 0 0 18px rgba(124,58,237,.7); }
+  }
+  .pulse { animation: pulse-glow 2s ease-in-out infinite; }
+
+  /* ── Divider ── */
+  .divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border), transparent);
+    margin: 48px 0 0;
+  }
+</style>
+</head>
+<body>
+
+<!-- Hamburger -->
+<button id="hamburger" onclick="toggleSidebar()">☰</button>
+
+<!-- Sidebar -->
+<nav id="sidebar">
+  <div class="sidebar-logo">
+    <h2>💄 Purplle Test Framework</h2>
+    <p>Robot Framework Automation Suite</p>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-label">Overview</div>
+    <a class="nav-link active" href="#overview"><span class="icon">🏠</span>Introduction</a>
+    <a class="nav-link" href="#techstack"><span class="icon">⚙️</span>Tech Stack</a>
+    <a class="nav-link" href="#structure"><span class="icon">📁</span>Project Structure</a>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-label">Architecture</div>
+    <a class="nav-link" href="#architecture"><span class="icon">🏗️</span>Dependency Flow</a>
+    <a class="nav-link" href="#config"><span class="icon">🔧</span>Configuration</a>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-label">Test Layers</div>
+    <a class="nav-link" href="#layers"><span class="icon">🧪</span>Layer Overview</a>
+    <a class="nav-link" href="#functional"><span class="icon">🔵</span>Functional Tests</a>
+    <a class="nav-link" href="#integration"><span class="icon">🟣</span>Integration Tests</a>
+    <a class="nav-link" href="#e2e"><span class="icon">🌸</span>E2E Journeys</a>
+    <a class="nav-link" href="#api"><span class="icon">🟢</span>API Tests</a>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-label">App Flows</div>
+    <a class="nav-link" href="#appflows"><span class="icon">🌐</span>Homepage</a>
+    <a class="nav-link" href="#loginflow"><span class="icon">🔐</span>Login (OTP)</a>
+    <a class="nav-link" href="#searchflow"><span class="icon">🔍</span>Search</a>
+    <a class="nav-link" href="#plpflow"><span class="icon">📋</span>Product Listing</a>
+    <a class="nav-link" href="#pdpflow"><span class="icon">🛍️</span>Product Detail</a>
+    <a class="nav-link" href="#cartflow"><span class="icon">🛒</span>Cart</a>
+    <a class="nav-link" href="#wishlistflow"><span class="icon">❤️</span>Wishlist</a>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-label">Execution</div>
+    <a class="nav-link" href="#running"><span class="icon">▶️</span>Running Tests</a>
+    <a class="nav-link" href="#datadriven"><span class="icon">📊</span>Data-Driven</a>
+    <a class="nav-link" href="#outputs"><span class="icon">📄</span>Outputs</a>
+    <a class="nav-link" href="#tags"><span class="icon">🏷️</span>Tag Reference</a>
+    <a class="nav-link" href="#conventions"><span class="icon">📐</span>Conventions</a>
+  </div>
+</nav>
+
+<!-- Main Content -->
+<main id="main">
+
+  <!-- Hero -->
+  <div class="hero fade-up" id="overview">
+    <div class="hero-badge">🤖 Robot Framework 7.4.2 &nbsp;·&nbsp; Selenium + Requests + DataDriver</div>
+    <h1>Purplle.com<br>Test Automation Framework</h1>
+    <p>A comprehensive Robot Framework suite covering UI automation, API testing, and data-driven test generation for India's leading online beauty store.</p>
+    <div class="hero-stats">
+      <div class="stat"><div class="stat-num">25+</div><div class="stat-label">Test Files</div></div>
+      <div class="stat"><div class="stat-num">4</div><div class="stat-label">Test Layers</div></div>
+      <div class="stat"><div class="stat-num">7</div><div class="stat-label">App Modules</div></div>
+      <div class="stat"><div class="stat-num">8</div><div class="stat-label">CSV Keywords</div></div>
+      <div class="stat"><div class="stat-num">16+</div><div class="stat-label">Tags</div></div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Tech Stack -->
+  <section id="techstack">
+    <div class="section-header">
+      <div class="section-icon" style="background:rgba(124,58,237,.2)">⚙️</div>
+      <div>
+        <h2>Tech Stack</h2>
+        <p>Libraries and tools powering the framework</p>
+      </div>
+    </div>
+    <div class="grid-4">
+      <div class="tech-card">
+        <div class="tech-icon">🤖</div>
+        <div class="tech-name">Robot Framework</div>
+        <div class="tech-version">7.4.2</div>
+        <div class="tech-desc">Core test framework and runner</div>
+      </div>
+      <div class="tech-card">
+        <div class="tech-icon">🌐</div>
+        <div class="tech-name">SeleniumLibrary</div>
+        <div class="tech-version">6.8.0</div>
+        <div class="tech-desc">Browser automation via WebDriver</div>
+      </div>
+      <div class="tech-card">
+        <div class="tech-icon">📡</div>
+        <div class="tech-name">RequestsLibrary</div>
+        <div class="tech-version">0.9.7</div>
+        <div class="tech-desc">HTTP / REST API testing</div>
+      </div>
+      <div class="tech-card">
+        <div class="tech-icon">📊</div>
+        <div class="tech-name">DataDriver</div>
+        <div class="tech-version">1.11.2</div>
+        <div class="tech-desc">CSV-driven test generation</div>
+      </div>
+      <div class="tech-card">
+        <div class="tech-icon">⚡</div>
+        <div class="tech-name">pabot</div>
+        <div class="tech-version">5.2.2</div>
+        <div class="tech-desc">Parallel suite execution</div>
+      </div>
+      <div class="tech-card">
+        <div class="tech-icon">🐍</div>
+        <div class="tech-name">Python</div>
+        <div class="tech-version">3.8+</div>
+        <div class="tech-desc">Runtime environment</div>
+      </div>
+      <div class="tech-card">
+        <div class="tech-icon">🟡</div>
+        <div class="tech-name">Chrome</div>
+        <div class="tech-version">Latest</div>
+        <div class="tech-desc">Default browser (auto-managed)</div>
+      </div>
+      <div class="tech-card">
+        <div class="tech-icon">📦</div>
+        <div class="tech-name">webdriver-manager</div>
+        <div class="tech-version">Auto</div>
+        <div class="tech-desc">Automatic ChromeDriver setup</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- Project Structure -->
+  <section id="structure">
+    <div class="section-header">
+      <div class="section-icon" style="background:rgba(59,130,246,.2)">📁</div>
+      <div>
+        <h2>Project Structure</h2>
+        <p>Directory layout and file responsibilities</p>
+      </div>
+    </div>
+    <div class="output-tree">
+<span class="tree-dir">purplle_robot_framework/</span>
+│
+├── <span class="tree-dir">config/</span>
+│   ├── <span class="tree-file">config.yaml</span>        <span class="tree-comment">← Single source of truth: URLs, browser, API endpoints</span>
+│   └── <span class="tree-file">readme.py</span>          <span class="tree-comment">← RF Python library — exposes config.yaml as keywords</span>
+│
+├── <span class="tree-dir">locators/</span>               <span class="tree-comment">← Element locators as RF variables (one file per page)</span>
+│   ├── <span class="tree-file">home_page_locators.robot</span>
+│   ├── <span class="tree-file">login_page_locators.robot</span>
+│   ├── <span class="tree-file">search_page_locators.robot</span>
+│   ├── <span class="tree-file">product_listing_page_locators.robot</span>
+│   ├── <span class="tree-file">product_detail_page_locators.robot</span>
+│   ├── <span class="tree-file">cart_page_locators.robot</span>
+│   └── <span class="tree-file">wishlist_page_locators.robot</span>
+│
+├── <span class="tree-dir">resources/</span>
+│   ├── <span class="tree-file">common_resources.robot</span>  <span class="tree-comment">← Browser lifecycle; BASE_URL, TIMEOUT; Open/Close Application</span>
+│   └── <span class="tree-dir">pages/</span>                <span class="tree-comment">← Page Object keywords (one file per page/module)</span>
+│       ├── <span class="tree-file">home_page.robot</span>
+│       ├── <span class="tree-file">login_page.robot</span>
+│       ├── <span class="tree-file">search_page.robot</span>
+│       ├── <span class="tree-file">product_listing_page.robot</span>
+│       ├── <span class="tree-file">product_detail_page.robot</span>
+│       ├── <span class="tree-file">cart_page.robot</span>
+│       └── <span class="tree-file">wishlist_page.robot</span>
+│
+├── <span class="tree-dir">testdata/</span>
+│   └── <span class="tree-file">purplle_search_keywords.csv</span>  <span class="tree-comment">← 8 keywords for DataDriver tests</span>
+│
+├── <span class="tree-dir">tests/</span>
+│   ├── <span class="tree-dir">functional/</span>          <span class="tree-comment">← Single-feature tests</span>
+│   ├── <span class="tree-dir">integration/</span>         <span class="tree-comment">← Multi-module flow tests</span>
+│   ├── <span class="tree-dir">e2e/</span>                 <span class="tree-comment">← Full user journey tests</span>
+│   └── <span class="tree-dir">api/</span>                 <span class="tree-comment">← HTTP-level tests (no browser)</span>
+│
+├── <span class="tree-dir">outputs/</span>               <span class="tree-comment">← Generated at runtime (gitignored)</span>
+├── <span class="tree-file">requirements.txt</span>
+├── <span class="tree-file">CLAUDE.md</span>
+└── <span class="tree-file">README.md</span>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- Architecture Flow -->
+  <section id="architecture">
+    <div class="section-header">
+      <div class="section-icon" style="background:rgba(236,72,153,.2)">🏗️</div>
+      <div>
+        <h2>Architecture &amp; Dependency Flow</h2>
+        <p>How layers connect from config to browser</p>
+      </div>
+    </div>
+    <div class="arch-flow">
+
+      <div class="flow-node pulse">
+        <div class="flow-node-badge" style="background:rgba(245,158,11,.2);color:var(--orange);border:1px solid rgba(245,158,11,.3)">CONFIG</div>
+        <div class="flow-node-title">config/config.yaml</div>
+        <div class="flow-node-sub">Browser settings · Base URL · API endpoints · Timeouts · Test credentials</div>
+      </div>
+
+      <div class="flow-arrow"><div class="arrow-down"></div><span>read by</span><div class="arrow-down"></div></div>
+
+      <div class="flow-node">
+        <div class="flow-node-badge" style="background:rgba(59,130,246,.2);color:var(--blue);border:1px solid rgba(59,130,246,.3)">PYTHON LIB</div>
+        <div class="flow-node-title">config/readme.py</div>
+        <div class="flow-node-sub">Python RF Library · exposes Get Base Url · Get Timeout · Get Test Credential</div>
+      </div>
+
+      <div class="flow-arrow"><div class="arrow-down"></div><span>imported by</span><div class="arrow-down"></div></div>
+
+      <div class="flow-node">
+        <div class="flow-node-badge" style="background:rgba(6,182,212,.2);color:var(--cyan);border:1px solid rgba(6,182,212,.3)">COMMON</div>
+        <div class="flow-node-title">resources/common_resources.robot</div>
+        <div class="flow-node-sub">${BASE_URL} · ${BROWSER} · ${TIMEOUT} · Open Application · Close Application · Title Should Contain</div>
+      </div>
+
+      <div class="flow-arrow"><div class="arrow-down"></div><span>Resource'd by</span><div class="arrow-down"></div></div>
+
+      <div class="flow-node">
+        <div class="flow-node-badge" style="background:rgba(124,58,237,.2);color:var(--purple-light);border:1px solid rgba(124,58,237,.3)">LOCATORS</div>
+        <div class="flow-node-title">locators/*_locators.robot</div>
+        <div class="flow-node-sub">${SEARCH_INPUT} · ${ADD_TO_BAG_BTN} · ${PRODUCT_CARD} — never inline in keywords</div>
+      </div>
+
+      <div class="flow-arrow"><div class="arrow-down"></div><span>Resource'd by</span><div class="arrow-down"></div></div>
+
+      <div class="flow-node">
+        <div class="flow-node-badge" style="background:rgba(236,72,153,.2);color:var(--pink);border:1px solid rgba(236,72,153,.3)">PAGE OBJECTS</div>
+        <div class="flow-node-title">resources/pages/*.robot</div>
+        <div class="flow-node-sub">Search For · Click First Product · Verify PDP Loaded · Add To Bag — reusable keywords</div>
+      </div>
+
+      <div class="flow-arrow"><div class="arrow-down"></div><span>Resource'd by</span><div class="arrow-down"></div></div>
+
+      <div class="flow-node" style="border-color:var(--purple);background:rgba(124,58,237,.1)">
+        <div class="flow-node-title" style="text-align:center">tests/</div>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:10px;text-align:center">
+          <div style="padding:8px;background:rgba(59,130,246,.1);border-radius:8px;border:1px solid rgba(59,130,246,.25);font-size:.75rem;color:var(--blue)">🔵 functional/<br><span style="color:var(--text-muted)">single page</span></div>
+          <div style="padding:8px;background:rgba(124,58,237,.1);border-radius:8px;border:1px solid rgba(124,58,237,.25);font-size:.75rem;color:var(--purple-light)">🟣 integration/<br><span style="color:var(--text-muted)">A→B flow</span></div>
+          <div style="padding:8px;background:rgba(236,72,153,.1);border-radius:8px;border:1px solid rgba(236,72,153,.25);font-size:.75rem;color:var(--pink)">🌸 e2e/<br><span style="color:var(--text-muted)">full journey</span></div>
+          <div style="padding:8px;background:rgba(16,185,129,.1);border-radius:8px;border:1px solid rgba(16,185,129,.25);font-size:.75rem;color:var(--green)">🟢 api/<br><span style="color:var(--text-muted)">HTTP only</span></div>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:40px;justify-content:center;margin-top:0">
+        <div>
+          <div class="flow-arrow"><div class="arrow-down"></div><span>executes via</span><div class="arrow-down"></div></div>
+          <div class="flow-node" style="max-width:260px;text-align:center">
+            <div class="flow-node-badge" style="background:rgba(59,130,246,.2);color:var(--blue);border:1px solid rgba(59,130,246,.3)">UI</div>
+            <div class="flow-node-title">SeleniumLibrary</div>
+            <div class="flow-node-sub">WebDriver commands → Chrome → purplle.com</div>
+          </div>
+        </div>
+        <div>
+          <div class="flow-arrow"><div class="arrow-down"></div><span>executes via</span><div class="arrow-down"></div></div>
+          <div class="flow-node" style="max-width:260px;text-align:center">
+            <div class="flow-node-badge" style="background:rgba(16,185,129,.2);color:var(--green);border:1px solid rgba(16,185,129,.3)">API</div>
+            <div class="flow-node-title">RequestsLibrary</div>
+            <div class="flow-node-sub">HTTP GET/POST → purplle.com REST API</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="flow-arrow"><div class="arrow-down"></div><span>results written to</span><div class="arrow-down"></div></div>
+
+      <div class="flow-node" style="background:rgba(16,185,129,.08);border-color:rgba(16,185,129,.3)">
+        <div class="flow-node-title" style="text-align:center;color:var(--green)">outputs/</div>
+        <div style="display:flex;justify-content:center;gap:16px;margin-top:8px;font-size:.78rem;color:var(--text-muted)">
+          <span>📄 log.html</span>
+          <span>📊 report.html</span>
+          <span>🗂️ output.xml</span>
+          <span>📸 screenshots/</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- Configuration -->
+  <section id="config">
+    <div class="section-header">
+      <div class="section-icon" style="background:rgba(245,158,11,.2)">🔧</div>
+      <div>
+        <h2>Configuration</h2>
+        <p>config/config.yaml — single source of truth</p>
+      </div>
+    </div>
+    <div class="grid-2">
+      <div>
+        <div class="code-block">
+          <div class="code-header"><span class="code-lang">YAML — config/config.yaml</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+          <pre><span class="cmt"># Browser settings</span>
+<span class="kw">browser:</span>
+  <span class="kw">name:</span> <span class="str">chrome</span>       <span class="cmt"># firefox, edge, etc.</span>
+  <span class="kw">headless:</span> <span class="str">false</span>    <span class="cmt"># true for CI</span>
+  <span class="kw">timeout:</span> <span class="str">15</span>
+  <span class="kw">implicit_wait:</span> <span class="str">10</span>
+
+<span class="kw">base_url:</span> <span class="str">https://www.purplle.com</span>
+
+<span class="kw">urls:</span>
+  <span class="kw">wishlist:</span> <span class="str">https://www.purplle.com/profile/myfavourites</span>
+  <span class="kw">cart:</span>     <span class="str">https://www.purplle.com/cart</span>
+
+<span class="kw">api:</span>
+  <span class="kw">endpoints:</span>
+    <span class="kw">search:</span>   <span class="str">/api/search</span>
+    <span class="kw">products:</span> <span class="str">/api/products</span></pre>
+        </div>
+      </div>
+      <div>
+        <div class="code-block">
+          <div class="code-header"><span class="code-lang">Robot Framework — using config</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+          <pre><span class="kw">*** Settings ***</span>
+<span class="kw">Library</span>    ../../config/readme.py
+
+<span class="kw">*** Test Cases ***</span>
+Example Test
+    <span class="var">${url}=</span>     <span class="cmd">Get Base Url</span>
+    <span class="var">${timeout}=</span> <span class="cmd">Get Timeout</span>
+    <span class="var">${mobile}=</span>  <span class="cmd">Get Test Credential</span>  <span class="str">mobile</span>
+    <span class="cmd">Open Application</span>
+    <span class="cmt"># URL, timeout, credentials all from config.yaml</span>
+    <span class="cmt"># No hardcoded values in test files</span></pre>
+        </div>
+        <div class="note note-info">
+          <span class="note-icon">ℹ️</span>
+          <div>
+            <div class="note-title">Edit config, not tests</div>
+            Change browser, timeouts, URLs or test data in <code>config.yaml</code> — no test file changes needed.
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- Test Layers -->
+  <section id="layers">
+    <div class="section-header">
+      <div class="section-icon" style="background:rgba(236,72,153,.2)">🧪</div>
+      <div>
+        <h2>Test Layers</h2>
+        <p>Four distinct layers with clear responsibilities</p>
+      </div>
+    </div>
+    <div class="grid-2">
+      <div class="layer-card layer-func" id="functional">
+        <div class="layer-header">
+          <div class="layer-icon" style="background:rgba(59,130,246,.15)">🔵</div>
+          <div>
+            <div class="layer-name">Functional Tests</div>
+            <div class="layer-path">tests/functional/</div>
+          </div>
+        </div>
+        <div class="layer-desc">Tests a single module in isolation. Each file maps 1-to-1 with a page or feature. Imports 1–2 page resources.</div>
+        <div class="layer-tests">
+          <div class="test-item">test_homepage.robot — Title, header, nav links</div>
+          <div class="test-item">test_login.robot — Form presence, OTP validation</div>
+          <div class="test-item">test_search.robot — Valid/invalid searches, suggestions</div>
+          <div class="test-item">test_product_listing.robot — Products, sort, filters</div>
+          <div class="test-item">test_product_detail.robot — Name, price, Add to Bag</div>
+          <div class="test-item">test_cart.robot — Empty state, cart icon</div>
+          <div class="test-item">test_wishlist.robot — Empty state, /profile/myfavourites</div>
+          <div class="test-item">test_navigation.robot — All nav links, logo, back</div>
+          <div class="test-item">test_datadriven_search.robot — 8 CSV keywords</div>
+        </div>
+      </div>
+
+      <div class="layer-card layer-int" id="integration">
+        <div class="layer-header">
+          <div class="layer-icon" style="background:rgba(124,58,237,.15)">🟣</div>
+          <div>
+            <div class="layer-name">Integration Tests</div>
+            <div class="layer-path">tests/integration/</div>
+          </div>
+        </div>
+        <div class="layer-desc">Tests how two or more modules work together in a single browser flow. Imports 2+ page resources.</div>
+        <div class="layer-tests">
+          <div class="test-item">test_search_to_pdp_flow — Search → PDP → Back</div>
+          <div class="test-item">test_plp_to_pdp_flow — Category PLP → PDP → Brand</div>
+          <div class="test-item">test_homepage_to_category_flow — Home nav → PLP → Cart</div>
+          <div class="test-item">test_search_filter_flow — Search → Sort → Filter → PDP</div>
+        </div>
+      </div>
+
+      <div class="layer-card layer-e2e" id="e2e">
+        <div class="layer-header">
+          <div class="layer-icon" style="background:rgba(236,72,153,.15)">🌸</div>
+          <div>
+            <div class="layer-name">E2E Journey Tests</div>
+            <div class="layer-path">tests/e2e/</div>
+          </div>
+        </div>
+        <div class="layer-desc">Complete realistic user journeys from start to finish. Imports all relevant page resources.</div>
+        <div class="layer-tests">
+          <div class="test-item">test_guest_browse_journey — Home → Category → PDP → Cart → Wishlist</div>
+          <div class="test-item">test_search_and_view_journey — Search → Sort → PDP → Compare</div>
+          <div class="test-item">test_category_navigation_journey — Multi-category → Filter → Search → Brands</div>
+        </div>
+      </div>
+
+      <div class="layer-card layer-api" id="api">
+        <div class="layer-header">
+          <div class="layer-icon" style="background:rgba(16,185,129,.15)">🟢</div>
+          <div>
+            <div class="layer-name">API Tests</div>
+            <div class="layer-path">tests/api/</div>
+          </div>
+        </div>
+        <div class="layer-desc">HTTP-level behaviour using RequestsLibrary. No browser needed. Fastest layer.</div>
+        <div class="layer-tests">
+          <div class="test-item">test_search_api — Status codes, JSON response, no 5xx</div>
+          <div class="test-item">test_product_api — Products, categories, HTTPS enforcement, response time</div>
+        </div>
+        <div class="note note-warn" style="margin-top:12px;font-size:.78rem">
+          <span class="note-icon">⚠️</span>
+          <div>API endpoint paths are best-guess patterns. Verify from Chrome DevTools → Network tab before running.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- App Flows -->
+  <section id="appflows">
+    <div class="section-header">
+      <div class="section-icon" style="background:rgba(6,182,212,.2)">🌐</div>
+      <div>
+        <h2>Application Module Flows</h2>
+        <p>Visual flow diagrams for each page/feature under test</p>
+      </div>
+    </div>
+
+    <!-- Homepage Flow -->
+    <div class="app-flow">
+      <h3><span style="background:rgba(59,130,246,.15);padding:4px 10px;border-radius:6px;font-size:.8rem;color:var(--blue)">TC_FUNC_HOME</span> Homepage Flow</h3>
+      <div style="text-align:center;margin-bottom:16px;font-size:.84rem;color:var(--text-muted)">User opens <span style="color:var(--purple-light)">https://www.purplle.com</span></div>
+      <div class="page-box">
+        <div class="page-header" style="background:linear-gradient(135deg,rgba(124,58,237,.3),rgba(236,72,153,.2));color:#fff">
+          HOMEPAGE — purplle.com
+        </div>
+        <div class="page-body">
+          <div class="page-section">
+            <div class="page-section-label">Header</div>
+            <div class="page-elements">
+              <span class="el-chip" style="border-color:rgba(124,58,237,.4);color:var(--purple-light)">Logo</span>
+              <span class="el-chip" style="border-color:rgba(59,130,246,.4);color:var(--blue)">Search Bar</span>
+              <span class="el-chip" style="border-color:rgba(16,185,129,.4);color:var(--green)">Profile Icon</span>
+              <span class="el-chip" style="border-color:rgba(236,72,153,.4);color:var(--pink)">Cart 🛒</span>
+            </div>
+          </div>
+          <div class="page-section">
+            <div class="page-section-label">Navigation Bar</div>
+            <div class="page-elements">
+              <span class="el-chip" style="border-color:var(--border);color:var(--text-muted)">Makeup</span>
+              <span class="el-chip" style="border-color:var(--border);color:var(--text-muted)">Skincare</span>
+              <span class="el-chip" style="border-color:var(--border);color:var(--text-muted)">Hair</span>
+              <span class="el-chip" style="border-color:var(--border);color:var(--text-muted)">Brands</span>
+              <span class="el-chip" style="border-color:var(--border);color:var(--text-muted)">Offers</span>
+              <span class="el-chip" style="border-color:var(--border);color:var(--text-muted)">New</span>
+            </div>
+          </div>
+          <div class="page-section">
+            <div class="page-section-label">Content</div>
+            <div class="page-elements">
+              <span class="el-chip" style="border-color:var(--border);color:var(--text-muted)">Banner Slider</span>
+              <span class="el-chip" style="border-color:var(--border);color:var(--text-muted)">Category Tiles</span>
+              <span class="el-chip" style="border-color:var(--border);color:var(--text-muted)">Trending Products</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="flow-branches">
+        <div class="branch">
+          <div class="branch-arrow"></div>
+          <div class="branch-dest" style="background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.3);color:var(--blue)">Click Nav Link<br>→ PLP</div>
+        </div>
+        <div class="branch">
+          <div class="branch-arrow"></div>
+          <div class="branch-dest" style="background:rgba(124,58,237,.1);border:1px solid rgba(124,58,237,.3);color:var(--purple-light)">Type Search<br>→ Search Results</div>
+        </div>
+        <div class="branch">
+          <div class="branch-arrow"></div>
+          <div class="branch-dest" style="background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.3);color:var(--green)">Profile Icon<br>→ Login (guest)</div>
+        </div>
+        <div class="branch">
+          <div class="branch-arrow"></div>
+          <div class="branch-dest" style="background:rgba(236,72,153,.1);border:1px solid rgba(236,72,153,.3);color:var(--pink)">Cart 🛒<br>→ Cart Page</div>
+        </div>
+      </div>
+      <div style="margin-top:20px">
+        <table>
+          <tr><th>Element</th><th>XPath Locator</th></tr>
+          <tr><td>Search input</td><td class="mono">xpath=//input[@type='search']</td></tr>
+          <tr><td>Logo</td><td class="mono">xpath=//img[@alt='Purplle Logo']</td></tr>
+          <tr><td>Profile/Login</td><td class="mono">xpath=//a[contains(@href,'/profile')]</td></tr>
+          <tr><td>Cart icon</td><td class="mono">xpath=//a[contains(@href,'/cart')]</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <!-- Login Flow -->
+    <div class="app-flow" id="loginflow">
+      <h3><span style="background:rgba(245,158,11,.15);padding:4px 10px;border-radius:6px;font-size:.8rem;color:var(--orange)">TC_FUNC_LOGIN</span> Login Flow (OTP)</h3>
+      <div class="note note-warn">
+        <span class="note-icon">⚠️</span>
+        <div>
+          <div class="note-title">OTP Cannot Be Automated</div>
+          Tests cover form element presence and input validation only. Tests requiring login are tagged <code>requires_login</code> and skipped in CI.
+        </div>
+      </div>
+      <div style="display:flex;gap:20px;flex-wrap:wrap;justify-content:center;margin-top:16px">
+        <div class="page-box" style="max-width:300px">
+          <div class="page-header" style="background:rgba(245,158,11,.15);color:var(--orange)">LOGIN PAGE — /login</div>
+          <div class="page-body">
+            <div class="page-section">
+              <div class="page-section-label">Form Elements</div>
+              <div class="page-elements" style="flex-direction:column">
+                <span class="el-chip" style="border-color:rgba(124,58,237,.4);color:var(--purple-light)">[ Mobile Number Field ]</span>
+                <span class="el-chip" style="border-color:rgba(16,185,129,.4);color:var(--green)">[ GET OTP Button ]</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:12px;align-self:center">
+          <div style="padding:10px 16px;background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.3);border-radius:8px;font-size:.8rem;color:var(--green)">✓ Valid 10-digit → OTP sent → OTP field appears → VERIFY btn</div>
+          <div style="padding:10px 16px;background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);border-radius:8px;font-size:.8rem;color:var(--red)">✗ Invalid/empty → Error message shown</div>
+          <div style="padding:10px 16px;background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);border-radius:8px;font-size:.8rem;color:var(--red)">✗ Wrong OTP → "Invalid OTP" error</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Search Flow -->
+    <div class="app-flow" id="searchflow">
+      <h3><span style="background:rgba(124,58,237,.15);padding:4px 10px;border-radius:6px;font-size:.8rem;color:var(--purple-light)">TC_FUNC_SEARCH</span> Search Flow</h3>
+      <div class="note note-info">
+        <span class="note-icon">ℹ️</span>
+        <div>
+          <div class="note-title">Angular App — Direct URL Navigation</div>
+          Pressing Enter in the search bar does not trigger page navigation. The <code>Search For</code> keyword navigates directly to <code>/search?q=$&#123;keyword&#125;</code>.
+        </div>
+      </div>
+      <div style="margin-top:16px;text-align:center;font-size:.84rem;color:var(--text-muted)">Navigate to <span style="color:var(--purple-light)">https://www.purplle.com/search?q=lipstick</span></div>
+      <div style="height:20px;border-left:2px dashed var(--border);margin:8px auto;width:1px"></div>
+      <div class="page-box">
+        <div class="page-header" style="background:rgba(124,58,237,.2);color:var(--purple-light)">SEARCH RESULTS — /search?q=lipstick</div>
+        <div class="page-body">
+          <div class="page-section">
+            <div class="page-section-label">Sort Bar</div>
+            <div class="page-elements">
+              <span class="el-chip" style="border-color:var(--border);color:var(--text)">Popularity</span>
+              <span class="el-chip" style="border-color:var(--border);color:var(--text)">Price ↑</span>
+              <span class="el-chip" style="border-color:var(--border);color:var(--text)">Price ↓</span>
+            </div>
+          </div>
+          <div class="page-section">
+            <div class="page-section-label">Product Cards — class=d-block, href=/product/...</div>
+            <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:6px">
+              <div style="aspect-ratio:1;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:.7rem;color:var(--text-muted)">Img<br>Name<br>₹XXX</div>
+              <div style="aspect-ratio:1;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:.7rem;color:var(--text-muted)">Img<br>Name<br>₹XXX</div>
+              <div style="aspect-ratio:1;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:.7rem;color:var(--text-muted)">Img<br>Name<br>₹XXX</div>
+              <div style="aspect-ratio:1;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:.7rem;color:var(--text-muted)">Img<br>Name<br>₹XXX</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="flow-branches">
+        <div class="branch">
+          <div class="branch-arrow"></div>
+          <div class="branch-dest" style="background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.3);color:var(--green)">Click product card → PDP</div>
+        </div>
+        <div class="branch">
+          <div class="branch-arrow"></div>
+          <div class="branch-dest" style="background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);color:var(--red)">No results keyword → "No results found"</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PLP Flow -->
+    <div class="app-flow" id="plpflow">
+      <h3><span style="background:rgba(59,130,246,.15);padding:4px 10px;border-radius:6px;font-size:.8rem;color:var(--blue)">TC_FUNC_PLP</span> Product Listing Page (PLP)</h3>
+      <div style="display:grid;grid-template-columns:160px 1fr;gap:8px;max-width:480px;margin:16px auto;border:1px solid var(--border);border-radius:10px;overflow:hidden">
+        <div style="background:rgba(255,255,255,.03);padding:14px;border-right:1px solid var(--border)">
+          <div style="font-size:.68rem;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);margin-bottom:8px">FILTERS</div>
+          <div style="display:flex;flex-direction:column;gap:6px;font-size:.78rem;color:var(--text)">
+            <span>▶ Brand</span><span>▶ Price</span><span>▶ Rating</span><span>▶ Skin Type</span>
+          </div>
+        </div>
+        <div style="padding:14px">
+          <div style="font-size:.68rem;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);margin-bottom:8px">PRODUCT GRID · Sort: Popularity ▼</div>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px">
+            <div style="aspect-ratio:.8;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:6px"></div>
+            <div style="aspect-ratio:.8;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:6px"></div>
+            <div style="aspect-ratio:.8;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:6px"></div>
+          </div>
+        </div>
+      </div>
+      <div class="flow-branches">
+        <div class="branch">
+          <div class="branch-arrow"></div>
+          <div class="branch-dest" style="background:rgba(124,58,237,.1);border:1px solid rgba(124,58,237,.3);color:var(--purple-light)">Apply filter / sort → Products re-ordered</div>
+        </div>
+        <div class="branch">
+          <div class="branch-arrow"></div>
+          <div class="branch-dest" style="background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.3);color:var(--blue)">Click product card → PDP</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PDP Flow -->
+    <div class="app-flow" id="pdpflow">
+      <h3><span style="background:rgba(236,72,153,.15);padding:4px 10px;border-radius:6px;font-size:.8rem;color:var(--pink)">TC_FUNC_PDP</span> Product Detail Page (PDP)</h3>
+      <div class="note note-success">
+        <span class="note-icon">💡</span>
+        <div><div class="note-title">Purplle-Specific: "ADD TO BAG"</div>The site uses "ADD TO BAG" not "Add to Cart". All locators in product_detail_page_locators.robot reflect this.</div>
+      </div>
+      <div class="page-box" style="margin-top:16px">
+        <div class="page-header" style="background:linear-gradient(135deg,rgba(236,72,153,.25),rgba(124,58,237,.2));color:#fff">PRODUCT DETAIL PAGE — /product/&lt;slug&gt;</div>
+        <div class="page-body">
+          <div style="font-size:.88rem;font-weight:700;color:#fff;margin-bottom:8px">Product Name (h1)</div>
+          <div style="font-size:.78rem;color:var(--blue);margin-bottom:6px">Brand Name ──────► Brand PLP</div>
+          <div style="font-size:.78rem;color:var(--orange);margin-bottom:8px">★★★★☆ (142 Reviews)</div>
+          <div style="display:flex;gap:16px;margin-bottom:12px;font-size:.84rem">
+            <span style="color:var(--text-muted);text-decoration:line-through">MRP: ₹799</span>
+            <span style="color:var(--green);font-weight:700">Price: ₹599</span>
+            <span style="color:var(--orange);font-size:.78rem">25% OFF</span>
+          </div>
+          <div style="display:flex;gap:10px;margin-bottom:12px">
+            <div style="padding:8px 16px;border:1px solid var(--pink);border-radius:6px;color:var(--pink);font-size:.78rem">♡ Add to Wishlist</div>
+            <div style="padding:8px 16px;background:var(--pink);border-radius:6px;color:#fff;font-size:.78rem;font-weight:700">ADD TO BAG</div>
+          </div>
+          <div style="display:flex;gap:6px;font-size:.72rem">
+            <span class="el-chip" style="border-color:var(--border);color:var(--text-muted)">Description</span>
+            <span class="el-chip" style="border-color:var(--border);color:var(--text-muted)">Ingredients</span>
+            <span class="el-chip" style="border-color:var(--border);color:var(--text-muted)">How to Use</span>
+          </div>
+        </div>
+      </div>
+      <div class="flow-branches">
+        <div class="branch">
+          <div class="branch-arrow"></div>
+          <div class="branch-dest" style="background:rgba(236,72,153,.1);border:1px solid rgba(236,72,153,.3);color:var(--pink)">ADD TO BAG → (Guest) Login prompt<br>(Logged) Cart updated ✓</div>
+        </div>
+        <div class="branch">
+          <div class="branch-arrow"></div>
+          <div class="branch-dest" style="background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.3);color:var(--orange)">♡ Wishlist → (Guest) Login prompt<br>(Logged) Wishlist updated ✓</div>
+        </div>
+        <div class="branch">
+          <div class="branch-arrow"></div>
+          <div class="branch-dest" style="background:rgba(124,58,237,.1);border:1px solid rgba(124,58,237,.3);color:var(--purple-light)">Similar Product → New PDP</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Cart Flow -->
+    <div class="app-flow" id="cartflow">
+      <h3><span style="background:rgba(16,185,129,.15);padding:4px 10px;border-radius:6px;font-size:.8rem;color:var(--green)">TC_FUNC_CART</span> Cart Page</h3>
+      <div style="display:grid;grid-template-columns:1fr 200px;gap:8px;max-width:480px;margin:16px auto;border:1px solid var(--border);border-radius:10px;overflow:hidden">
+        <div style="padding:14px;border-right:1px solid var(--border)">
+          <div style="font-size:.68rem;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);margin-bottom:8px">CART ITEMS</div>
+          <div style="font-size:.8rem;color:var(--text);margin-bottom:6px">Product · Qty · Price</div>
+          <div style="font-size:.72rem;color:var(--text-muted)">[ Remove ]</div>
+          <div style="margin-top:12px;padding:8px 12px;background:rgba(239,68,68,.08);border:1px dashed rgba(239,68,68,.3);border-radius:6px;font-size:.75rem;color:var(--red)">Empty state: "Your bag is empty"<br>[Continue Shopping]</div>
+        </div>
+        <div style="padding:14px">
+          <div style="font-size:.68rem;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);margin-bottom:8px">ORDER SUMMARY</div>
+          <div style="font-size:.78rem;color:var(--text);line-height:2">Subtotal: ₹1,198<br>Discount: -₹200<br><b>Total: ₹998</b></div>
+          <div style="margin-top:8px;padding:6px 10px;background:var(--purple);border-radius:6px;text-align:center;font-size:.72rem;font-weight:700;color:#fff">PROCEED TO CHECKOUT</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Wishlist Flow -->
+    <div class="app-flow" id="wishlistflow">
+      <h3><span style="background:rgba(236,72,153,.15);padding:4px 10px;border-radius:6px;font-size:.8rem;color:var(--pink)">TC_FUNC_WISH</span> Wishlist Page</h3>
+      <div class="note note-info">
+        <span class="note-icon">ℹ️</span>
+        <div><div class="note-title">Actual URL is /profile/myfavourites</div>Not /wishlist. Config and all tests use this correct path.</div>
+      </div>
+      <div class="flow-branches" style="margin-top:16px">
+        <div class="branch">
+          <div class="branch-label" style="color:var(--text-muted);font-size:.8rem">Click ♡ (Not logged in)</div>
+          <div class="branch-arrow"></div>
+          <div class="branch-dest" style="background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.3);color:var(--orange)">Login prompt shown</div>
+        </div>
+        <div class="branch">
+          <div class="branch-label" style="color:var(--text-muted);font-size:.8rem">Click ♡ (Logged in)</div>
+          <div class="branch-arrow"></div>
+          <div class="branch-dest" style="background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.3);color:var(--green)">Item saved ✓ → /profile/myfavourites</div>
+        </div>
+      </div>
+      <div class="page-box" style="margin-top:16px;max-width:400px">
+        <div class="page-header" style="background:rgba(236,72,153,.15);color:var(--pink)">WISHLIST — /profile/myfavourites</div>
+        <div class="page-body">
+          <div style="font-size:.84rem;font-weight:700;color:#fff;margin-bottom:8px">My Wishlist (X items)</div>
+          <div style="font-size:.78rem;color:var(--text-muted);margin-bottom:8px">Product Image | Name | Price</div>
+          <div style="display:flex;gap:8px">
+            <span class="el-chip" style="border-color:rgba(124,58,237,.4);color:var(--purple-light)">[Move to Bag]</span>
+            <span class="el-chip" style="border-color:rgba(236,72,153,.4);color:var(--pink)">[♡ Remove]</span>
+          </div>
+          <div style="margin-top:10px;font-size:.75rem;color:var(--text-muted)">Empty state: "Your wishlist is empty"</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- Running Tests -->
+  <section id="running">
+    <div class="section-header">
+      <div class="section-icon" style="background:rgba(16,185,129,.2)">▶️</div>
+      <div>
+        <h2>Running Tests</h2>
+        <p>Commands to execute different test configurations</p>
+      </div>
+    </div>
+
+    <div class="tabs" id="run-tabs">
+      <button class="tab-btn active" onclick="switchTab('run', 'layers')">By Layer</button>
+      <button class="tab-btn" onclick="switchTab('run', 'file')">Single File</button>
+      <button class="tab-btn" onclick="switchTab('run', 'tags')">By Tag</button>
+      <button class="tab-btn" onclick="switchTab('run', 'special')">Special Modes</button>
+    </div>
+
+    <div id="run-layers" class="tab-panel active">
+      <div class="code-block">
+        <div class="code-header"><span class="code-lang">PowerShell / Bash</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+        <pre><span class="cmt"># Run an entire test layer</span>
+<span class="cmd">robot</span> <span class="flag">-d</span> <span class="path">outputs</span> tests/functional/
+<span class="cmd">robot</span> <span class="flag">-d</span> <span class="path">outputs</span> tests/integration/
+<span class="cmd">robot</span> <span class="flag">-d</span> <span class="path">outputs</span> tests/e2e/
+<span class="cmd">robot</span> <span class="flag">-d</span> <span class="path">outputs</span> tests/api/
+
+<span class="cmt"># Run ALL tests</span>
+<span class="cmd">robot</span> <span class="flag">-d</span> <span class="path">outputs</span> tests/
+
+<span class="cmt"># Run in parallel (pabot)</span>
+<span class="cmd">pabot</span> tests/
+<span class="cmd">pabot</span> <span class="flag">--processes 4</span> tests/functional/</pre>
+      </div>
+    </div>
+
+    <div id="run-file" class="tab-panel">
+      <div class="code-block">
+        <div class="code-header"><span class="code-lang">PowerShell / Bash</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+        <pre><span class="cmd">robot</span> <span class="flag">-d</span> <span class="path">outputs</span> tests/functional/test_homepage.robot
+<span class="cmd">robot</span> <span class="flag">-d</span> <span class="path">outputs</span> tests/functional/test_datadriven_search.robot
+<span class="cmd">robot</span> <span class="flag">-d</span> <span class="path">outputs</span> tests/functional/test_login.robot
+<span class="cmd">robot</span> <span class="flag">-d</span> <span class="path">outputs</span> tests/integration/test_search_to_pdp_flow.robot
+<span class="cmd">robot</span> <span class="flag">-d</span> <span class="path">outputs</span> tests/api/test_search_api.robot</pre>
+      </div>
+    </div>
+
+    <div id="run-tags" class="tab-panel">
+      <div class="code-block">
+        <div class="code-header"><span class="code-lang">PowerShell / Bash — use --include, not --tag</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+        <pre><span class="cmd">robot</span> <span class="flag">-d</span> <span class="path">outputs</span> <span class="flag">--include</span> smoke tests/          <span class="cmt"># Quick checks before deploy</span>
+<span class="cmd">robot</span> <span class="flag">-d</span> <span class="path">outputs</span> <span class="flag">--include</span> regression tests/      <span class="cmt"># Full regression suite</span>
+<span class="cmd">robot</span> <span class="flag">-d</span> <span class="path">outputs</span> <span class="flag">--include</span> functional tests/      <span class="cmt"># All functional tests</span>
+<span class="cmd">robot</span> <span class="flag">-d</span> <span class="path">outputs</span> <span class="flag">--include</span> integration tests/     <span class="cmt"># All integration tests</span>
+<span class="cmd">robot</span> <span class="flag">-d</span> <span class="path">outputs</span> <span class="flag">--include</span> e2e tests/             <span class="cmt"># All E2E journey tests</span>
+<span class="cmd">robot</span> <span class="flag">-d</span> <span class="path">outputs</span> <span class="flag">--include</span> api tests/             <span class="cmt"># All API tests</span>
+<span class="cmd">robot</span> <span class="flag">-d</span> <span class="path">outputs</span> <span class="flag">--include</span> data_driven tests/     <span class="cmt"># DataDriver CSV tests</span>
+<span class="cmd">robot</span> <span class="flag">-d</span> <span class="path">outputs</span> <span class="flag">--include</span> negative tests/         <span class="cmt"># Error-path tests</span></pre>
+      </div>
+    </div>
+
+    <div id="run-special" class="tab-panel">
+      <div class="code-block">
+        <div class="code-header"><span class="code-lang">Special Modes</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+        <pre><span class="cmt"># Headless mode — required on Linux CI / no display</span>
+<span class="cmd">robot</span> <span class="flag">-d</span> <span class="path">outputs</span> <span class="flag">-v HEADLESS:true</span> tests/
+<span class="cmd">robot</span> <span class="flag">-d</span> <span class="path">outputs</span> <span class="flag">-v HEADLESS:true</span> tests/functional/test_homepage.robot
+
+<span class="cmt"># Dry run — validate keywords without launching browser</span>
+<span class="cmd">robot</span> <span class="flag">--dryrun</span> tests/
+<span class="cmd">robot</span> <span class="flag">--dryrun</span> tests/functional/test_datadriven_search.robot
+
+<span class="cmt"># Install dependencies</span>
+<span class="cmd">pip install</span> <span class="flag">-r</span> requirements.txt
+
+<span class="cmt"># Open reports after run</span>
+<span class="cmd">start</span> outputs\report.html       <span class="cmt"># Windows</span>
+<span class="cmd">open</span>  outputs/report.html       <span class="cmt"># macOS</span>
+<span class="cmd">xdg-open</span> outputs/report.html  <span class="cmt"># Linux</span></pre>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- Data-Driven -->
+  <section id="datadriven">
+    <div class="section-header">
+      <div class="section-icon" style="background:rgba(6,182,212,.2)">📊</div>
+      <div>
+        <h2>Data-Driven Search Flow</h2>
+        <p>DataDriver generates 8 test cases from one CSV file</p>
+      </div>
+    </div>
+    <div class="grid-2">
+      <div>
+        <div class="csv-table">
+          <div class="csv-header">${search_keyword}  ← RF variable format required</div>
+          <div class="csv-row"><span class="csv-num">1</span><span class="csv-kw">lipstick</span><span class="csv-pass">✓ PASS</span></div>
+          <div class="csv-row"><span class="csv-num">2</span><span class="csv-kw">foundation</span><span class="csv-pass">✓ PASS</span></div>
+          <div class="csv-row"><span class="csv-num">3</span><span class="csv-kw">moisturizer</span><span class="csv-pass">✓ PASS</span></div>
+          <div class="csv-row"><span class="csv-num">4</span><span class="csv-kw">serum</span><span class="csv-pass">✓ PASS</span></div>
+          <div class="csv-row"><span class="csv-num">5</span><span class="csv-kw">shampoo</span><span class="csv-pass">✓ PASS</span></div>
+          <div class="csv-row"><span class="csv-num">6</span><span class="csv-kw">perfume</span><span class="csv-pass">✓ PASS</span></div>
+          <div class="csv-row"><span class="csv-num">7</span><span class="csv-kw">kajal</span><span class="csv-pass">✓ PASS</span></div>
+          <div class="csv-row"><span class="csv-num">8</span><span class="csv-kw">sunscreen</span><span class="csv-pass">✓ PASS</span></div>
+        </div>
+        <div style="margin-top:12px;padding:12px 16px;background:rgba(6,182,212,.08);border:1px solid rgba(6,182,212,.2);border-radius:8px;font-size:.8rem;color:var(--text-muted)">
+          DataDriver reads CSV → generates 8 test cases at runtime.<br>Each test navigates to <code style="color:var(--cyan)">/search?q=$&#123;keyword&#125;</code> and waits for product cards.
+        </div>
+      </div>
+      <div>
+        <div class="code-block">
+          <div class="code-header"><span class="code-lang">test_datadriven_search.robot (pattern)</span></div>
+          <pre><span class="kw">*** Settings ***</span>
+<span class="kw">Library</span>      DataDriver
+...          file=../../testdata/purplle_search_keywords.csv
+<span class="kw">Test Template</span>    Search And Verify By Keyword
+
+<span class="kw">*** Test Cases ***</span>
+Search For <span class="var">${search_keyword}</span>    <span class="cmt"># template row</span>
+
+<span class="kw">*** Keywords ***</span>
+Search And Verify By Keyword
+    [Arguments]    <span class="var">${keyword}</span>
+    <span class="cmd">Go To</span>    <span class="var">${BASE_URL}</span>/search?q=<span class="var">${keyword}</span>
+    <span class="cmd">Wait Until Element Is Visible</span>
+    ...    xpath=(//a[contains(@class,'d-block') and contains(@href,'/product/')])[1]
+    ...    timeout=<span class="var">${TIMEOUT}</span></pre>
+        </div>
+        <div class="note note-warn" style="margin-top:12px;font-size:.8rem">
+          <span class="note-icon">⚠️</span>
+          <div>
+            <div class="note-title">RF 7 Compatibility</div>
+            CSV column header must use <code>${variable}</code> syntax. Template keyword must be in the test file's own <code>*** Keywords ***</code> section — DataDriver cannot find keywords from imported Resource files at listener init time.
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- Outputs -->
+  <section id="outputs">
+    <div class="section-header">
+      <div class="section-icon" style="background:rgba(16,185,129,.2)">📄</div>
+      <div>
+        <h2>Output Folder Structure</h2>
+        <p>Generated artifacts after every test run</p>
+      </div>
+    </div>
+    <div class="grid-2">
+      <div class="output-tree">
+<span class="tree-dir">outputs/</span>
+├── <span class="tree-file">output.xml</span>    <span class="tree-comment">← machine-readable results (CI/CD)</span>
+├── <span class="tree-file">log.html</span>      <span class="tree-comment">← step-by-step detail with screenshots</span>
+├── <span class="tree-file">report.html</span>   <span class="tree-comment">← interactive summary (open in browser)</span>
+└── <span class="tree-dir">screenshots/</span>  <span class="tree-comment">← failure screenshots (auto-captured)</span>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div class="card" style="border-left:3px solid var(--green)">
+          <div style="font-size:.88rem;font-weight:700;color:var(--green);margin-bottom:4px">📊 report.html</div>
+          <div style="font-size:.8rem;color:var(--text-muted)">Interactive pass/fail summary. Open after a run to see overall test health at a glance.</div>
+        </div>
+        <div class="card" style="border-left:3px solid var(--blue)">
+          <div style="font-size:.88rem;font-weight:700;color:var(--blue);margin-bottom:4px">📋 log.html</div>
+          <div style="font-size:.8rem;color:var(--text-muted)">Step-by-step execution log with keyword nesting and inline failure screenshots.</div>
+        </div>
+        <div class="card" style="border-left:3px solid var(--orange)">
+          <div style="font-size:.88rem;font-weight:700;color:var(--orange);margin-bottom:4px">🗂️ output.xml</div>
+          <div style="font-size:.8rem;color:var(--text-muted)">Machine-readable results for CI/CD pipelines and custom report generation with rebot.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- Tags -->
+  <section id="tags">
+    <div class="section-header">
+      <div class="section-icon" style="background:rgba(236,72,153,.2)">🏷️</div>
+      <div>
+        <h2>Tag Reference</h2>
+        <p>Use --include &lt;tag&gt; to filter test execution</p>
+      </div>
+    </div>
+    <div class="tag-grid">
+      <span class="tag-badge" style="background:rgba(239,68,68,.1);border-color:rgba(239,68,68,.3);color:#f87171">🔴 smoke</span>
+      <span class="tag-badge" style="background:rgba(245,158,11,.1);border-color:rgba(245,158,11,.3);color:var(--orange)">🟠 regression</span>
+      <span class="tag-badge" style="background:rgba(59,130,246,.1);border-color:rgba(59,130,246,.3);color:var(--blue)">🔵 functional</span>
+      <span class="tag-badge" style="background:rgba(124,58,237,.1);border-color:rgba(124,58,237,.3);color:var(--purple-light)">🟣 integration</span>
+      <span class="tag-badge" style="background:rgba(236,72,153,.1);border-color:rgba(236,72,153,.3);color:var(--pink)">🌸 e2e</span>
+      <span class="tag-badge" style="background:rgba(16,185,129,.1);border-color:rgba(16,185,129,.3);color:var(--green)">🟢 api</span>
+      <span class="tag-badge" style="background:rgba(255,255,255,.05);border-color:var(--border);color:var(--text-muted)">negative</span>
+      <span class="tag-badge" style="background:rgba(255,255,255,.05);border-color:var(--border);color:var(--text-muted)">login</span>
+      <span class="tag-badge" style="background:rgba(255,255,255,.05);border-color:var(--border);color:var(--text-muted)">search</span>
+      <span class="tag-badge" style="background:rgba(255,255,255,.05);border-color:var(--border);color:var(--text-muted)">product_listing</span>
+      <span class="tag-badge" style="background:rgba(255,255,255,.05);border-color:var(--border);color:var(--text-muted)">product_detail</span>
+      <span class="tag-badge" style="background:rgba(255,255,255,.05);border-color:var(--border);color:var(--text-muted)">cart</span>
+      <span class="tag-badge" style="background:rgba(255,255,255,.05);border-color:var(--border);color:var(--text-muted)">wishlist</span>
+      <span class="tag-badge" style="background:rgba(255,255,255,.05);border-color:var(--border);color:var(--text-muted)">navigation</span>
+      <span class="tag-badge" style="background:rgba(6,182,212,.1);border-color:rgba(6,182,212,.3);color:var(--cyan)">data_driven</span>
+      <span class="tag-badge" style="background:rgba(245,158,11,.1);border-color:rgba(245,158,11,.3);color:var(--orange)">performance</span>
+      <span class="tag-badge" style="background:rgba(239,68,68,.1);border-color:rgba(239,68,68,.3);color:#f87171">security</span>
+    </div>
+  </section>
+
+  <div class="divider"></div>
+
+  <!-- Conventions -->
+  <section id="conventions">
+    <div class="section-header">
+      <div class="section-icon" style="background:rgba(124,58,237,.2)">📐</div>
+      <div>
+        <h2>Key Conventions</h2>
+        <p>Rules that keep the framework consistent and maintainable</p>
+      </div>
+    </div>
+    <div class="convention-list">
+      <div class="convention">
+        <span class="convention-icon">📁</span>
+        <div>
+          <div class="convention-title">Locators stay in locators/</div>
+          <div class="convention-desc">Always go in <code>locators/*_locators.robot</code> — never inline in keywords or test cases. Keeps test files readable and locators centralized.</div>
+        </div>
+      </div>
+      <div class="convention">
+        <span class="convention-icon">⏱️</span>
+        <div>
+          <div class="convention-title">Wait Until Element Is Visible — never Sleep</div>
+          <div class="convention-desc">Use <code>Wait Until Element Is Visible</code> with explicit timeout (15s default). <code>Sleep</code> is fragile — it either wastes time or fails on slow networks.</div>
+        </div>
+      </div>
+      <div class="convention">
+        <span class="convention-icon">🏷️</span>
+        <div>
+          <div class="convention-title">Test ID Format: TC_&lt;LAYER&gt;_&lt;MODULE&gt;_&lt;NN&gt;</div>
+          <div class="convention-desc">e.g. <code>TC_FUNC_HOME_01</code>, <code>TC_INT_FILTER_03</code>, <code>TC_E2E_GUEST_02</code>, <code>TC_API_SEARCH_06</code></div>
+        </div>
+      </div>
+      <div class="convention">
+        <span class="convention-icon">🔐</span>
+        <div>
+          <div class="convention-title">Guest-only flows in CI</div>
+          <div class="convention-desc">Purplle uses phone OTP login which cannot be automated. Tests requiring login are tagged <code>requires_login</code> and skipped in CI.</div>
+        </div>
+      </div>
+      <div class="convention">
+        <span class="convention-icon">🛍️</span>
+        <div>
+          <div class="convention-title">"ADD TO BAG" not "Add to Cart"</div>
+          <div class="convention-desc">Purplle's UI uses this specific label. All locators in <code>product_detail_page_locators.robot</code> reflect the actual site text.</div>
+        </div>
+      </div>
+      <div class="convention">
+        <span class="convention-icon">📍</span>
+        <div>
+          <div class="convention-title">Resource import paths</div>
+          <div class="convention-desc">Tests in <code>tests/functional/</code>, <code>integration/</code>, <code>e2e/</code> use <code>../../resources/</code> and <code>../../locators/</code>. Legacy tests in <code>tests/</code> root use <code>../resources/</code>.</div>
+        </div>
+      </div>
+      <div class="convention">
+        <span class="convention-icon">✉️</span>
+        <div>
+          <div class="convention-title">Tag every test</div>
+          <div class="convention-desc">Each test must have at least: layer tag (<code>functional</code>/<code>integration</code>/<code>e2e</code>/<code>api</code>) + feature tag + either <code>smoke</code> or <code>regression</code>.</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:28px">
+      <div class="cmd-group-title">Adding New Tests — Workflow</div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:12px">
+        <div class="card" style="text-align:center;border-top:3px solid var(--orange)">
+          <div style="font-size:1.5rem;margin-bottom:8px">1️⃣</div>
+          <div style="font-size:.88rem;font-weight:700;color:#fff;margin-bottom:4px">Add Locator</div>
+          <div style="font-size:.75rem;color:var(--text-muted)">locators/&lt;page&gt;_locators.robot</div>
+        </div>
+        <div class="card" style="text-align:center;border-top:3px solid var(--blue)">
+          <div style="font-size:1.5rem;margin-bottom:8px">2️⃣</div>
+          <div style="font-size:.88rem;font-weight:700;color:#fff;margin-bottom:4px">Add Keyword</div>
+          <div style="font-size:.75rem;color:var(--text-muted)">resources/pages/&lt;page&gt;.robot</div>
+        </div>
+        <div class="card" style="text-align:center;border-top:3px solid var(--purple)">
+          <div style="font-size:1.5rem;margin-bottom:8px">3️⃣</div>
+          <div style="font-size:.88rem;font-weight:700;color:#fff;margin-bottom:4px">Choose Layer</div>
+          <div style="font-size:.75rem;color:var(--text-muted)">functional / integration / e2e / api</div>
+        </div>
+        <div class="card" style="text-align:center;border-top:3px solid var(--pink)">
+          <div style="font-size:1.5rem;margin-bottom:8px">4️⃣</div>
+          <div style="font-size:.88rem;font-weight:700;color:#fff;margin-bottom:4px">Tag It</div>
+          <div style="font-size:.75rem;color:var(--text-muted)">layer + feature + smoke/regression</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div style="height:80px"></div>
+</main>
+
+<script>
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+}
+
+function switchTab(group, panel) {
+  document.querySelectorAll(`#run-tabs .tab-btn`).forEach(b => b.classList.remove('active'));
+  document.querySelectorAll(`.tab-panel`).forEach(p => p.classList.remove('active'));
+  event.target.classList.add('active');
+  document.getElementById(`run-${panel}`).classList.add('active');
+}
+
+function copyCode(btn) {
+  const pre = btn.closest('.code-block').querySelector('pre');
+  navigator.clipboard.writeText(pre.innerText).then(() => {
+    btn.textContent = 'Copied!';
+    btn.style.color = '#10b981';
+    setTimeout(() => { btn.textContent = 'Copy'; btn.style.color = ''; }, 2000);
+  });
+}
+
+// Active nav link on scroll
+const sections = document.querySelectorAll('section[id], div[id]');
+const navLinks = document.querySelectorAll('.nav-link');
+
+function updateActiveNav() {
+  let current = '';
+  sections.forEach(s => {
+    if (window.scrollY >= s.offsetTop - 100) current = s.id;
+  });
+  navLinks.forEach(l => {
+    l.classList.toggle('active', l.getAttribute('href') === '#' + current);
+  });
+}
+
+window.addEventListener('scroll', updateActiveNav, { passive: true });
+
+// Close sidebar on mobile nav click
+navLinks.forEach(l => l.addEventListener('click', () => {
+  document.getElementById('sidebar').classList.remove('open');
+}));
+
+// Animate cards on scroll
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.style.opacity = '1';
+      e.target.style.transform = 'translateY(0)';
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.tech-card, .layer-card, .card, .app-flow').forEach(el => {
+  el.style.opacity = '0';
+  el.style.transform = 'translateY(16px)';
+  el.style.transition = 'opacity .4s ease, transform .4s ease, border-color .2s';
+  observer.observe(el);
+});
+</script>
+</body>
+</html>
