@@ -6,100 +6,50 @@
 <title>Keyword Reference — Purplle Robot Framework Suite</title>
 <style>
   :root {
-    --bg:        #0d0a14;
-    --surface:   #15101f;
-    --surface2:  #1e1630;
-    --border:    #2d2248;
-    --purple:    #9b5de5;
-    --pink:      #f72585;
-    --blue:      #4361ee;
-    --green:     #06d6a0;
-    --cyan:      #00b4d8;
-    --orange:    #fb8500;
-    --text:      #e8e0f5;
-    --muted:     #8b7aa8;
-    --code-bg:   #0a0714;
+    --bg:#0d0a14;--surface:#15101f;--surface2:#1e1630;--border:#2d2248;
+    --purple:#9b5de5;--pink:#f72585;--blue:#4361ee;--green:#06d6a0;
+    --cyan:#00b4d8;--orange:#fb8500;--teal:#4cc9f0;--text:#e8e0f5;
+    --muted:#8b7aa8;--code-bg:#0a0714;
   }
   *{box-sizing:border-box;margin:0;padding:0}
   html{scroll-behavior:smooth}
   body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);display:flex;min-height:100vh;overflow-x:hidden}
 
   /* ── Sidebar ── */
-  #sidebar{
-    position:fixed;top:0;left:0;width:260px;height:100vh;
-    background:var(--surface);border-right:1px solid var(--border);
-    display:flex;flex-direction:column;z-index:100;overflow:hidden;
-    transition:transform .3s;
-  }
-  #sidebar-header{
-    padding:24px 20px 16px;
-    background:linear-gradient(135deg,#1a0a2e,#0d0a14);
-    border-bottom:1px solid var(--border);flex-shrink:0;
-  }
-  #sidebar-header h2{font-size:13px;color:var(--purple);letter-spacing:2px;text-transform:uppercase;margin-bottom:6px}
+  #sidebar{position:fixed;top:0;left:0;width:270px;height:100vh;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;z-index:100;overflow:hidden;transition:transform .3s}
+  #sidebar-header{padding:22px 20px 14px;background:linear-gradient(135deg,#1a0a2e,#0d0a14);border-bottom:1px solid var(--border);flex-shrink:0}
+  #sidebar-header h2{font-size:12px;color:var(--purple);letter-spacing:2px;text-transform:uppercase;margin-bottom:4px}
   #sidebar-header p{font-size:11px;color:var(--muted)}
-  #search-box{
-    margin:14px 16px 10px;
-    display:flex;align-items:center;gap:8px;
-    background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:8px 12px;
-    flex-shrink:0;
-  }
+  #search-box{margin:12px 14px 8px;display:flex;align-items:center;gap:8px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:8px 12px;flex-shrink:0}
   #search-box svg{flex-shrink:0;opacity:.5}
-  #search-input{background:none;border:none;outline:none;color:var(--text);font-size:13px;width:100%}
+  #search-input{background:none;border:none;outline:none;color:var(--text);font-size:12.5px;width:100%}
   #search-input::placeholder{color:var(--muted)}
-  #nav{overflow-y:auto;flex:1;padding:8px 0 24px}
-  #nav::-webkit-scrollbar{width:4px}
-  #nav::-webkit-scrollbar-track{background:transparent}
-  #nav::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
-  .nav-section{margin-bottom:4px}
-  .nav-section-header{
-    display:flex;align-items:center;gap:10px;
-    padding:10px 20px;cursor:pointer;
-    font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;
-    color:var(--muted);transition:color .2s;user-select:none;
-  }
+  #nav{overflow-y:auto;flex:1;padding:6px 0 24px}
+  #nav::-webkit-scrollbar{width:3px}
+  #nav::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+  .nav-section{margin-bottom:2px}
+  .nav-section-header{display:flex;align-items:center;gap:10px;padding:9px 18px;cursor:pointer;font-size:10.5px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);transition:color .2s;user-select:none}
   .nav-section-header:hover{color:var(--text)}
-  .nav-section-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+  .nav-section-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
   .nav-section-header .chevron{margin-left:auto;transition:transform .25s}
   .nav-section-header.collapsed .chevron{transform:rotate(-90deg)}
   .nav-keywords{overflow:hidden;transition:max-height .3s ease}
-  .nav-keyword{
-    display:block;padding:7px 20px 7px 38px;
-    font-size:12.5px;color:var(--muted);text-decoration:none;
-    border-left:2px solid transparent;transition:all .15s;
-    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-  }
+  .nav-keyword{display:block;padding:6px 18px 6px 36px;font-size:12px;color:var(--muted);text-decoration:none;border-left:2px solid transparent;transition:all .15s;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .nav-keyword:hover{color:var(--text);background:var(--surface2)}
   .nav-keyword.active{color:var(--text);border-left-color:var(--purple);background:rgba(155,93,229,.08)}
-  .stats-bar{
-    flex-shrink:0;padding:14px 20px;
-    border-top:1px solid var(--border);background:var(--surface);
-    display:flex;gap:12px;flex-wrap:wrap;
-  }
+  .stats-bar{flex-shrink:0;padding:12px 18px;border-top:1px solid var(--border);background:var(--surface);display:flex;gap:10px;flex-wrap:wrap}
   .stat{text-align:center;flex:1}
-  .stat-num{font-size:16px;font-weight:700;color:var(--purple)}
-  .stat-lbl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+  .stat-num{font-size:15px;font-weight:700;color:var(--purple)}
+  .stat-lbl{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
 
   /* ── Main ── */
-  #main{margin-left:260px;flex:1;min-height:100vh}
-  #topbar{
-    position:sticky;top:0;z-index:50;
-    background:rgba(13,10,20,.9);backdrop-filter:blur(12px);
-    border-bottom:1px solid var(--border);
-    padding:0 32px;height:56px;
-    display:flex;align-items:center;gap:16px;
-  }
-  #topbar h1{font-size:15px;font-weight:700;background:linear-gradient(90deg,var(--purple),var(--pink));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-  .filter-chips{display:flex;gap:8px;margin-left:auto;flex-wrap:wrap}
-  .chip{
-    padding:5px 14px;border-radius:20px;font-size:11px;font-weight:600;
-    border:1px solid transparent;cursor:pointer;transition:all .2s;
-    text-transform:uppercase;letter-spacing:.5px;
-  }
-  .chip:hover{opacity:.85}
-  .chip.active{color:#fff}
+  #main{margin-left:270px;flex:1;min-height:100vh}
+  #topbar{position:sticky;top:0;z-index:50;background:rgba(13,10,20,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 28px;height:54px;display:flex;align-items:center;gap:14px}
+  #topbar h1{font-size:14px;font-weight:700;background:linear-gradient(90deg,var(--purple),var(--pink));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;white-space:nowrap}
+  .filter-chips{display:flex;gap:7px;margin-left:auto;flex-wrap:wrap}
+  .chip{padding:4px 12px;border-radius:20px;font-size:10px;font-weight:700;border:1px solid transparent;cursor:pointer;transition:all .2s;text-transform:uppercase;letter-spacing:.5px}
   .chip[data-lib="all"]{border-color:var(--purple);color:var(--purple)}
-  .chip[data-lib="all"].active{background:var(--purple);color:#fff;border-color:var(--purple)}
+  .chip[data-lib="all"].active{background:var(--purple);color:#fff}
   .chip[data-lib="selenium"]{border-color:var(--blue);color:var(--blue)}
   .chip[data-lib="selenium"].active{background:var(--blue);color:#fff}
   .chip[data-lib="requests"]{border-color:var(--green);color:var(--green)}
@@ -110,181 +60,117 @@
   .chip[data-lib="builtin"].active{background:var(--orange);color:#000}
   .chip[data-lib="custom"]{border-color:var(--pink);color:var(--pink)}
   .chip[data-lib="custom"].active{background:var(--pink);color:#fff}
+  .chip[data-lib="string"]{border-color:var(--teal);color:var(--teal)}
+  .chip[data-lib="string"].active{background:var(--teal);color:#000}
 
-  #content{padding:32px}
+  #content{padding:28px}
   #no-results{display:none;text-align:center;padding:80px 32px;color:var(--muted)}
-  #no-results svg{margin-bottom:16px;opacity:.3}
-  #no-results p{font-size:16px}
+  #no-results p{font-size:15px;margin-top:14px}
 
   /* ── Section Header ── */
-  .section-block{margin-bottom:48px}
-  .section-header{
-    display:flex;align-items:center;gap:16px;
-    padding:20px 28px;border-radius:14px;margin-bottom:24px;
-    position:relative;overflow:hidden;
-  }
-  .section-header::before{content:'';position:absolute;inset:0;opacity:.08}
-  .section-header[data-lib="selenium"]{background:rgba(67,97,238,.15);border:1px solid rgba(67,97,238,.3)}
-  .section-header[data-lib="selenium"]::before{background:var(--blue)}
-  .section-header[data-lib="requests"]{background:rgba(6,214,160,.12);border:1px solid rgba(6,214,160,.25)}
-  .section-header[data-lib="requests"]::before{background:var(--green)}
-  .section-header[data-lib="collections"]{background:rgba(0,180,216,.12);border:1px solid rgba(0,180,216,.25)}
-  .section-header[data-lib="collections"]::before{background:var(--cyan)}
-  .section-header[data-lib="builtin"]{background:rgba(251,133,0,.12);border:1px solid rgba(251,133,0,.25)}
-  .section-header[data-lib="builtin"]::before{background:var(--orange)}
-  .section-header[data-lib="custom"]{background:rgba(247,37,133,.12);border:1px solid rgba(247,37,133,.25)}
-  .section-header[data-lib="custom"]::before{background:var(--pink)}
-  .section-icon{
-    width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;
-    font-size:22px;font-weight:700;flex-shrink:0;
-  }
+  .section-block{margin-bottom:44px}
+  .section-header{display:flex;align-items:center;gap:16px;padding:18px 24px;border-radius:14px;margin-bottom:22px;position:relative;overflow:hidden}
+  .section-header[data-lib="selenium"]{background:rgba(67,97,238,.13);border:1px solid rgba(67,97,238,.3)}
+  .section-header[data-lib="requests"]{background:rgba(6,214,160,.1);border:1px solid rgba(6,214,160,.25)}
+  .section-header[data-lib="collections"]{background:rgba(0,180,216,.1);border:1px solid rgba(0,180,216,.25)}
+  .section-header[data-lib="builtin"]{background:rgba(251,133,0,.1);border:1px solid rgba(251,133,0,.25)}
+  .section-header[data-lib="custom"]{background:rgba(247,37,133,.1);border:1px solid rgba(247,37,133,.25)}
+  .section-header[data-lib="string"]{background:rgba(76,201,240,.1);border:1px solid rgba(76,201,240,.25)}
+  .section-icon{width:46px;height:46px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
   .section-icon[data-lib="selenium"]{background:rgba(67,97,238,.25);color:var(--blue)}
   .section-icon[data-lib="requests"]{background:rgba(6,214,160,.2);color:var(--green)}
   .section-icon[data-lib="collections"]{background:rgba(0,180,216,.2);color:var(--cyan)}
   .section-icon[data-lib="builtin"]{background:rgba(251,133,0,.2);color:var(--orange)}
   .section-icon[data-lib="custom"]{background:rgba(247,37,133,.2);color:var(--pink)}
-  .section-meta h2{font-size:20px;font-weight:700;margin-bottom:4px}
-  .section-meta p{font-size:13px;color:var(--muted);font-family:monospace}
-  .section-badge{
-    margin-left:auto;padding:4px 14px;border-radius:20px;
-    font-size:11px;font-weight:700;letter-spacing:.5px;
-  }
+  .section-icon[data-lib="string"]{background:rgba(76,201,240,.2);color:var(--teal)}
+  .section-meta h2{font-size:18px;font-weight:700;margin-bottom:3px}
+  .section-meta p{font-size:12px;color:var(--muted);font-family:monospace}
+  .section-badge{margin-left:auto;padding:4px 13px;border-radius:20px;font-size:10px;font-weight:700;letter-spacing:.5px;white-space:nowrap}
   .section-badge[data-lib="selenium"]{background:rgba(67,97,238,.2);color:var(--blue)}
   .section-badge[data-lib="requests"]{background:rgba(6,214,160,.2);color:var(--green)}
   .section-badge[data-lib="collections"]{background:rgba(0,180,216,.2);color:var(--cyan)}
   .section-badge[data-lib="builtin"]{background:rgba(251,133,0,.2);color:var(--orange)}
   .section-badge[data-lib="custom"]{background:rgba(247,37,133,.2);color:var(--pink)}
+  .section-badge[data-lib="string"]{background:rgba(76,201,240,.2);color:var(--teal)}
 
-  /* ── Category Label ── */
-  .category-label{
-    display:flex;align-items:center;gap:10px;
-    margin:24px 0 14px;padding-left:4px;
-  }
-  .category-label span{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted)}
+  /* ── Category label ── */
+  .category-label{display:flex;align-items:center;gap:10px;margin:22px 0 12px;padding-left:2px}
+  .category-label span{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted);white-space:nowrap}
   .category-label::after{content:'';flex:1;height:1px;background:var(--border)}
 
   /* ── Keyword Card ── */
-  .keyword-card{
-    background:var(--surface);border:1px solid var(--border);border-radius:12px;
-    margin-bottom:14px;overflow:hidden;transition:border-color .2s,transform .15s;
-    animation:fadeup .3s ease both;
-  }
-  @keyframes fadeup{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
-  .keyword-card:hover{border-color:var(--purple);transform:translateY(-1px)}
+  .keyword-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;margin-bottom:10px;overflow:hidden;transition:border-color .2s,box-shadow .2s;animation:fadeup .3s ease both}
+  @keyframes fadeup{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  .keyword-card:hover{box-shadow:0 4px 20px rgba(0,0,0,.3)}
   .keyword-card[data-lib="selenium"]:hover{border-color:var(--blue)}
   .keyword-card[data-lib="requests"]:hover{border-color:var(--green)}
   .keyword-card[data-lib="collections"]:hover{border-color:var(--cyan)}
   .keyword-card[data-lib="builtin"]:hover{border-color:var(--orange)}
   .keyword-card[data-lib="custom"]:hover{border-color:var(--pink)}
+  .keyword-card[data-lib="string"]:hover{border-color:var(--teal)}
   .keyword-card.hidden{display:none}
-  .kw-header{
-    display:flex;align-items:center;gap:14px;padding:16px 20px;cursor:pointer;
-    user-select:none;
-  }
-  .kw-badge{
-    padding:3px 11px;border-radius:20px;font-size:10px;font-weight:700;
-    letter-spacing:.5px;text-transform:uppercase;flex-shrink:0;
-  }
+  .kw-header{display:flex;align-items:center;gap:12px;padding:14px 18px;cursor:pointer;user-select:none}
+  .kw-badge{padding:2px 10px;border-radius:20px;font-size:9.5px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;flex-shrink:0}
   .kw-badge[data-lib="selenium"]{background:rgba(67,97,238,.2);color:var(--blue)}
   .kw-badge[data-lib="requests"]{background:rgba(6,214,160,.18);color:var(--green)}
   .kw-badge[data-lib="collections"]{background:rgba(0,180,216,.18);color:var(--cyan)}
   .kw-badge[data-lib="builtin"]{background:rgba(251,133,0,.18);color:var(--orange)}
   .kw-badge[data-lib="custom"]{background:rgba(247,37,133,.18);color:var(--pink)}
-  .kw-name{font-size:14px;font-weight:700;font-family:'Courier New',monospace;flex:1}
+  .kw-badge[data-lib="string"]{background:rgba(76,201,240,.18);color:var(--teal)}
+  .kw-name{font-size:13.5px;font-weight:700;font-family:'Courier New',monospace;flex:1.2;min-width:0}
   .kw-purpose-preview{font-size:12px;color:var(--muted);flex:2;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-  .kw-toggle{
-    width:28px;height:28px;border-radius:8px;
-    display:flex;align-items:center;justify-content:center;
-    background:var(--surface2);border:1px solid var(--border);flex-shrink:0;
-    transition:transform .25s,background .2s;
-  }
+  .kw-toggle{width:26px;height:26px;border-radius:7px;display:flex;align-items:center;justify-content:center;background:var(--surface2);border:1px solid var(--border);flex-shrink:0;transition:transform .25s,background .2s}
   .kw-header.open .kw-toggle{transform:rotate(180deg);background:var(--purple)}
   .kw-body{display:none;border-top:1px solid var(--border)}
   .kw-body.open{display:block}
   .kw-grid{display:grid;grid-template-columns:1fr 1fr;gap:0}
-  .kw-field{padding:16px 20px;border-bottom:1px solid var(--border)}
+  .kw-field{padding:14px 18px;border-bottom:1px solid var(--border)}
   .kw-field:nth-child(odd){border-right:1px solid var(--border)}
   .kw-field.full{grid-column:1/-1}
-  .kw-field-label{
-    font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;
-    margin-bottom:8px;
-  }
+  .kw-field-label{font-size:9.5px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:7px}
   .label-purpose{color:var(--green)}
   .label-syntax{color:var(--cyan)}
   .label-notes{color:var(--orange)}
   .label-usage{color:var(--purple)}
-  .kw-field-value{font-size:13px;line-height:1.6;color:var(--text)}
-  .kw-field-value code,.code-block{
-    font-family:'Courier New',monospace;font-size:12px;
-    background:var(--code-bg);border:1px solid var(--border);
-    border-radius:6px;padding:2px 7px;color:var(--cyan);
-  }
-  .code-block{
-    display:block;padding:12px 16px;margin:4px 0;
-    white-space:pre;overflow-x:auto;line-height:1.7;color:var(--text);
-    position:relative;
-  }
+  .label-source{color:var(--muted)}
+  .kw-field-value{font-size:12.5px;line-height:1.6;color:var(--text)}
+  code,.code-block{font-family:'Courier New',monospace;font-size:11.5px;background:var(--code-bg);border:1px solid var(--border);border-radius:5px;padding:2px 6px;color:var(--cyan)}
+  .code-block{display:block;padding:11px 14px;margin:4px 0;white-space:pre;overflow-x:auto;line-height:1.75;color:var(--text);position:relative}
   .code-line{display:block}
-  .code-kw{color:var(--purple)}
-  .code-param{color:var(--cyan)}
-  .code-comment{color:var(--muted);font-style:italic}
-  .copy-btn{
-    position:absolute;top:8px;right:8px;
-    padding:3px 10px;border-radius:5px;border:1px solid var(--border);
-    background:var(--surface2);color:var(--muted);font-size:10px;
-    cursor:pointer;transition:all .2s;
-  }
+  .copy-btn{position:absolute;top:7px;right:8px;padding:2px 9px;border-radius:4px;border:1px solid var(--border);background:var(--surface2);color:var(--muted);font-size:9.5px;cursor:pointer;transition:all .2s}
   .copy-btn:hover{color:var(--text);border-color:var(--purple)}
   .copy-btn.copied{color:var(--green);border-color:var(--green)}
-  .notes-text{font-size:12.5px;color:var(--muted);line-height:1.6;font-style:italic}
-  .status-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
-  .status-badge{
-    padding:3px 10px;border-radius:5px;font-size:11px;font-weight:600;
-    font-family:monospace;
-  }
+  .notes-text{font-size:12px;color:var(--muted);line-height:1.65;font-style:italic}
+  .warn-text{font-size:12px;color:#fb8500;line-height:1.65}
+  .status-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+  .status-badge{padding:2px 9px;border-radius:4px;font-size:10.5px;font-weight:600;font-family:monospace}
   .s-2xx{background:rgba(6,214,160,.15);color:var(--green)}
   .s-3xx{background:rgba(0,180,216,.15);color:var(--cyan)}
   .s-4xx{background:rgba(251,133,0,.15);color:var(--orange)}
   .s-5xx{background:rgba(247,37,133,.15);color:var(--pink)}
 
-  /* ── HTTP Status Table ── */
-  .status-table-section{
-    background:var(--surface);border:1px solid var(--border);border-radius:14px;
-    padding:28px;margin-bottom:48px;
-  }
-  .status-table-section h3{
-    font-size:16px;font-weight:700;margin-bottom:6px;
-    background:linear-gradient(90deg,var(--purple),var(--pink));
-    -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
-  }
-  .status-table-section p{font-size:13px;color:var(--muted);margin-bottom:20px}
-  .method-rows{display:flex;flex-direction:column;gap:12px}
-  .method-row{display:flex;align-items:center;gap:16px;padding:14px 18px;border-radius:10px;background:var(--surface2)}
-  .method-pill{
-    padding:5px 16px;border-radius:8px;font-size:12px;font-weight:700;
-    font-family:monospace;min-width:70px;text-align:center;
-  }
+  /* ── Status table ── */
+  .status-table-section{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:24px;margin-bottom:44px}
+  .status-table-section h3{font-size:15px;font-weight:700;margin-bottom:4px;background:linear-gradient(90deg,var(--purple),var(--pink));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+  .status-table-section p{font-size:12px;color:var(--muted);margin-bottom:18px}
+  .method-rows{display:flex;flex-direction:column;gap:10px}
+  .method-row{display:flex;align-items:center;gap:14px;padding:12px 16px;border-radius:9px;background:var(--surface2)}
+  .method-pill{padding:4px 14px;border-radius:7px;font-size:11px;font-weight:700;font-family:monospace;min-width:66px;text-align:center}
   .m-get{background:rgba(6,214,160,.2);color:var(--green)}
   .m-post{background:rgba(155,93,229,.2);color:var(--purple)}
   .m-put{background:rgba(0,180,216,.2);color:var(--cyan)}
   .m-patch{background:rgba(251,133,0,.2);color:var(--orange)}
   .m-delete{background:rgba(247,37,133,.2);color:var(--pink)}
-  .method-codes{display:flex;gap:6px;flex:1;flex-wrap:wrap}
-  .method-note{font-size:11px;color:var(--muted);margin-left:auto}
-  .warning-box{
-    background:rgba(247,37,133,.08);border:1px solid rgba(247,37,133,.25);
-    border-radius:10px;padding:14px 18px;margin-top:16px;
-    display:flex;align-items:flex-start;gap:12px;
-  }
-  .warning-box svg{flex-shrink:0;margin-top:1px}
-  .warning-box p{font-size:12.5px;color:var(--text);line-height:1.6}
+  .m-head{background:rgba(76,201,240,.2);color:var(--teal)}
+  .method-codes{display:flex;gap:5px;flex:1;flex-wrap:wrap}
+  .method-note{font-size:10.5px;color:var(--muted);margin-left:auto;white-space:nowrap}
+  .warning-box{background:rgba(247,37,133,.07);border:1px solid rgba(247,37,133,.22);border-radius:9px;padding:13px 16px;margin-top:14px;display:flex;align-items:flex-start;gap:11px}
+  .warning-box p{font-size:12px;color:var(--text);line-height:1.6}
   .warning-box strong{color:var(--pink)}
 
   /* ── Mobile ── */
-  #ham{display:none;position:fixed;top:16px;left:16px;z-index:200;
-    background:var(--surface2);border:1px solid var(--border);border-radius:8px;
-    padding:8px;cursor:pointer;color:var(--text)}
-  @media(max-width:768px){
+  #ham{display:none;position:fixed;top:14px;left:14px;z-index:200;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:7px;cursor:pointer;color:var(--text)}
+  @media(max-width:800px){
     #sidebar{transform:translateX(-100%)}
     #sidebar.open{transform:translateX(0)}
     #main{margin-left:0}
@@ -292,35 +178,33 @@
     .kw-grid{grid-template-columns:1fr}
     .kw-field:nth-child(odd){border-right:none}
     .filter-chips{display:none}
+    .kw-purpose-preview{display:none}
   }
 </style>
 </head>
 <body>
 
-<!-- Hamburger -->
 <button id="ham" onclick="document.getElementById('sidebar').classList.toggle('open')" aria-label="Menu">
-  <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><line x1="0" y1="4" x2="18" y2="4"/><line x1="0" y1="9" x2="18" y2="9"/><line x1="0" y1="14" x2="18" y2="14"/></svg>
+  <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2"><line x1="0" y1="4" x2="17" y2="4"/><line x1="0" y1="8.5" x2="17" y2="8.5"/><line x1="0" y1="13" x2="17" y2="13"/></svg>
 </button>
 
-<!-- Sidebar -->
 <aside id="sidebar">
   <div id="sidebar-header">
     <h2>Keyword Reference</h2>
     <p>Purplle.com Robot Framework Suite</p>
   </div>
   <div id="search-box">
-    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
     <input id="search-input" type="text" placeholder="Search keywords…" autocomplete="off" />
   </div>
   <nav id="nav"></nav>
   <div class="stats-bar">
-    <div class="stat"><div class="stat-num">5</div><div class="stat-lbl">Sections</div></div>
-    <div class="stat"><div class="stat-num" id="kw-count">50+</div><div class="stat-lbl">Keywords</div></div>
-    <div class="stat"><div class="stat-num">5</div><div class="stat-lbl">Libraries</div></div>
+    <div class="stat"><div class="stat-num">6</div><div class="stat-lbl">Libraries</div></div>
+    <div class="stat"><div class="stat-num" id="kw-count">—</div><div class="stat-lbl">Keywords</div></div>
+    <div class="stat"><div class="stat-num">100+</div><div class="stat-lbl">Examples</div></div>
   </div>
 </aside>
 
-<!-- Main -->
 <main id="main">
   <div id="topbar">
     <h1>Purplle RF Keyword Reference</h1>
@@ -330,893 +214,854 @@
       <button class="chip" data-lib="requests">Requests</button>
       <button class="chip" data-lib="collections">Collections</button>
       <button class="chip" data-lib="builtin">BuiltIn</button>
+      <button class="chip" data-lib="string">String</button>
       <button class="chip" data-lib="custom">Custom</button>
     </div>
   </div>
 
   <div id="content">
     <div id="no-results">
-      <svg width="48" height="48" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <svg width="44" height="44" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
       <p>No keywords match your search.</p>
     </div>
-    <!-- Sections are built by JS -->
   </div>
 </main>
 
 <script>
 const SECTIONS = [
-  {
-    id:'selenium',lib:'selenium',num:1,
-    title:'SeleniumLibrary',
-    import:'Library    SeleniumLibrary',
-    used:'resources/common_resources.robot, resources/pages/*.robot, tests/functional/*, tests/integration/*, tests/e2e/*',
-    icon:'🌐',
-    categories:[
-      {label:'Browser Lifecycle',keywords:[
-        {
-          name:'Open Browser',
-          purpose:'Launch a new browser window and navigate to a URL.',
-          syntax:'Open Browser    <url>    <browser>',
-          usage:[
-            'Open Browser    https://www.purplle.com    chrome',
-            'Open Browser    ${BASE_URL}    ${BROWSER}',
-            'Open Browser    ${url}    ${BROWSER}',
-            '...    options=add_argument("--headless=new");add_argument("--no-sandbox")',
-          ],
-          notes:'${BROWSER} defaults to chrome. Pass options= for headless/flags. Called inside custom keyword Open Application in common_resources.',
-        },
-        {
-          name:'Maximize Browser Window',
-          purpose:'Maximize the browser window to full screen.',
-          syntax:'Maximize Browser Window',
-          usage:['Maximize Browser Window'],
-          notes:'Called right after Open Browser inside Open Application.',
-        },
-        {
-          name:'Close All Browsers',
-          purpose:'Close every open browser session managed by SeleniumLibrary.',
-          syntax:'Close All Browsers',
-          usage:['Close All Browsers'],
-          notes:'Used inside custom keyword Close Application for Suite Teardown.',
-        },
-      ]},
-      {label:'Navigation',keywords:[
-        {
-          name:'Go To',
-          purpose:'Navigate the current browser to a given URL.',
-          syntax:'Go To    <url>',
-          usage:[
-            'Go To    ${BASE_URL}',
-            'Go To    ${BASE_URL}/search?q=${keyword}',
-            'Go To    https://www.purplle.com/cart',
-            'Go To    https://www.purplle.com/makeup',
-            'Go To    https://www.purplle.com/profile/myfavourites',
-            'Go To    ${MAKEUP_URL}',
-            'Go To    ${SKINCARE_URL}',
-            'Go To    ${HAIR_URL}',
-          ],
-          notes:'Used heavily in Test Setup and inside page keywords. Purplle is Angular — search requires direct URL navigation; pressing ENTER on the search bar does NOT trigger navigation.',
-        },
-        {
-          name:'Location Should Be',
-          purpose:'Assert the current URL matches exactly.',
-          syntax:'Location Should Be    <expected_url>',
-          usage:['Location Should Be    https://www.purplle.com/'],
-          notes:'Use for exact URL match. Use Location Should Contain for partial.',
-        },
-        {
-          name:'Location Should Contain',
-          purpose:'Assert the current URL contains a substring.',
-          syntax:'Location Should Contain    <substring>',
-          usage:['Location Should Contain    myfavourites'],
-          notes:'Preferred over Location Should Be when query strings may vary.',
-        },
-      ]},
-      {label:'Waits',keywords:[
-        {
-          name:'Wait Until Element Is Visible',
-          purpose:'Pause test execution until an element becomes visible on the page. Fails if the element is not visible within the timeout.',
-          syntax:'Wait Until Element Is Visible    <locator>    timeout=<time>',
-          usage:[
-            'Wait Until Element Is Visible    ${LOGO}',
-            'Wait Until Element Is Visible    ${FIRST_PRODUCT_CARD}    timeout=15s',
-            'Wait Until Element Is Visible    ${EMPTY_CART_MESSAGE}    timeout=15s',
-            'Wait Until Element Is Visible    ${MOBILE_INPUT}    timeout=10s',
-            'Wait Until Element Is Visible    ${PRODUCT_NAME}    timeout=15s',
-            'Wait Until Element Is Visible    ${WISHLIST_PAGE_HEADING}    timeout=15s',
-            'Wait Until Element Is Visible    ${SEARCH_SUGGESTION_BOX}    timeout=5s',
-            'Wait Until Element Is Visible    xpath=//h1    timeout=15s',
-          ],
-          notes:'ALWAYS use this instead of Sleep. Default timeout is ${TIMEOUT} (15s). Never use Sleep — it is fragile and wastes time.',
-        },
-      ]},
-      {label:'Interaction',keywords:[
-        {
-          name:'Click Element',
-          purpose:'Click on any DOM element identified by a locator.',
-          syntax:'Click Element    <locator>',
-          usage:[
-            'Click Element    ${LOGO}',
-            'Click Element    ${FIRST_PRODUCT_CARD}',
-            'Click Element    ${ADD_TO_BAG_BTN}',
-            'Click Element    ${SORT_DROPDOWN}',
-            'Click Element    ${SORT_PRICE_LOW_HIGH}',
-            'Click Element    ${NAV_MAKEUP}',
-            'Click Element    ${WISHLIST_ICON}',
-            'Click Element    ${CART_ICON}',
-            'Click Element    ${REMOVE_BTN}',
-            'Click Element    ${MOVE_TO_BAG_BTN}',
-            'Click Element    ${QUANTITY_PLUS}',
-            'Click Element    ${PROCEED_TO_CHECKOUT_BTN}',
-            'Click Element    xpath=//label[contains(text(),"${brand_name}")]',
-          ],
-          notes:'Locators must be defined in locators/*_locators.robot. Never hardcode locators inside test cases.',
-        },
-        {
-          name:'Click Button',
-          purpose:'Click a <button> element. Semantically clearer than Click Element.',
-          syntax:'Click Button    <locator>',
-          usage:[
-            'Click Button    ${GET_OTP_BUTTON}',
-            'Click Button    ${VERIFY_OTP_BUTTON}',
-            'Click Button    ${LOGIN_SUBMIT_BTN}',
-          ],
-          notes:'Use for actual <button> tags. Use Click Element for <a>, <div>, etc.',
-        },
-        {
-          name:'Click Link',
-          purpose:'Click an <a> (anchor/link) element.',
-          syntax:'Click Link    <locator_or_text>',
-          usage:['Click Link    ${LOGIN_REGISTER_LINK}'],
-          notes:'Functionally same as Click Element but signals intent — it is a link.',
-        },
-        {
-          name:'Input Text',
-          purpose:'Type text into an input or textarea field.',
-          syntax:'Input Text    <locator>    <text>',
-          usage:[
-            'Input Text    ${SEARCH_INPUT}    ${keyword}',
-            'Input Text    ${SEARCH_INPUT}    kajal',
-            'Input Text    ${MOBILE_INPUT}    ${mobile}',
-            'Input Text    ${OTP_INPUT}    ${otp}',
-            'Input Text    ${EMAIL_INPUT}    ${email}',
-            'Input Text    ${COUPON_INPUT}    ${coupon_code}',
-          ],
-          notes:'Clears the field before typing. Use Clear Element Text first if the field already has content and you need to replace it.',
-        },
-        {
-          name:'Clear Element Text',
-          purpose:'Clear all existing text from an input field.',
-          syntax:'Clear Element Text    <locator>',
-          usage:['Clear Element Text    ${MOBILE_INPUT}'],
-          notes:'Used before re-entering text in the same field (e.g. invalid → valid input).',
-        },
-        {
-          name:'Press Keys',
-          purpose:'Simulate keyboard key presses on a focused element.',
-          syntax:'Press Keys    <locator>    <key>',
-          usage:['Press Keys    ${SEARCH_INPUT}    RETURN'],
-          notes:'On Purplle (Angular app) pressing RETURN in search does NOT navigate. Use Go To with the search URL instead for reliable navigation.',
-        },
-        {
-          name:'Scroll Element Into View',
-          purpose:'Scroll the page until the element is within the visible viewport.',
-          syntax:'Scroll Element Into View    <locator>',
-          usage:[
-            'Scroll Element Into View    ${REVIEWS_SECTION}',
-            'Scroll Element Into View    ${SIMILAR_PRODUCTS}',
-            'Scroll Element Into View    ${LOAD_MORE_BTN}',
-          ],
-          notes:'Useful for lazy-loaded sections and infinite-scroll pages.',
-        },
-      ]},
-      {label:'Assertions',keywords:[
-        {
-          name:'Element Should Be Visible',
-          purpose:'Assert that an element is present and visible on the page RIGHT NOW. Does not wait — use Wait Until Element Is Visible to wait first.',
-          syntax:'Element Should Be Visible    <locator>',
-          usage:[
-            'Element Should Be Visible    ${LOGO}',
-            'Element Should Be Visible    ${SEARCH_INPUT}',
-            'Element Should Be Visible    ${CART_ICON}',
-            'Element Should Be Visible    ${PRODUCT_NAME}',
-            'Element Should Be Visible    ${PRODUCT_PRICE}',
-            'Element Should Be Visible    ${ADD_TO_BAG_BTN}',
-            'Element Should Be Visible    ${WISHLIST_ICON}',
-            'Element Should Be Visible    ${EMPTY_CART_MESSAGE}',
-            'Element Should Be Visible    ${SEARCH_SUGGESTION_BOX}',
-            'Element Should Be Visible    xpath=//h1',
-          ],
-          notes:'Does NOT wait. Always pair with Wait Until Element Is Visible before calling this.',
-        },
-        {
-          name:'Page Should Contain Element',
-          purpose:'Assert that an element exists anywhere on the page (visible or not).',
-          syntax:'Page Should Contain Element    <locator>',
-          usage:[
-            'Page Should Contain Element    ${PRODUCT_CARDS}',
-            'Page Should Contain Element    ${FIRST_PRODUCT_CARD}',
-            'Page Should Contain Element    ${CART_ITEMS}',
-            'Page Should Contain Element    ${WISHLIST_ITEMS}',
-          ],
-          notes:'Does not require the element to be visible. Use for presence checks.',
-        },
-        {
-          name:'Page Should Not Contain Element',
-          purpose:'Assert that an element does NOT exist anywhere on the page.',
-          syntax:'Page Should Not Contain Element    <locator>',
-          usage:['Page Should Not Contain Element    ${PROCEED_TO_CHECKOUT_BTN}'],
-          notes:'Useful for asserting empty states (e.g. cart has no checkout button).',
-        },
-      ]},
-      {label:'Data Retrieval',keywords:[
-        {
-          name:'Get Title',
-          purpose:'Return the current page title as a string.',
-          syntax:'${title}=    Get Title',
-          usage:[
-            '${title}=    Get Title',
-            'Should Contain    ${title}    Purplle',
-          ],
-          notes:'Used inside custom keyword Title Should Contain in common_resources. SeleniumLibrary only has Title Should Be (exact match) — Title Should Contain is a custom keyword.',
-        },
-        {
-          name:'Get Text',
-          purpose:'Return the visible text content of an element as a string.',
-          syntax:'${var}=    Get Text    <locator>',
-          usage:[
-            '${name}=     Get Text    ${PRODUCT_NAME}',
-            '${price}=    Get Text    ${PRODUCT_PRICE}',
-            '${brand}=    Get Text    ${PRODUCT_BRAND}',
-            '${rating}=   Get Text    ${RATING_VALUE}',
-            '${total}=    Get Text    ${CART_TOTAL}',
-            '${message}=  Get Text    ${ERROR_MESSAGE}',
-          ],
-          notes:'Returns inner text (not HTML). Use to capture values for assertions.',
-        },
-        {
-          name:'Get WebElements',
-          purpose:'Return a list of all matching WebElement objects for a locator.',
-          syntax:'${list}=    Get WebElements    <locator>',
-          usage:[
-            '${items}=    Get WebElements    ${CART_ITEMS}',
-            '${items}=    Get WebElements    ${WISHLIST_ITEMS}',
-          ],
-          notes:'Returns a Python list. Use Get Length / len() to count items. Each item is a Selenium WebElement — can call .text, .click(), etc.',
-        },
-      ]},
-      {label:'Configuration',keywords:[
-        {
-          name:'Set Selenium Implicit Wait',
-          purpose:'Set the global implicit wait timeout for all element lookups.',
-          syntax:'Set Selenium Implicit Wait    <time>',
-          usage:['Set Selenium Implicit Wait    ${IMPLICIT_WAIT}    # 10s'],
-          notes:'Set once in Open Application. Applies to all subsequent keywords. Implicit wait runs silently on every element search.',
-        },
-        {
-          name:'Set Selenium Timeout',
-          purpose:'Set the global explicit timeout for SeleniumLibrary keywords.',
-          syntax:'Set Selenium Timeout    <time>',
-          usage:['Set Selenium Timeout    ${TIMEOUT}    # 15s'],
-          notes:'Used by Wait Until Element Is Visible when no timeout= is given.',
-        },
-        {
-          name:'Set Screenshot Directory',
-          purpose:'Set the folder where failure screenshots are automatically saved.',
-          syntax:'Set Screenshot Directory    <path>',
-          usage:['Set Screenshot Directory    ${SCREENSHOT_DIR}    # outputs/screenshots/'],
-          notes:'Called in Open Application. Screenshots are captured automatically by SeleniumLibrary on any keyword failure.',
-        },
-      ]},
-    ]
-  },
-  {
-    id:'requests',lib:'requests',num:2,
-    title:'RequestsLibrary',
-    import:'Library    RequestsLibrary',
-    used:'tests/api/*.robot',
-    icon:'🔌',
-    categories:[
-      {label:'Session Management',keywords:[
-        {
-          name:'Create Session',
-          purpose:'Create a named HTTP session with a base URL and default headers. All subsequent HTTP calls use this session by name.',
-          syntax:'Create Session    <alias>    <base_url>    headers=<dict>    verify=<bool>',
-          usage:[
-            '${headers}=    Create Dictionary',
-            '...    Accept=application/json',
-            '...    Content-Type=application/json',
-            '...    User-Agent=Mozilla/5.0 ...',
-            'Create Session    purplle    https://www.purplle.com',
-            '...    headers=${headers}    verify=True',
-          ],
-          notes:'alias="purplle" is used in all On Session calls. verify=True enables SSL certificate validation. Called in Suite Setup via Create Purplle API Session keyword.',
-          statuses:['SSL ✓','alias reused'],
-        },
-        {
-          name:'Delete All Sessions',
-          purpose:'Close and delete all active HTTP sessions.',
-          syntax:'Delete All Sessions',
-          usage:['Delete All Sessions'],
-          notes:'Called in Suite Teardown to clean up session resources.',
-        },
-      ]},
-      {label:'HTTP Methods',keywords:[
-        {
-          name:'GET On Session',
-          purpose:'Send an HTTP GET request to retrieve a resource.',
-          syntax:'GET On Session    <alias>    <endpoint>    params=<dict>    expected_status=<any|code>',
-          usage:[
-            '${response}=    GET On Session    purplle    /    expected_status=any',
-            '${response}=    GET On Session    purplle    /api/search    params=${params}    expected_status=any',
-            '${response}=    GET On Session    purplle    /api/autocomplete    params=${params}    expected_status=any',
-            '${response}=    GET On Session    purplle    /api/cart    expected_status=any',
-            '${response}=    GET On Session    purplle    /api/wishlist    expected_status=any',
-            '${response}=    GET On Session    purplle    /api/profile    expected_status=any',
-          ],
-          notes:'Use expected_status=any to suppress auto-fail on non-2xx. Then assert manually with Assert GET Status.',
-          statuses:['200 OK','301 Redirect','302 Redirect','401 Auth','403 Forbidden'],
-          statusTypes:['s-2xx','s-3xx','s-3xx','s-4xx','s-4xx'],
-        },
-        {
-          name:'POST On Session',
-          purpose:'Send an HTTP POST request to create a resource.',
-          syntax:'POST On Session    <alias>    <endpoint>    json=<dict>    expected_status=<any|code>',
-          usage:[
-            '${response}=    POST On Session    purplle    /api/cart    json=${body}    expected_status=any',
-            '${response}=    POST On Session    purplle    /api/wishlist    json=${body}    expected_status=any',
-            '${response}=    POST On Session    purplle    /api/checkout    json=${body}    expected_status=any',
-            '${response}=    POST On Session    purplle    /api/profile    json=${body}    expected_status=any',
-          ],
-          notes:'201 Created is the correct REST standard for a successful creation. Purplle endpoints are auth-gated — guest calls return 401/403. NEVER assert < 500 — that masks 400 Bad Request errors.',
-          statuses:['201 Created','200 OK','401 Auth','403 Forbidden'],
-          statusTypes:['s-2xx','s-2xx','s-4xx','s-4xx'],
-        },
-        {
-          name:'PUT On Session',
-          purpose:'Send an HTTP PUT request to fully replace a resource. All fields of the resource must be sent — replaces the whole object.',
-          syntax:'PUT On Session    <alias>    <endpoint>    json=<dict>    expected_status=<any|code>',
-          usage:[
-            '${response}=    PUT On Session    purplle    /api/cart/items/12345    json=${body}    expected_status=any',
-            '${response}=    PUT On Session    purplle    /api/profile    json=${body}    expected_status=any',
-            '${response}=    PUT On Session    purplle    /api/wishlist/items/12345    json=${body}    expected_status=any',
-          ],
-          notes:'PUT differs from PATCH — PUT replaces the ENTIRE resource. Missing fields in the payload will be set to null/default.',
-          statuses:['200 OK','204 No Content','401 Auth','403 Forbidden'],
-          statusTypes:['s-2xx','s-2xx','s-4xx','s-4xx'],
-        },
-        {
-          name:'PATCH On Session',
-          purpose:'Send an HTTP PATCH request to partially update a resource. Only the fields included in the payload are changed; others stay.',
-          syntax:'PATCH On Session    <alias>    <endpoint>    json=<dict>    expected_status=<any|code>',
-          usage:[
-            '${response}=    PATCH On Session    purplle    /api/cart/items/12345    json=${qty}    expected_status=any',
-            '${response}=    PATCH On Session    purplle    /api/profile    json=${name_patch}    expected_status=any',
-            '${response}=    PATCH On Session    purplle    /api/wishlist/items/12345    json=${note}    expected_status=any',
-          ],
-          notes:'PATCH differs from PUT — PATCH only modifies named fields. Ideal for fine-tuning a single field without resending the full payload.',
-          statuses:['200 OK','204 No Content','401 Auth','403 Forbidden'],
-          statusTypes:['s-2xx','s-2xx','s-4xx','s-4xx'],
-        },
-        {
-          name:'DELETE On Session',
-          purpose:'Send an HTTP DELETE request to remove a resource.',
-          syntax:'DELETE On Session    <alias>    <endpoint>    expected_status=<any|code>',
-          usage:[
-            '${response}=    DELETE On Session    purplle    /api/cart/items/12345    expected_status=any',
-            '${response}=    DELETE On Session    purplle    /api/wishlist/items/67890    expected_status=any',
-            '${response}=    DELETE On Session    purplle    /api/profile    expected_status=any',
-          ],
-          notes:'204 No Content is the most common success status for DELETE. 404 is acceptable — means the resource was already deleted. 401/403 expected for guest calls on auth-protected endpoints.',
-          statuses:['200 OK','204 No Content','401 Auth','403 Forbidden','404 Gone'],
-          statusTypes:['s-2xx','s-2xx','s-4xx','s-4xx','s-4xx'],
-        },
-      ]},
-      {label:'Response Object Properties',keywords:[
-        {
-          name:'response.status_code',
-          purpose:'Integer HTTP status code of the response (200, 201, 404, etc.).',
-          syntax:'${code}=    Set Variable    ${response.status_code}',
-          usage:[
-            'Should Be True    ${response.status_code} in [200, 201, 401, 403]',
-            'Should Be Equal As Integers    ${resp1.status_code}    ${resp2.status_code}',
-          ],
-          notes:'Returned as an integer. Use in Should Be True expressions for membership checks.',
-        },
-        {
-          name:'response.url',
-          purpose:'The final URL after any redirects.',
-          syntax:'${url}=    Set Variable    ${response.url}',
-          usage:[
-            'Should Contain    ${response.url}    purplle.com',
-            'Should Not Contain    ${final_url}    error',
-          ],
-          notes:'Reflects the URL after all 301/302 redirect hops.',
-        },
-        {
-          name:'response.json()',
-          purpose:'Parse the response body as JSON and return a Python dict/list.',
-          syntax:'${json}=    Set Variable    ${response.json()}',
-          usage:[
-            '${json}=    Set Variable    ${response.json()}',
-            'Should Not Be Empty    ${json}',
-            'Dictionary Should Contain Key    ${json}    products',
-          ],
-          notes:'Only call when status_code is 200 and Content-Type is application/json.',
-        },
-        {
-          name:'response.elapsed.total_seconds()',
-          purpose:'Response time in seconds as a float.',
-          syntax:'${t}=    Set Variable    ${response.elapsed.total_seconds()}',
-          usage:[
-            '${time}=    Set Variable    ${resp.elapsed.total_seconds()}',
-            'Should Be True    ${time} < 10',
-          ],
-          notes:'Used in performance assertions. Compare against 10s threshold.',
-        },
-        {
-          name:'response.text',
-          purpose:'The raw response body as a string.',
-          syntax:'${body}=    Set Variable    ${response.text}',
-          usage:[
-            'Log    Response body (first 500 chars): ${response.text}[:500]',
-          ],
-          notes:'Useful for debugging when JSON parsing fails. Not for assertions.',
-        },
-        {
-          name:'response.headers',
-          purpose:'Dictionary of response headers.',
-          syntax:'${hdrs}=    Set Variable    ${response.headers}',
-          usage:[
-            '${ct}=    Get From Dictionary    ${response.headers}    Content-Type',
-          ],
-          notes:'Use with Collections Get From Dictionary to extract specific headers.',
-        },
-      ]},
-    ]
-  },
-  {
-    id:'collections',lib:'collections',num:3,
-    title:'Collections Library',
-    import:'Library    Collections',
-    used:'tests/api/*.robot',
-    icon:'📦',
-    categories:[
-      {label:'Dictionary Keywords',keywords:[
-        {
-          name:'Create Dictionary',
-          purpose:'Create a Python dictionary (key=value pairs). Used to build request bodies, query params, and headers.',
-          syntax:'${dict}=    Create Dictionary    key1=value1    key2=value2    ...',
-          usage:[
-            '${headers}=    Create Dictionary',
-            '...    Accept=application/json',
-            '...    Content-Type=application/json',
-            '',
-            '${params}=    Create Dictionary    q=lipstick',
-            '${params}=    Create Dictionary    category=makeup',
-            '',
-            '${body}=    Create Dictionary    product_id=12345    quantity=1',
-            '${body}=    Create Dictionary    name=Suraj    email=suraj@example.com    phone=9876543210',
-          ],
-          notes:'The most frequently used Collections keyword in this suite. Used for every HTTP request payload and params block.',
-        },
-        {
-          name:'Get From Dictionary',
-          purpose:'Extract the value for a specific key from a dictionary.',
-          syntax:'${val}=    Get From Dictionary    <dict>    <key>',
-          usage:['${val}=    Get From Dictionary    ${json}    products'],
-          notes:'Raises KeyError if key is absent. Use Dictionary Should Contain Key first.',
-        },
-        {
-          name:'Dictionary Should Contain Key',
-          purpose:'Assert that a dictionary contains a specific key.',
-          syntax:'Dictionary Should Contain Key    <dict>    <key>',
-          usage:[
-            'Dictionary Should Contain Key    ${json}    products',
-            'Dictionary Should Contain Key    ${json}    status',
-          ],
-          notes:'Used to validate JSON response structure after ${response.json()}.',
-        },
-      ]},
-      {label:'List Keywords',keywords:[
-        {
-          name:'Get From List',
-          purpose:'Extract an item from a list by its index.',
-          syntax:'${item}=    Get From List    <list>    <index>',
-          usage:['${first}=    Get From List    ${items}    0'],
-          notes:'Index 0 = first item. Negative indices count from the end (-1 = last).',
-        },
-        {
-          name:'Length Should Be',
-          purpose:'Assert the length of a list or dictionary equals an expected value.',
-          syntax:'Length Should Be    <collection>    <expected_length>',
-          usage:['Length Should Be    ${items}    3'],
-          notes:'Works on lists, dicts, and strings.',
-        },
-        {
-          name:'Should Not Be Empty',
-          purpose:'Assert that a list, dictionary, or string is not empty.',
-          syntax:'Should Not Be Empty    <collection_or_string>',
-          usage:[
-            'Should Not Be Empty    ${json}',
-            'Should Not Be Empty    ${items}',
-          ],
-          notes:'Fails if the value is [], {}, or "".',
-        },
-      ]},
-    ]
-  },
-  {
-    id:'builtin',lib:'builtin',num:4,
-    title:'BuiltIn Library',
-    import:'No import needed — always available',
-    used:'All test files',
-    icon:'⚙️',
-    categories:[
-      {label:'Variables',keywords:[
-        {
-          name:'Set Variable',
-          purpose:'Assign any value to a variable.',
-          syntax:'${var}=    Set Variable    <value>',
-          usage:[
-            '${json}=        Set Variable    ${response.json()}',
-            '${final_url}=   Set Variable    ${search_response.url}',
-            '${elapsed}=     Set Variable    ${response.elapsed.total_seconds()}',
-            '${full_keyword}=    Set Variable    foundation',
-          ],
-          notes:'Used to alias response properties into cleaner variable names.',
-        },
-      ]},
-      {label:'Assertions',keywords:[
-        {
-          name:'Should Be True',
-          purpose:'Assert that a Python expression evaluates to True.',
-          syntax:'Should Be True    <expression>',
-          usage:[
-            'Should Be True    ${response.status_code} in [200, 201, 401, 403]',
-            'Should Be True    ${response.status_code} in [200, 204, 401, 403]',
-            'Should Be True    ${response.status_code} in [200, 204, 401, 403, 404]',
-            'Should Be True    ${response.status_code} in [200, 301, 302, 401, 403]',
-            'Should Be True    ${response.status_code} == 200',
-            'Should Be True    ${elapsed} < 10',
-          ],
-          notes:'Accepts any Python expression. Preferred over Should Be Equal when checking membership (in []) or comparisons (< > ==).',
-        },
-        {
-          name:'Should Be Equal As Integers',
-          purpose:'Assert two values are equal when treated as integers.',
-          syntax:'Should Be Equal As Integers    <actual>    <expected>',
-          usage:[
-            'Should Be Equal As Integers    ${resp1.status_code}    ${resp2.status_code}',
-            'Should Be Equal As Integers    ${put_resp.status_code}    ${patch_resp.status_code}',
-          ],
-          notes:'Used to verify two chained API calls returned the same status code. Safer than == comparison for HTTP status codes.',
-        },
-        {
-          name:'Should Contain',
-          purpose:'Assert that a string or list contains a specific substring or item.',
-          syntax:'Should Contain    <container>    <item>',
-          usage:[
-            'Should Contain    ${title}    Purplle',
-            'Should Contain    ${response.url}    purplle.com',
-            'Should Contain    ${response.url}    https',
-          ],
-          notes:'Case-sensitive. Use for partial URL and page title checks.',
-        },
-        {
-          name:'Should Not Contain',
-          purpose:'Assert that a string does NOT contain a specific substring.',
-          syntax:'Should Not Contain    <container>    <item>',
-          usage:['Should Not Contain    ${final_url}    error'],
-          notes:'Useful for verifying redirect URLs did not land on an error page.',
-        },
-      ]},
-      {label:'Expressions',keywords:[
-        {
-          name:'Evaluate',
-          purpose:'Evaluate a Python expression and return the result.',
-          syntax:'${result}=    Evaluate    <python_expression>    [modules]',
-          usage:[
-            '${status_match}=    Evaluate    ${resp1.status_code} == ${resp2.status_code}',
-            '${both_auth_gated}=    Evaluate',
-            '...    ${post_resp.status_code} in [401,403] and ${del_resp.status_code} in [401,403,404]',
-            '${both_succeeded}=     Evaluate',
-            '...    ${post_resp.status_code} in [200,201] and ${del_resp.status_code} in [200,204]',
-          ],
-          notes:'Useful for multi-condition boolean logic in test assertions. Pass module names as the second argument to use Python stdlib.',
-        },
-        {
-          name:'Log',
-          purpose:'Write a message to the Robot Framework log (log.html).',
-          syntax:'Log    <message>    [level]',
-          usage:[
-            'Log    Step 1 PASS — Homepage status: ${response.status_code}',
-            'Log    Response body (first 500 chars): ${response.text}[:500]',
-            'Log    Final URL: ${response.url}',
-            'Log    CRUD Chain complete — POST:${post_resp.status_code} GET:${get_resp.status_code}',
-          ],
-          notes:'Default level is INFO. Use DEBUG/WARN for other levels. All Log output is visible in outputs/log.html.',
-        },
-      ]},
-      {label:'Flow Control',keywords:[
-        {
-          name:'Run Keyword',
-          purpose:'Call another keyword by name dynamically.',
-          syntax:'Run Keyword    <keyword_name>    [args]',
-          usage:[
-            'Run Keyword    Assert POST Status    ${post_resp}    Step 1 POST /api/cart',
-            'Run Keyword    Assert GET Status     ${get_resp}    Step 2 GET (Read)',
-            'Run Keyword    Assert PUT Status     ${put_resp}    Step 3 PUT (Full Update)',
-            'Run Keyword    Assert PATCH Status   ${patch_resp}  Step 4 PATCH (Partial)',
-            'Run Keyword    Assert DELETE Status  ${del_resp}    Step 5 DELETE (Remove)',
-          ],
-          notes:'Used to call custom Assert keywords by name from within test cases.',
-        },
-        {
-          name:'Run Keyword If',
-          purpose:'Call a keyword conditionally if an expression is true.',
-          syntax:'Run Keyword If    <condition>    <keyword>    [args]',
-          usage:['Run Keyword If    ${response.status_code} == 200    Verify JSON Response    ${response}'],
-          notes:'Skips keyword silently if condition is false. Use in API tests where response structure only exists on 200 responses.',
-        },
-        {
-          name:'Run Keyword And Return Status',
-          purpose:'Run a keyword and return True/False instead of failing.',
-          syntax:'${status}=    Run Keyword And Return Status    <keyword>    [args]',
-          usage:[
-            '${suggestion_found}=    Run Keyword And Return Status',
-            '...    Wait Until Element Is Visible    ${SEARCH_SUGGESTION_BOX}    timeout=5s',
-          ],
-          notes:'Captures expected failures gracefully for optional/conditional UI elements.',
-        },
-      ]},
-    ]
-  },
-  {
-    id:'custom',lib:'custom',num:5,
-    title:'Custom Keywords',
-    import:'Resource    ../../resources/common_resources.robot',
-    used:'All test files',
-    icon:'✨',
-    categories:[
-      {label:'Browser Setup',keywords:[
-        {
-          name:'Open Application',
-          purpose:'Browser setup — open browser, maximize, set timeouts and screenshot dir.',
-          syntax:'Open Application    [url=${BASE_URL}]',
-          usage:[
-            'Suite Setup    Open Application',
-            'Open Application    https://www.purplle.com/login',
-          ],
-          notes:'Wraps Open Browser with headless support, implicit wait, timeout, and screenshot directory setup. Use this instead of raw Open Browser.',
-          source:'resources/common_resources.robot',
-        },
-        {
-          name:'Close Application',
-          purpose:'Close all open browsers.',
-          syntax:'Close Application',
-          usage:['Suite Teardown    Close Application'],
-          notes:'Wraps Close All Browsers. Always use in Suite Teardown.',
-          source:'resources/common_resources.robot',
-        },
-        {
-          name:'Title Should Contain',
-          purpose:'Assert the page title contains a substring (partial match).',
-          syntax:'Title Should Contain    <expected_substring>',
-          usage:[
-            'Title Should Contain    Purplle',
-            'Title Should Contain    lipstick',
-          ],
-          notes:'SeleniumLibrary only provides Title Should Be (exact match). This custom keyword uses Get Title + Should Contain for partial match.',
-          source:'resources/common_resources.robot',
-        },
-      ]},
-      {label:'API Session',keywords:[
-        {
-          name:'Create Purplle API Session',
-          purpose:'Create the shared HTTP session with JSON headers for all API tests.',
-          syntax:'Create Purplle API Session',
-          usage:['Suite Setup    Create Purplle API Session'],
-          notes:'Defined locally in each API test file. Sets Accept, Content-Type, User-Agent headers and calls Create Session with alias "purplle".',
-          source:'tests/api/*.robot',
-        },
-      ]},
-      {label:'Status Assertions',keywords:[
-        {
-          name:'Assert POST Status',
-          purpose:'Assert POST response is in the accepted status list [200, 201, 401, 403].',
-          syntax:'Assert POST Status    <response>    <label>',
-          usage:['Run Keyword    Assert POST Status    ${post_resp}    Step 1 POST /api/cart'],
-          notes:'201 = resource created. 401/403 = guest auth gate. 400/5xx = failure. NEVER use < 500.',
-          statuses:['200 OK','201 Created','401 Auth','403 Forbidden'],
-          statusTypes:['s-2xx','s-2xx','s-4xx','s-4xx'],
-          source:'tests/api/test_post_chaining.robot, test_crud_chaining.robot',
-        },
-        {
-          name:'Assert GET Status',
-          purpose:'Assert GET response is in the accepted status list [200, 301, 302, 401, 403].',
-          syntax:'Assert GET Status    <response>    <label>',
-          usage:['Run Keyword    Assert GET Status    ${get_resp}    Step 2 GET (Read)'],
-          statuses:['200 OK','301 Redirect','302 Redirect','401 Auth','403 Forbidden'],
-          statusTypes:['s-2xx','s-3xx','s-3xx','s-4xx','s-4xx'],
-          source:'tests/api/test_crud_chaining.robot, test_api_chaining.robot',
-        },
-        {
-          name:'Assert PUT Status',
-          purpose:'Assert PUT response is in the accepted status list [200, 204, 401, 403].',
-          syntax:'Assert PUT Status    <response>    <label>',
-          usage:['Run Keyword    Assert PUT Status    ${put_resp}    Step 3 PUT (Full Update)'],
-          statuses:['200 OK','204 No Content','401 Auth','403 Forbidden'],
-          statusTypes:['s-2xx','s-2xx','s-4xx','s-4xx'],
-          source:'tests/api/test_put_chaining.robot, test_crud_chaining.robot',
-        },
-        {
-          name:'Assert PATCH Status',
-          purpose:'Assert PATCH response is in the accepted status list [200, 204, 401, 403].',
-          syntax:'Assert PATCH Status    <response>    <label>',
-          usage:['Run Keyword    Assert PATCH Status    ${patch_resp}    Step 4 PATCH (Partial)'],
-          statuses:['200 OK','204 No Content','401 Auth','403 Forbidden'],
-          statusTypes:['s-2xx','s-2xx','s-4xx','s-4xx'],
-          source:'tests/api/test_patch_chaining.robot, test_crud_chaining.robot',
-        },
-        {
-          name:'Assert DELETE Status',
-          purpose:'Assert DELETE response is in accepted list [200, 204, 401, 403, 404].',
-          syntax:'Assert DELETE Status    <response>    <label>',
-          usage:['Run Keyword    Assert DELETE Status    ${del_resp}    Step 5 DELETE (Remove)'],
-          statuses:['200 OK','204 No Content','401 Auth','403 Forbidden','404 Gone'],
-          statusTypes:['s-2xx','s-2xx','s-4xx','s-4xx','s-4xx'],
-          source:'tests/api/test_delete_chaining.robot, test_crud_chaining.robot',
-        },
-        {
-          name:'Assert Search GET Status',
-          purpose:'Assert search/autocomplete GET response in [200, 301, 302, 401, 403, 404]. 404 included because search endpoint paths are best-guess patterns.',
-          syntax:'Assert Search GET Status    <response>    <label>',
-          usage:['Run Keyword    Assert Search GET Status    ${search_response}    Step 2 GET /api/search'],
-          statuses:['200 OK','301 Redirect','302 Redirect','401 Auth','403 Forbidden','404 Not Found'],
-          statusTypes:['s-2xx','s-3xx','s-3xx','s-4xx','s-4xx','s-4xx'],
-          source:'tests/api/test_api_chaining.robot',
-        },
-        {
-          name:'Verify JSON Response',
-          purpose:'Assert JSON response body is parseable and not empty.',
-          syntax:'Verify JSON Response    <response>',
-          usage:['Run Keyword If    ${response.status_code} == 200    Verify JSON Response    ${response}'],
-          notes:'Only called when status is 200. Parses response.json() and checks Should Not Be Empty.',
-          source:'tests/api/test_search_api.robot',
-        },
-      ]},
-    ]
-  },
+/* ══════════════════════════════════════════════════════════════
+   1. SELENIUM LIBRARY
+══════════════════════════════════════════════════════════════ */
+{
+  id:'selenium',lib:'selenium',num:1,
+  title:'SeleniumLibrary',
+  import:'Library    SeleniumLibrary',
+  used:'resources/common_resources.robot, resources/pages/*.robot, tests/functional/*, tests/integration/*, tests/e2e/*',
+  icon:'🌐',
+  categories:[
+    {label:'Browser Lifecycle',keywords:[
+      {name:'Open Browser',
+       purpose:'Launch a new browser window and navigate to a URL.',
+       syntax:'Open Browser    <url>    <browser>    [options=<opts>]',
+       usage:['Open Browser    https://www.purplle.com    chrome','Open Browser    ${BASE_URL}    ${BROWSER}','Open Browser    ${url}    ${BROWSER}','...    options=add_argument("--headless=new");add_argument("--no-sandbox")'],
+       notes:'${BROWSER} defaults to chrome. Pass options= for headless/flags. Called inside custom keyword Open Application in common_resources.'},
+      {name:'Maximize Browser Window',
+       purpose:'Maximize the browser window to full screen.',
+       syntax:'Maximize Browser Window',
+       usage:['Maximize Browser Window'],
+       notes:'Called right after Open Browser inside Open Application.'},
+      {name:'Close All Browsers',
+       purpose:'Close every open browser session managed by SeleniumLibrary.',
+       syntax:'Close All Browsers',
+       usage:['Close All Browsers'],
+       notes:'Used inside custom keyword Close Application for Suite Teardown.'},
+      {name:'Switch Window',
+       purpose:'Switch the active browser context to another open window or tab.',
+       syntax:'Switch Window    <locator>',
+       usage:['Switch Window    NEW','Switch Window    MAIN','Switch Window    title=Purplle | Best Beauty'],
+       notes:'Use NEW to switch to a newly opened popup/tab. Use MAIN to return to the original. locator can be a window title, url, or index.'},
+      {name:'Close Window',
+       purpose:'Close the current browser window/tab and return to the previous one.',
+       syntax:'Close Window',
+       usage:['Close Window'],
+       notes:'Does not close the entire browser. Use Close All Browsers in Suite Teardown.'},
+      {name:'Get Window Handles',
+       purpose:'Return a list of all open window handles.',
+       syntax:'${handles}=    Get Window Handles',
+       usage:['${handles}=    Get Window Handles','${count}=    Get Length    ${handles}','Should Be Equal As Integers    ${count}    2'],
+       notes:'Useful for verifying a new tab opened. Combine with Switch Window to control it.'},
+      {name:'Set Window Size',
+       purpose:'Set the browser window to a specific width and height in pixels.',
+       syntax:'Set Window Size    <width>    <height>',
+       usage:['Set Window Size    1920    1080','Set Window Size    1280    800','Set Window Size    375    812    # Mobile viewport'],
+       notes:'Useful for responsive testing at specific breakpoints.'},
+    ]},
+    {label:'Navigation',keywords:[
+      {name:'Go To',
+       purpose:'Navigate the current browser to a given URL.',
+       syntax:'Go To    <url>',
+       usage:['Go To    ${BASE_URL}','Go To    ${BASE_URL}/search?q=${keyword}','Go To    https://www.purplle.com/cart','Go To    https://www.purplle.com/makeup','Go To    https://www.purplle.com/profile/myfavourites','Go To    ${MAKEUP_URL}'],
+       notes:'Used heavily in Test Setup and inside page keywords. Purplle is Angular — search requires direct URL navigation; pressing ENTER on the search bar does NOT trigger navigation.'},
+      {name:'Go Back',
+       purpose:'Navigate to the previous page in the browser history (equivalent to clicking Back).',
+       syntax:'Go Back',
+       usage:['Go Back','# Navigate to PDP then back to PLP','Click First Product','Go Back','Verify Products Are Listed'],
+       notes:'Use to simulate a user pressing the browser back button. Verify the page loaded correctly after going back.'},
+      {name:'Reload Page',
+       purpose:'Reload/refresh the current page.',
+       syntax:'Reload Page',
+       usage:['Reload Page','Wait Until Element Is Visible    ${LOGO}'],
+       notes:'Use when testing that state persists after a page refresh (e.g. cart items remain).'},
+      {name:'Get Location',
+       purpose:'Return the current browser URL as a string.',
+       syntax:'${url}=    Get Location',
+       usage:['${url}=    Get Location','Should Contain    ${url}    /search','Log    Current URL: ${url}'],
+       notes:'Alias: Get Current Url. Use instead of Location Should Be when you need the URL as a variable.'},
+      {name:'Location Should Be',
+       purpose:'Assert the current URL matches exactly.',
+       syntax:'Location Should Be    <expected_url>',
+       usage:['Location Should Be    https://www.purplle.com/'],
+       notes:'Use for exact URL match. Use Location Should Contain for partial.'},
+      {name:'Location Should Contain',
+       purpose:'Assert the current URL contains a substring.',
+       syntax:'Location Should Contain    <substring>',
+       usage:['Location Should Contain    myfavourites','Location Should Contain    /search?q='],
+       notes:'Preferred over Location Should Be when query strings may vary.'},
+    ]},
+    {label:'Waits',keywords:[
+      {name:'Wait Until Element Is Visible',
+       purpose:'Pause test execution until an element becomes visible on the page. Fails if the element is not visible within the timeout.',
+       syntax:'Wait Until Element Is Visible    <locator>    timeout=<time>',
+       usage:['Wait Until Element Is Visible    ${LOGO}','Wait Until Element Is Visible    ${FIRST_PRODUCT_CARD}    timeout=15s','Wait Until Element Is Visible    ${EMPTY_CART_MESSAGE}    timeout=15s','Wait Until Element Is Visible    ${MOBILE_INPUT}    timeout=10s','Wait Until Element Is Visible    ${SEARCH_SUGGESTION_BOX}    timeout=5s','Wait Until Element Is Visible    xpath=//h1    timeout=15s'],
+       notes:'ALWAYS use this instead of Sleep. Default timeout is ${TIMEOUT} (15s). Never use Sleep — it is fragile and wastes time.'},
+      {name:'Wait Until Element Is Not Visible',
+       purpose:'Wait until an element disappears from the visible viewport. Fails if still visible after timeout.',
+       syntax:'Wait Until Element Is Not Visible    <locator>    timeout=<time>',
+       usage:['Wait Until Element Is Not Visible    ${LOADING_SPINNER}    timeout=15s','Wait Until Element Is Not Visible    ${MODAL_OVERLAY}    timeout=10s'],
+       notes:'Useful for waiting for loading spinners, modals, or overlays to disappear before proceeding.'},
+      {name:'Wait Until Page Contains',
+       purpose:'Wait until a text string appears anywhere on the current page.',
+       syntax:'Wait Until Page Contains    <text>    timeout=<time>',
+       usage:['Wait Until Page Contains    Purplle    timeout=15s','Wait Until Page Contains    Add to Bag    timeout=10s','Wait Until Page Contains    No products found    timeout=10s'],
+       notes:'Use when you need to verify text content rather than an element locator. Case-sensitive.'},
+      {name:'Wait Until Page Contains Element',
+       purpose:'Wait until an element matching the locator exists anywhere in the DOM (not necessarily visible).',
+       syntax:'Wait Until Page Contains Element    <locator>    timeout=<time>',
+       usage:['Wait Until Page Contains Element    ${PRODUCT_CARDS}    timeout=15s','Wait Until Page Contains Element    css:.product-item    timeout=10s'],
+       notes:'Different from Wait Until Element Is Visible — this checks DOM presence, not visibility.'},
+      {name:'Wait Until Element Contains',
+       purpose:'Wait until a specific element contains a given text string.',
+       syntax:'Wait Until Element Contains    <locator>    <text>    timeout=<time>',
+       usage:['Wait Until Element Contains    ${CART_COUNT_BADGE}    1    timeout=5s','Wait Until Element Contains    ${SEARCH_RESULTS_COUNT}    results    timeout=10s'],
+       notes:'Useful when an element updates its text after an async operation (e.g. cart count increments).'},
+    ]},
+    {label:'Interaction',keywords:[
+      {name:'Click Element',
+       purpose:'Click on any DOM element identified by a locator.',
+       syntax:'Click Element    <locator>',
+       usage:['Click Element    ${LOGO}','Click Element    ${FIRST_PRODUCT_CARD}','Click Element    ${ADD_TO_BAG_BTN}','Click Element    ${SORT_DROPDOWN}','Click Element    ${NAV_MAKEUP}','Click Element    ${WISHLIST_ICON}','Click Element    ${CART_ICON}','Click Element    ${REMOVE_BTN}','Click Element    ${MOVE_TO_BAG_BTN}','Click Element    ${QUANTITY_PLUS}','Click Element    ${PROCEED_TO_CHECKOUT_BTN}','Click Element    xpath=//label[contains(text(),"${brand_name}")]'],
+       notes:'Locators must be defined in locators/*_locators.robot. Never hardcode locators inside test cases.'},
+      {name:'Click Button',
+       purpose:'Click a <button> element. Semantically clearer than Click Element.',
+       syntax:'Click Button    <locator>',
+       usage:['Click Button    ${GET_OTP_BUTTON}','Click Button    ${VERIFY_OTP_BUTTON}','Click Button    ${LOGIN_SUBMIT_BTN}'],
+       notes:'Use for actual <button> tags. Use Click Element for <a>, <div>, etc.'},
+      {name:'Click Link',
+       purpose:'Click an <a> (anchor/link) element.',
+       syntax:'Click Link    <locator_or_text>',
+       usage:['Click Link    ${LOGIN_REGISTER_LINK}','Click Link    Makeup'],
+       notes:'Functionally same as Click Element but signals intent — it is a link.'},
+      {name:'Double Click Element',
+       purpose:'Double-click on an element. Used when a single click opens edit mode or selects text.',
+       syntax:'Double Click Element    <locator>',
+       usage:['Double Click Element    ${PRODUCT_NAME}','Double Click Element    ${EDITABLE_QUANTITY}'],
+       notes:'Less common on Purplle. Use when a UI control requires a double-click to activate.'},
+      {name:'Mouse Over',
+       purpose:'Simulate hovering the mouse over an element without clicking. Triggers CSS hover states and hover menus.',
+       syntax:'Mouse Over    <locator>',
+       usage:['Mouse Over    ${NAV_MAKEUP}','Mouse Over    ${NAV_SKINCARE}','Mouse Over    ${PRODUCT_IMAGE}'],
+       notes:'Use to trigger dropdown menus that appear on hover. Follow with Click Element on the revealed item.'},
+      {name:'Input Text',
+       purpose:'Type text into an input or textarea field.',
+       syntax:'Input Text    <locator>    <text>',
+       usage:['Input Text    ${SEARCH_INPUT}    ${keyword}','Input Text    ${SEARCH_INPUT}    kajal','Input Text    ${MOBILE_INPUT}    ${mobile}','Input Text    ${OTP_INPUT}    ${otp}','Input Text    ${EMAIL_INPUT}    ${email}','Input Text    ${COUPON_INPUT}    ${coupon_code}'],
+       notes:'Clears the field before typing. Use Clear Element Text first if the field already has content and you need to replace it.'},
+      {name:'Clear Element Text',
+       purpose:'Clear all existing text from an input field.',
+       syntax:'Clear Element Text    <locator>',
+       usage:['Clear Element Text    ${MOBILE_INPUT}','Clear Element Text    ${SEARCH_INPUT}'],
+       notes:'Used before re-entering text in the same field (e.g. invalid → valid input).'},
+      {name:'Press Keys',
+       purpose:'Simulate keyboard key presses on a focused element.',
+       syntax:'Press Keys    <locator>    <key>',
+       usage:['Press Keys    ${SEARCH_INPUT}    RETURN','Press Keys    ${SEARCH_INPUT}    ESCAPE','Press Keys    ${QTY_INPUT}    CTRL+a    DELETE'],
+       notes:'On Purplle (Angular app) pressing RETURN in search does NOT navigate. Use Go To with the search URL instead.'},
+      {name:'Select From List By Value',
+       purpose:'Select an option from a <select> dropdown by its value attribute.',
+       syntax:'Select From List By Value    <locator>    <value>',
+       usage:['Select From List By Value    ${SORT_DROPDOWN}    price_asc','Select From List By Value    ${QTY_SELECT}    2'],
+       notes:'Use when the dropdown is a native HTML <select> element. For custom JS dropdowns use Click Element instead.'},
+      {name:'Select From List By Label',
+       purpose:'Select an option from a <select> dropdown by its visible text label.',
+       syntax:'Select From List By Label    <locator>    <label>',
+       usage:['Select From List By Label    ${SORT_DROPDOWN}    Price: Low to High','Select From List By Label    ${SORT_DROPDOWN}    Popularity'],
+       notes:'Most human-readable option — matches what the user sees in the dropdown.'},
+      {name:'Select From List By Index',
+       purpose:'Select an option from a <select> dropdown by its zero-based index.',
+       syntax:'Select From List By Index    <locator>    <index>',
+       usage:['Select From List By Index    ${SORT_DROPDOWN}    0','Select From List By Index    ${QTY_SELECT}    1'],
+       notes:'Index 0 is the first option. Fragile if options reorder — prefer By Label or By Value.'},
+      {name:'Scroll Element Into View',
+       purpose:'Scroll the page until the element is within the visible viewport.',
+       syntax:'Scroll Element Into View    <locator>',
+       usage:['Scroll Element Into View    ${REVIEWS_SECTION}','Scroll Element Into View    ${SIMILAR_PRODUCTS}','Scroll Element Into View    ${LOAD_MORE_BTN}'],
+       notes:'Useful for lazy-loaded sections and infinite-scroll pages.'},
+      {name:'Execute Javascript',
+       purpose:'Execute arbitrary JavaScript in the browser context. Returns the JS return value.',
+       syntax:'Execute Javascript    <javascript_code>',
+       usage:['Execute Javascript    window.scrollTo(0, document.body.scrollHeight)','${val}=    Execute Javascript    return document.title','Execute Javascript    document.querySelector("${css}").click()','Execute Javascript    window.scrollTo(0, 0)'],
+       notes:'Use as a last resort when SeleniumLibrary keywords cannot interact with an element (hidden, intercepted). Prefer standard keywords where possible.'},
+      {name:'Drag And Drop',
+       purpose:'Drag an element and drop it onto another element.',
+       syntax:'Drag And Drop    <source_locator>    <target_locator>',
+       usage:['Drag And Drop    ${ITEM_TO_MOVE}    ${DROP_ZONE}'],
+       notes:'Uses native Selenium Actions. May not work on all browsers equally — test in Chrome first.'},
+    ]},
+    {label:'Assertions',keywords:[
+      {name:'Element Should Be Visible',
+       purpose:'Assert that an element is present and visible on the page RIGHT NOW. Does not wait.',
+       syntax:'Element Should Be Visible    <locator>',
+       usage:['Element Should Be Visible    ${LOGO}','Element Should Be Visible    ${SEARCH_INPUT}','Element Should Be Visible    ${PRODUCT_NAME}','Element Should Be Visible    ${ADD_TO_BAG_BTN}','Element Should Be Visible    ${EMPTY_CART_MESSAGE}','Element Should Be Visible    ${WISHLIST_PAGE_HEADING}','Element Should Be Visible    xpath=//h1'],
+       notes:'Does NOT wait. Always pair with Wait Until Element Is Visible before calling this.'},
+      {name:'Element Should Not Be Visible',
+       purpose:'Assert that an element is NOT visible on the page right now.',
+       syntax:'Element Should Not Be Visible    <locator>',
+       usage:['Element Should Not Be Visible    ${LOADING_SPINNER}','Element Should Not Be Visible    ${ERROR_BANNER}','Element Should Not Be Visible    ${MODAL_OVERLAY}'],
+       notes:'Use to verify overlays, modals, or loading states are gone.'},
+      {name:'Element Should Contain',
+       purpose:'Assert that an element contains a specific text substring.',
+       syntax:'Element Should Contain    <locator>    <text>',
+       usage:['Element Should Contain    ${CART_PAGE_HEADING}    Cart','Element Should Contain    ${PRODUCT_PRICE}    ₹','Element Should Contain    ${SEARCH_RESULTS_COUNT}    results'],
+       notes:'Partial match — does not require the element text to exactly equal the expected string.'},
+      {name:'Page Should Contain Element',
+       purpose:'Assert that an element exists anywhere on the page (visible or not).',
+       syntax:'Page Should Contain Element    <locator>',
+       usage:['Page Should Contain Element    ${PRODUCT_CARDS}','Page Should Contain Element    ${CART_ITEMS}','Page Should Contain Element    ${WISHLIST_ITEMS}'],
+       notes:'Does not require the element to be visible. Use for presence checks.'},
+      {name:'Page Should Not Contain Element',
+       purpose:'Assert that an element does NOT exist anywhere on the page.',
+       syntax:'Page Should Not Contain Element    <locator>',
+       usage:['Page Should Not Contain Element    ${PROCEED_TO_CHECKOUT_BTN}'],
+       notes:'Useful for asserting empty states (e.g. cart has no checkout button).'},
+      {name:'Page Should Contain Text',
+       purpose:'Assert that a text string appears anywhere on the current page.',
+       syntax:'Page Should Contain Text    <text>',
+       usage:['Page Should Contain Text    Add to Bag','Page Should Contain Text    Free Delivery','Page Should Contain Text    Purplle'],
+       notes:'Checks the entire page DOM, not just visible text. Case-sensitive.'},
+      {name:'Page Should Not Contain Text',
+       purpose:'Assert that a text string does NOT appear anywhere on the current page.',
+       syntax:'Page Should Not Contain Text    <text>',
+       usage:['Page Should Not Contain Text    Error','Page Should Not Contain Text    500 Internal Server Error'],
+       notes:'Useful for verifying no error messages are displayed after an action.'},
+      {name:'Element Attribute Value Should Be',
+       purpose:'Assert that a specific attribute of an element has an expected value.',
+       syntax:'Element Attribute Value Should Be    <locator>    <attribute>    <expected_value>',
+       usage:['Element Attribute Value Should Be    ${ADD_TO_BAG_BTN}    disabled    true','Element Attribute Value Should Be    ${SEARCH_INPUT}    placeholder    Search for products...','Element Attribute Value Should Be    ${NAV_LINK}    href    /makeup'],
+       notes:'Use when you need to verify element state via attribute (e.g. disabled, aria-selected, class).'},
+    ]},
+    {label:'Data Retrieval',keywords:[
+      {name:'Get Title',
+       purpose:'Return the current page title as a string.',
+       syntax:'${title}=    Get Title',
+       usage:['${title}=    Get Title','Should Contain    ${title}    Purplle'],
+       notes:'Used inside custom keyword Title Should Contain in common_resources. SeleniumLibrary only has Title Should Be (exact match) — use the custom keyword for partial match.'},
+      {name:'Get Text',
+       purpose:'Return the visible text content of an element as a string.',
+       syntax:'${var}=    Get Text    <locator>',
+       usage:['${name}=     Get Text    ${PRODUCT_NAME}','${price}=    Get Text    ${PRODUCT_PRICE}','${brand}=    Get Text    ${PRODUCT_BRAND}','${rating}=   Get Text    ${RATING_VALUE}','${total}=    Get Text    ${CART_TOTAL}','${message}=  Get Text    ${ERROR_MESSAGE}','${heading}=  Get Text    ${CATEGORY_HEADING}','${count}=    Get Text    ${SEARCH_RESULTS_COUNT}'],
+       notes:'Returns inner text (not HTML). Use to capture values for assertions or logging.'},
+      {name:'Get Attribute',
+       purpose:'Return the value of a specified attribute from an element.',
+       syntax:'${value}=    Get Attribute    <locator>    <attribute>',
+       usage:['${href}=     Get Attribute    ${NAV_LINK}    href','${src}=      Get Attribute    ${PRODUCT_IMAGE}    src','${class}=    Get Attribute    ${ACTIVE_TAB}    class','${disabled}= Get Attribute    ${ADD_TO_BAG_BTN}    disabled','${data}=     Get Attribute    ${ELEMENT}    data-id'],
+       notes:'Returns None if the attribute is not present. Useful for checking href, src, class, disabled, aria-* attributes.'},
+      {name:'Get WebElements',
+       purpose:'Return a list of all matching WebElement objects for a locator.',
+       syntax:'${list}=    Get WebElements    <locator>',
+       usage:['${items}=    Get WebElements    ${CART_ITEMS}','${items}=    Get WebElements    ${WISHLIST_ITEMS}','${count}=    Get Length    ${items}','Should Be True    ${count} > 0'],
+       notes:'Returns a Python list. Use Get Length to count items. Each element is a Selenium WebElement.'},
+      {name:'Get Element Count',
+       purpose:'Return the number of elements matching a locator as an integer.',
+       syntax:'${count}=    Get Element Count    <locator>',
+       usage:['${count}=    Get Element Count    ${PRODUCT_CARDS}','Should Be True    ${count} > 0','Should Be Equal As Integers    ${count}    10'],
+       notes:'More direct than Get WebElements when you only need the count, not the elements themselves.'},
+      {name:'Capture Page Screenshot',
+       purpose:'Take a screenshot of the current browser page and save it to a file.',
+       syntax:'Capture Page Screenshot    [filename=<name>]',
+       usage:['Capture Page Screenshot','Capture Page Screenshot    homepage_state.png','Capture Page Screenshot    failure_debug_{index}.png'],
+       notes:'SeleniumLibrary takes screenshots automatically on failure. Call manually to capture state at a specific test step for debugging.'},
+    ]},
+    {label:'Configuration',keywords:[
+      {name:'Set Selenium Implicit Wait',
+       purpose:'Set the global implicit wait timeout for all element lookups.',
+       syntax:'Set Selenium Implicit Wait    <time>',
+       usage:['Set Selenium Implicit Wait    ${IMPLICIT_WAIT}    # 10s'],
+       notes:'Set once in Open Application. Applies to all subsequent keywords. Implicit wait runs silently on every element search.'},
+      {name:'Set Selenium Timeout',
+       purpose:'Set the global explicit timeout for SeleniumLibrary keywords.',
+       syntax:'Set Selenium Timeout    <time>',
+       usage:['Set Selenium Timeout    ${TIMEOUT}    # 15s'],
+       notes:'Used by Wait Until Element Is Visible when no timeout= is given.'},
+      {name:'Set Screenshot Directory',
+       purpose:'Set the folder where failure screenshots are automatically saved.',
+       syntax:'Set Screenshot Directory    <path>',
+       usage:['Set Screenshot Directory    ${SCREENSHOT_DIR}    # outputs/screenshots/'],
+       notes:'Called in Open Application. Screenshots are captured automatically by SeleniumLibrary on any keyword failure.'},
+    ]},
+  ]
+},
+
+/* ══════════════════════════════════════════════════════════════
+   2. REQUESTS LIBRARY
+══════════════════════════════════════════════════════════════ */
+{
+  id:'requests',lib:'requests',num:2,
+  title:'RequestsLibrary',
+  import:'Library    RequestsLibrary',
+  used:'tests/api/*.robot',
+  icon:'🔌',
+  categories:[
+    {label:'Session Management',keywords:[
+      {name:'Create Session',
+       purpose:'Create a named HTTP session with a base URL and default headers. All subsequent HTTP calls use this session by name.',
+       syntax:'Create Session    <alias>    <base_url>    headers=<dict>    verify=<bool>',
+       usage:['${headers}=    Create Dictionary','...    Accept=application/json','...    Content-Type=application/json','...    User-Agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36','Create Session    purplle    https://www.purplle.com','...    headers=${headers}    verify=True'],
+       notes:'alias="purplle" is used in all On Session calls. verify=True enables SSL certificate validation. Called in Suite Setup via Create Purplle API Session custom keyword.'},
+      {name:'Delete All Sessions',
+       purpose:'Close and delete all active HTTP sessions.',
+       syntax:'Delete All Sessions',
+       usage:['Delete All Sessions'],
+       notes:'Called in Suite Teardown to clean up session resources.'},
+      {name:'Session Should Exist',
+       purpose:'Assert that a session with the given alias has been created and is still active.',
+       syntax:'Session Should Exist    <alias>',
+       usage:['Session Should Exist    purplle'],
+       notes:'Use in test setup to verify the session was created before making API calls. Fails if Create Session was not called.'},
+    ]},
+    {label:'HTTP Methods',keywords:[
+      {name:'GET On Session',
+       purpose:'Send an HTTP GET request to retrieve a resource.',
+       syntax:'GET On Session    <alias>    <endpoint>    params=<dict>    expected_status=<any|code>',
+       usage:['${response}=    GET On Session    purplle    /    expected_status=any','${response}=    GET On Session    purplle    /api/search    params=${params}    expected_status=any','${response}=    GET On Session    purplle    /api/autocomplete    params=${params}    expected_status=any','${response}=    GET On Session    purplle    /api/cart    expected_status=any','${response}=    GET On Session    purplle    /api/wishlist    expected_status=any','${response}=    GET On Session    purplle    /api/profile    expected_status=any'],
+       notes:'Use expected_status=any to suppress auto-fail on non-2xx. Then assert manually with Assert GET Status.',
+       statuses:['200 OK','301 Redirect','302 Redirect','401 Auth','403 Forbidden'],statusTypes:['s-2xx','s-3xx','s-3xx','s-4xx','s-4xx']},
+      {name:'POST On Session',
+       purpose:'Send an HTTP POST request to create a resource.',
+       syntax:'POST On Session    <alias>    <endpoint>    json=<dict>    expected_status=<any|code>',
+       usage:['${response}=    POST On Session    purplle    /api/cart    json=${body}    expected_status=any','${response}=    POST On Session    purplle    /api/wishlist    json=${body}    expected_status=any','${response}=    POST On Session    purplle    /api/checkout    json=${body}    expected_status=any'],
+       notes:'201 Created is the correct REST standard for a successful creation. NEVER assert < 500 — that masks 400 Bad Request errors.',
+       statuses:['201 Created','200 OK','401 Auth','403 Forbidden'],statusTypes:['s-2xx','s-2xx','s-4xx','s-4xx']},
+      {name:'PUT On Session',
+       purpose:'Send an HTTP PUT request to fully replace a resource. All fields must be sent — replaces the whole object.',
+       syntax:'PUT On Session    <alias>    <endpoint>    json=<dict>    expected_status=<any|code>',
+       usage:['${response}=    PUT On Session    purplle    /api/cart/items/12345    json=${body}    expected_status=any','${response}=    PUT On Session    purplle    /api/profile    json=${body}    expected_status=any','${response}=    PUT On Session    purplle    /api/wishlist/items/12345    json=${body}    expected_status=any'],
+       notes:'PUT differs from PATCH — PUT replaces the ENTIRE resource. Missing fields in the payload will be set to null/default.',
+       statuses:['200 OK','204 No Content','401 Auth','403 Forbidden'],statusTypes:['s-2xx','s-2xx','s-4xx','s-4xx']},
+      {name:'PATCH On Session',
+       purpose:'Send an HTTP PATCH request to partially update a resource. Only the fields included in the payload are changed.',
+       syntax:'PATCH On Session    <alias>    <endpoint>    json=<dict>    expected_status=<any|code>',
+       usage:['${response}=    PATCH On Session    purplle    /api/cart/items/12345    json=${qty}    expected_status=any','${response}=    PATCH On Session    purplle    /api/profile    json=${name_patch}    expected_status=any'],
+       notes:'PATCH differs from PUT — PATCH only modifies named fields. Ideal for fine-tuning a single field without resending the full payload.',
+       statuses:['200 OK','204 No Content','401 Auth','403 Forbidden'],statusTypes:['s-2xx','s-2xx','s-4xx','s-4xx']},
+      {name:'DELETE On Session',
+       purpose:'Send an HTTP DELETE request to remove a resource.',
+       syntax:'DELETE On Session    <alias>    <endpoint>    expected_status=<any|code>',
+       usage:['${response}=    DELETE On Session    purplle    /api/cart/items/12345    expected_status=any','${response}=    DELETE On Session    purplle    /api/wishlist/items/67890    expected_status=any'],
+       notes:'204 No Content is the most common success status for DELETE. 404 is acceptable — means the resource was already deleted.',
+       statuses:['200 OK','204 No Content','401 Auth','403 Forbidden','404 Gone'],statusTypes:['s-2xx','s-2xx','s-4xx','s-4xx','s-4xx']},
+      {name:'HEAD On Session',
+       purpose:'Send an HTTP HEAD request — identical to GET but returns only headers, no body. Used for connectivity and header checks.',
+       syntax:'HEAD On Session    <alias>    <endpoint>    expected_status=<any|code>',
+       usage:['${response}=    HEAD On Session    purplle    /    expected_status=any','Should Be Equal As Integers    ${response.status_code}    200','Log    Content-Type: ${response.headers["Content-Type"]}'],
+       notes:'Faster than GET for checking if an endpoint exists. Response body is always empty — use response.headers for assertions.',
+       statuses:['200 OK','301 Redirect','401 Auth','403 Forbidden'],statusTypes:['s-2xx','s-3xx','s-4xx','s-4xx']},
+      {name:'OPTIONS On Session',
+       purpose:'Send an HTTP OPTIONS request to discover allowed methods and CORS policy for an endpoint.',
+       syntax:'OPTIONS On Session    <alias>    <endpoint>    expected_status=<any|code>',
+       usage:['${response}=    OPTIONS On Session    purplle    /api/search    expected_status=any','${allow}=    Get From Dictionary    ${response.headers}    Allow','Log    Allowed methods: ${allow}'],
+       notes:'Useful for CORS testing. The response headers will include Allow and Access-Control-Allow-Methods.',
+       statuses:['200 OK','204 No Content'],statusTypes:['s-2xx','s-2xx']},
+    ]},
+    {label:'Response Object Properties',keywords:[
+      {name:'response.status_code',
+       purpose:'Integer HTTP status code of the response (200, 201, 404, etc.).',
+       syntax:'${code}=    Set Variable    ${response.status_code}',
+       usage:['Should Be True    ${response.status_code} in [200, 201, 401, 403]','Should Be Equal As Integers    ${resp1.status_code}    ${resp2.status_code}'],
+       notes:'Returned as an integer. Use in Should Be True expressions for membership checks.'},
+      {name:'response.url',
+       purpose:'The final URL after any redirects.',
+       syntax:'${url}=    Set Variable    ${response.url}',
+       usage:['Should Contain    ${response.url}    purplle.com','Should Not Contain    ${final_url}    error','Should Contain    ${response.url}    https'],
+       notes:'Reflects the URL after all 301/302 redirect hops.'},
+      {name:'response.json()',
+       purpose:'Parse the response body as JSON and return a Python dict or list.',
+       syntax:'${json}=    Set Variable    ${response.json()}',
+       usage:['${json}=    Set Variable    ${response.json()}','Should Not Be Empty    ${json}','Dictionary Should Contain Key    ${json}    products'],
+       notes:'Only call when status_code is 200 and Content-Type is application/json. Raises exception on invalid JSON.'},
+      {name:'response.elapsed.total_seconds()',
+       purpose:'Response time in seconds as a float.',
+       syntax:'${t}=    Set Variable    ${response.elapsed.total_seconds()}',
+       usage:['${time}=    Set Variable    ${resp.elapsed.total_seconds()}','Should Be True    ${time} < 10'],
+       notes:'Used in performance assertions. Compare against 10s threshold for basic health checks.'},
+      {name:'response.text',
+       purpose:'The raw response body as a string.',
+       syntax:'${body}=    Set Variable    ${response.text}',
+       usage:['Log    Response body (first 500 chars): ${response.text}[:500]','Should Contain    ${response.text}    lipstick'],
+       notes:'Useful for debugging when JSON parsing fails. Not for structured assertions — use response.json() instead.'},
+      {name:'response.headers',
+       purpose:'Dictionary of response headers.',
+       syntax:'${hdrs}=    Set Variable    ${response.headers}',
+       usage:['${ct}=    Get From Dictionary    ${response.headers}    Content-Type','Should Contain    ${ct}    application/json'],
+       notes:'Use with Collections Get From Dictionary to extract specific headers like Content-Type, Set-Cookie, X-Request-Id.'},
+    ]},
+  ]
+},
+
+/* ══════════════════════════════════════════════════════════════
+   3. COLLECTIONS LIBRARY
+══════════════════════════════════════════════════════════════ */
+{
+  id:'collections',lib:'collections',num:3,
+  title:'Collections Library',
+  import:'Library    Collections',
+  used:'tests/api/*.robot',
+  icon:'📦',
+  categories:[
+    {label:'Dictionary Keywords',keywords:[
+      {name:'Create Dictionary',
+       purpose:'Create a Python dictionary (key=value pairs). Used to build request bodies, query params, and headers.',
+       syntax:'${dict}=    Create Dictionary    key1=value1    key2=value2    ...',
+       usage:['${headers}=    Create Dictionary','...    Accept=application/json','...    Content-Type=application/json','','${params}=    Create Dictionary    q=lipstick','${params}=    Create Dictionary    category=makeup','','${body}=    Create Dictionary    product_id=12345    quantity=1','${body}=    Create Dictionary    name=Suraj    email=suraj@example.com    phone=9876543210'],
+       notes:'The most frequently used Collections keyword in this suite. Used for every HTTP request payload and params block.'},
+      {name:'Get From Dictionary',
+       purpose:'Extract the value for a specific key from a dictionary.',
+       syntax:'${val}=    Get From Dictionary    <dict>    <key>',
+       usage:['${val}=    Get From Dictionary    ${json}    products','${ct}=    Get From Dictionary    ${response.headers}    Content-Type'],
+       notes:'Raises KeyError if key is absent. Use Dictionary Should Contain Key first to guard against missing keys.'},
+      {name:'Dictionary Should Contain Key',
+       purpose:'Assert that a dictionary contains a specific key.',
+       syntax:'Dictionary Should Contain Key    <dict>    <key>',
+       usage:['Dictionary Should Contain Key    ${json}    products','Dictionary Should Contain Key    ${json}    status'],
+       notes:'Used to validate JSON response structure after ${response.json()}.'},
+      {name:'Get Dictionary Keys',
+       purpose:'Return a list of all keys in a dictionary.',
+       syntax:'${keys}=    Get Dictionary Keys    <dict>',
+       usage:['${keys}=    Get Dictionary Keys    ${json}','Log    Response keys: ${keys}','Should Contain    ${keys}    products'],
+       notes:'Useful for debugging API responses — log the keys to understand the JSON structure.'},
+      {name:'Get Dictionary Values',
+       purpose:'Return a list of all values in a dictionary.',
+       syntax:'${vals}=    Get Dictionary Values    <dict>',
+       usage:['${vals}=    Get Dictionary Values    ${json}','Should Not Be Empty    ${vals}'],
+       notes:'Useful when you need to iterate over or count all values in a response dict.'},
+      {name:'Copy Dictionary',
+       purpose:'Return a shallow copy of a dictionary.',
+       syntax:'${copy}=    Copy Dictionary    <dict>',
+       usage:['${modified}=    Copy Dictionary    ${base_body}','Set To Dictionary    ${modified}    quantity=5'],
+       notes:'Use when you need to modify request body variants without changing the original template dict.'},
+    ]},
+    {label:'List Keywords',keywords:[
+      {name:'Get From List',
+       purpose:'Extract an item from a list by its index.',
+       syntax:'${item}=    Get From List    <list>    <index>',
+       usage:['${first}=    Get From List    ${items}    0','${last}=     Get From List    ${items}    -1'],
+       notes:'Index 0 = first item. Negative indices count from the end (-1 = last).'},
+      {name:'Append To List',
+       purpose:'Add an item to the end of a list.',
+       syntax:'Append To List    <list>    <value>',
+       usage:['Append To List    ${keyword_list}    lipstick','Append To List    ${product_ids}    12345'],
+       notes:'Modifies the list in-place. Use to build lists dynamically during test execution.'},
+      {name:'Remove From List',
+       purpose:'Remove the element at a given index from a list and return it.',
+       syntax:'${item}=    Remove From List    <list>    <index>',
+       usage:['${removed}=    Remove From List    ${cart_items}    0'],
+       notes:'Index 0 removes the first item. The list is modified in-place.'},
+      {name:'List Should Contain Value',
+       purpose:'Assert that a list contains a specific value.',
+       syntax:'List Should Contain Value    <list>    <value>',
+       usage:['List Should Contain Value    ${keys}    products','List Should Contain Value    ${status_codes}    200'],
+       notes:'Fails if the value is not found in the list.'},
+      {name:'Length Should Be',
+       purpose:'Assert the length of a list or dictionary equals an expected value.',
+       syntax:'Length Should Be    <collection>    <expected_length>',
+       usage:['Length Should Be    ${items}    3','Length Should Be    ${cart_items}    1'],
+       notes:'Works on lists, dicts, and strings.'},
+      {name:'Should Not Be Empty',
+       purpose:'Assert that a list, dictionary, or string is not empty.',
+       syntax:'Should Not Be Empty    <collection_or_string>',
+       usage:['Should Not Be Empty    ${json}','Should Not Be Empty    ${items}'],
+       notes:'Fails if the value is [], {}, or "".'},
+    ]},
+  ]
+},
+
+/* ══════════════════════════════════════════════════════════════
+   4. BUILTIN LIBRARY
+══════════════════════════════════════════════════════════════ */
+{
+  id:'builtin',lib:'builtin',num:4,
+  title:'BuiltIn Library',
+  import:'No import needed — always available in every robot file',
+  used:'All test files',
+  icon:'⚙️',
+  categories:[
+    {label:'Variables',keywords:[
+      {name:'Set Variable',
+       purpose:'Assign any value to a variable.',
+       syntax:'${var}=    Set Variable    <value>',
+       usage:['${json}=        Set Variable    ${response.json()}','${final_url}=   Set Variable    ${search_response.url}','${elapsed}=     Set Variable    ${response.elapsed.total_seconds()}','${keyword}=     Set Variable    foundation'],
+       notes:'Used to alias response properties into cleaner variable names.'},
+      {name:'Set Suite Variable',
+       purpose:'Set a variable that is available for the rest of the current test suite (all tests in the file).',
+       syntax:'Set Suite Variable    ${VAR}    <value>',
+       usage:['Set Suite Variable    ${PRODUCT_ID}    ${id_from_api}','Set Suite Variable    ${AUTH_TOKEN}    ${token}'],
+       notes:'Use in Suite Setup or the first test to share state across all tests in a suite. More controlled than Set Global Variable.'},
+      {name:'Set Global Variable',
+       purpose:'Set a variable that is available across ALL suites and tests for the rest of the run.',
+       syntax:'Set Global Variable    ${VAR}    <value>',
+       usage:['Set Global Variable    ${SHARED_SESSION_ID}    ${session}'],
+       notes:'Use sparingly — global state makes tests harder to understand and debug. Prefer Suite Variable for suite-scoped sharing.'},
+      {name:'Convert To Integer',
+       purpose:'Convert a value to a Python integer.',
+       syntax:'${int}=    Convert To Integer    <value>',
+       usage:['${count}=    Convert To Integer    ${count_text}','${qty}=      Convert To Integer    ${qty_str}','Should Be True    ${count} > 0'],
+       notes:'Use when Get Text returns a numeric string and you need to do math or numeric comparisons on it.'},
+      {name:'Convert To String',
+       purpose:'Convert a value to a Python string.',
+       syntax:'${str}=    Convert To String    <value>',
+       usage:['${str_id}=    Convert To String    ${product_id}','${str_code}=  Convert To String    ${response.status_code}'],
+       notes:'Use when you need to concatenate or do string operations on a non-string value.'},
+      {name:'Get Length',
+       purpose:'Return the length of a string, list, or dictionary as an integer.',
+       syntax:'${len}=    Get Length    <collection_or_string>',
+       usage:['${items}=     Get WebElements    ${CART_ITEMS}','${count}=     Get Length    ${items}','RETURN    ${count}','','${json}=    Set Variable    ${response.json()}','${len}=     Get Length    ${json}'],
+       notes:'Used in cart_page.robot and wishlist_page.robot to count items. Equivalent to Python len().'},
+    ]},
+    {label:'Assertions',keywords:[
+      {name:'Should Be True',
+       purpose:'Assert that a Python expression evaluates to True.',
+       syntax:'Should Be True    <expression>',
+       usage:['Should Be True    ${response.status_code} in [200, 201, 401, 403]','Should Be True    ${response.status_code} in [200, 204, 401, 403, 404]','Should Be True    ${response.status_code} == 200','Should Be True    ${elapsed} < 10','Should Be True    ${count} > 0'],
+       notes:'Accepts any Python expression. Preferred over Should Be Equal when checking membership (in []) or comparisons (< > ==).'},
+      {name:'Should Be Equal',
+       purpose:'Assert that two values are equal.',
+       syntax:'Should Be Equal    <first>    <second>',
+       usage:['Should Be Equal    ${title}    Purplle | Best Beauty Store','Should Be Equal    ${response.status_code}    ${200}'],
+       notes:'Exact string match. Use Should Be Equal As Integers for numeric comparisons.'},
+      {name:'Should Be Equal As Integers',
+       purpose:'Assert two values are equal when treated as integers.',
+       syntax:'Should Be Equal As Integers    <actual>    <expected>',
+       usage:['Should Be Equal As Integers    ${resp1.status_code}    ${resp2.status_code}','Should Be Equal As Integers    ${put_resp.status_code}    ${patch_resp.status_code}','Should Be Equal As Integers    ${home_response.status_code}    200'],
+       notes:'Used to verify two chained API calls returned the same status code. Safer than == comparison for HTTP status codes.'},
+      {name:'Should Not Be Equal',
+       purpose:'Assert that two values are NOT equal.',
+       syntax:'Should Not Be Equal    <first>    <second>',
+       usage:['Should Not Be Equal    ${resp1.status_code}    ${resp2.status_code}','Should Not Be Equal    ${price}    ${EMPTY}'],
+       notes:'Inverse of Should Be Equal. Use to verify a value has changed after an update.'},
+      {name:'Should Contain',
+       purpose:'Assert that a string or list contains a specific substring or item.',
+       syntax:'Should Contain    <container>    <item>',
+       usage:['Should Contain    ${title}    Purplle','Should Contain    ${response.url}    purplle.com','Should Contain    ${response.url}    https'],
+       notes:'Case-sensitive. Use for partial URL and page title checks.'},
+      {name:'Should Not Contain',
+       purpose:'Assert that a string does NOT contain a specific substring.',
+       syntax:'Should Not Contain    <container>    <item>',
+       usage:['Should Not Contain    ${final_url}    error','Should Not Contain    ${page_text}    500'],
+       notes:'Useful for verifying redirect URLs did not land on an error page.'},
+      {name:'Should Be Empty',
+       purpose:'Assert that a string, list, or dictionary is empty.',
+       syntax:'Should Be Empty    <value>',
+       usage:['Should Be Empty    ${error_messages}','Should Be Empty    ${cart_items}'],
+       notes:'Inverse of Should Not Be Empty. Use to verify a container has no items.'},
+      {name:'Fail',
+       purpose:'Unconditionally fail the test with an optional message.',
+       syntax:'Fail    [message]',
+       usage:['Fail    This test is not implemented yet','Fail    Expected product to be in cart but it was not found'],
+       notes:'Use to mark a test as explicitly failed. Also useful as a placeholder for test cases under development.'},
+    ]},
+    {label:'Expressions',keywords:[
+      {name:'Evaluate',
+       purpose:'Evaluate a Python expression and return the result.',
+       syntax:'${result}=    Evaluate    <python_expression>    [modules]',
+       usage:['${match}=    Evaluate    ${resp1.status_code} == ${resp2.status_code}','${both_auth}=    Evaluate','...    ${post_resp.status_code} in [401,403] and ${del_resp.status_code} in [401,403,404]','${price_float}=  Evaluate    float("${price}".replace("₹","").replace(",",""))'],
+       notes:'Useful for multi-condition boolean logic and type conversions. Pass module names as the second argument to use Python stdlib (e.g. json, re, math).'},
+      {name:'Log',
+       purpose:'Write a message to the Robot Framework log (log.html).',
+       syntax:'Log    <message>    [level]',
+       usage:['Log    Step 1 PASS — Homepage status: ${response.status_code}','Log    Response body (first 500 chars): ${response.text}[:500]','Log    Final URL: ${response.url}','Log    CRUD Chain complete — POST:${post_resp.status_code} GET:${get_resp.status_code}'],
+       notes:'Default level is INFO. Use WARN for non-critical issues, DEBUG for verbose output. All Log output is visible in outputs/log.html.'},
+      {name:'Log To Console',
+       purpose:'Print a message to the console (stdout) during test execution.',
+       syntax:'Log To Console    <message>',
+       usage:['Log To Console    Running test: ${TEST_NAME}','Log To Console    Status: ${response.status_code}'],
+       notes:'Output appears in terminal, not in log.html. Use for real-time feedback during long-running tests.'},
+      {name:'Get Time',
+       purpose:'Return the current date and time as a formatted string.',
+       syntax:'${time}=    Get Time    [format]    [time_]',
+       usage:['${now}=    Get Time','${ts}=     Get Time    timestamp','${date}=   Get Time    %Y-%m-%d'],
+       notes:'Useful for generating unique test data (e.g. unique email addresses with timestamp suffix).'},
+    ]},
+    {label:'Flow Control',keywords:[
+      {name:'Run Keyword',
+       purpose:'Call another keyword by name dynamically.',
+       syntax:'Run Keyword    <keyword_name>    [args]',
+       usage:['Run Keyword    Assert POST Status    ${post_resp}    Step 1 POST /api/cart','Run Keyword    Assert GET Status     ${get_resp}    Step 2 GET (Read)','Run Keyword    Assert PUT Status     ${put_resp}    Step 3 PUT (Full Update)','Run Keyword    Assert DELETE Status  ${del_resp}    Step 5 DELETE (Remove)'],
+       notes:'Used to call custom Assert keywords by name from within test cases.'},
+      {name:'Run Keyword If',
+       purpose:'Call a keyword conditionally if an expression is true.',
+       syntax:'Run Keyword If    <condition>    <keyword>    [args]',
+       usage:['Run Keyword If    ${response.status_code} == 200    Verify JSON Response    ${response}'],
+       notes:'Skips keyword silently if condition is false. Use in API tests where response structure only exists on 200 responses.'},
+      {name:'Run Keyword And Return Status',
+       purpose:'Run a keyword and return True/False instead of failing.',
+       syntax:'${status}=    Run Keyword And Return Status    <keyword>    [args]',
+       usage:['${found}=    Run Keyword And Return Status','...    Wait Until Element Is Visible    ${SEARCH_SUGGESTION_BOX}    timeout=5s','Run Keyword If    ${found}    Click Element    ${SEARCH_SUGGESTION_ITEM}'],
+       notes:'Captures expected failures gracefully for optional/conditional UI elements.'},
+      {name:'Pass Execution If',
+       purpose:'Skip (pass) the current test if a condition is true, with an optional message.',
+       syntax:'Pass Execution If    <condition>    [message]',
+       usage:['Pass Execution If    ${response.status_code} == 401    Skipping — endpoint requires auth','Pass Execution If    "${HEADLESS}" == "true"    Skipping visual test in headless mode'],
+       notes:'Use to skip tests that are conditionally not applicable rather than failing them. Shows as PASS with message in report.'},
+      {name:'Sleep',
+       purpose:'Pause test execution for a specified duration.',
+       syntax:'Sleep    <time>',
+       usage:['Sleep    1s    # Used in product_listing_page.robot after opening sort dropdown','Sleep    2s    # Used in cart_page.robot and wishlist_page.robot after remove actions'],
+       notes:'⚠ AVOID — Sleep is fragile and slow. Use Wait Until Element Is Visible instead. Only use when no deterministic wait is possible (e.g. after a non-blocking animation).'},
+      {name:'RETURN',
+       purpose:'Return a value from a user-defined keyword.',
+       syntax:'RETURN    <value>',
+       usage:['RETURN    ${count}','RETURN    ${heading}','RETURN    ${name}','RETURN    ${price}'],
+       notes:'Used in all resource/pages/*.robot keywords that return data. RF7+ syntax — replaces the older [Return] tag.'},
+    ]},
+  ]
+},
+
+/* ══════════════════════════════════════════════════════════════
+   5. STRING LIBRARY
+══════════════════════════════════════════════════════════════ */
+{
+  id:'string',lib:'string',num:5,
+  title:'String Library',
+  import:'Library    String',
+  used:'tests/api/test_api_chaining.robot',
+  icon:'🔤',
+  categories:[
+    {label:'String Manipulation',keywords:[
+      {name:'Split String',
+       purpose:'Split a string by a separator and return the resulting list of parts.',
+       syntax:'${list}=    Split String    <string>    [separator]    [max_split]',
+       usage:['${parts}=    Split String    ${response.url}    /','${words}=    Split String    lipstick blush eyeshadow    ${SPACE}','${items}=    Split String    200,201,401    ,'],
+       notes:'Default separator is whitespace. Use to parse URL segments or CSV-like strings.'},
+      {name:'Strip String',
+       purpose:'Remove leading and/or trailing whitespace (or specific characters) from a string.',
+       syntax:'${clean}=    Strip String    <string>    [mode=both]    [characters]',
+       usage:['${name}=     Strip String    ${raw_name}','${trimmed}=  Strip String    ${text}    mode=left','${trimmed}=  Strip String    ${text}    characters=₹,'],
+       notes:'mode can be both (default), left, or right. Use to clean scraped text that has extra whitespace.'},
+      {name:'Replace String',
+       purpose:'Replace all occurrences of a search string with a replacement string.',
+       syntax:'${new}=    Replace String    <string>    <search>    <replacement>',
+       usage:['${clean_price}=    Replace String    ${price_text}    ₹    ${EMPTY}','${no_space}=      Replace String    ${keyword}    ${SPACE}    +','${clean}=         Replace String    ${text}    ,    ${EMPTY}'],
+       notes:'Replaces ALL occurrences. Use to clean currency symbols, spaces, or commas from scraped text before numeric conversion.'},
+      {name:'Convert To Lower Case',
+       purpose:'Convert all characters in a string to lowercase.',
+       syntax:'${lower}=    Convert To Lower Case    <string>',
+       usage:['${lower}=    Convert To Lower Case    ${product_name}','Should Be Equal    ${lower}    lipstick matte'],
+       notes:'Use for case-insensitive comparisons.'},
+      {name:'Convert To Upper Case',
+       purpose:'Convert all characters in a string to uppercase.',
+       syntax:'${upper}=    Convert To Upper Case    <string>',
+       usage:['${upper}=    Convert To Upper Case    ${category}','Should Be Equal    ${upper}    MAKEUP'],
+       notes:'Use for case-insensitive comparisons or when an API expects uppercase values.'},
+      {name:'Should Match Regexp',
+       purpose:'Assert that a string matches a regular expression pattern.',
+       syntax:'Should Match Regexp    <string>    <pattern>',
+       usage:['Should Match Regexp    ${price}    ^₹\\d+','Should Match Regexp    ${response.url}    https://www\\.purplle\\.com/.*','Should Match Regexp    ${email}    ^[\\w.]+@[\\w.]+\\.\\w+$'],
+       notes:'Uses Python re.search (partial match by default). Add ^ and $ anchors for full-string match.'},
+      {name:'Get Regexp Matches',
+       purpose:'Return all substrings of a string that match a regular expression.',
+       syntax:'${matches}=    Get Regexp Matches    <string>    <pattern>    [group]',
+       usage:['${prices}=    Get Regexp Matches    ${page_text}    ₹(\\d+)    1','${ids}=       Get Regexp Matches    ${response.text}    "id":\\s*(\\d+)    1'],
+       notes:'Returns a list of matches. group=1 extracts the first capture group. Empty list if no match.'},
+      {name:'Get Substring',
+       purpose:'Return a substring of a string from a start index to an end index.',
+       syntax:'${sub}=    Get Substring    <string>    <start>    [end]',
+       usage:['${first_50}=    Get Substring    ${response.text}    0    50','${suffix}=      Get Substring    ${url}    -10'],
+       notes:'Indexes follow Python slice notation. Negative indices count from the end.'},
+    ]},
+  ]
+},
+
+/* ══════════════════════════════════════════════════════════════
+   6. CUSTOM KEYWORDS
+══════════════════════════════════════════════════════════════ */
+{
+  id:'custom',lib:'custom',num:6,
+  title:'Custom Keywords',
+  import:'Resource    ../../resources/common_resources.robot',
+  used:'All test files',
+  icon:'✨',
+  categories:[
+    {label:'Browser Setup',keywords:[
+      {name:'Open Application',
+       purpose:'Browser setup — open browser with headless support, maximize, set timeouts and screenshot dir.',
+       syntax:'Open Application    [url=${BASE_URL}]',
+       usage:['Suite Setup    Open Application','Open Application    https://www.purplle.com/login'],
+       notes:'Wraps Open Browser with IF/ELSE for headless mode, plus Set Selenium Implicit Wait, Set Selenium Timeout, and Set Screenshot Directory. Always use this instead of raw Open Browser.',
+       source:'resources/common_resources.robot'},
+      {name:'Close Application',
+       purpose:'Close all open browsers.',
+       syntax:'Close Application',
+       usage:['Suite Teardown    Close Application'],
+       notes:'Wraps Close All Browsers. Always use in Suite Teardown.',
+       source:'resources/common_resources.robot'},
+      {name:'Title Should Contain',
+       purpose:'Assert the page title contains a substring (partial match).',
+       syntax:'Title Should Contain    <expected_substring>',
+       usage:['Title Should Contain    Purplle','Title Should Contain    lipstick'],
+       notes:'SeleniumLibrary only provides Title Should Be (exact match). This custom keyword uses Get Title + Should Contain for partial match.',
+       source:'resources/common_resources.robot'},
+    ]},
+    {label:'API Session',keywords:[
+      {name:'Create Purplle API Session',
+       purpose:'Create the shared HTTP session with JSON headers for all API tests.',
+       syntax:'Create Purplle API Session',
+       usage:['Suite Setup    Create Purplle API Session'],
+       notes:'Defined locally in each API test file. Sets Accept, Content-Type, User-Agent headers and calls Create Session with alias "purplle".',
+       source:'tests/api/*.robot'},
+    ]},
+    {label:'Status Assertions',keywords:[
+      {name:'Assert POST Status',
+       purpose:'Assert POST response is in the accepted status list [200, 201, 401, 403].',
+       syntax:'Assert POST Status    <response>    <label>',
+       usage:['Run Keyword    Assert POST Status    ${post_resp}    Step 1 POST /api/cart'],
+       notes:'201 = resource created. 401/403 = guest auth gate. 400/5xx = failure. NEVER use < 500.',
+       statuses:['200 OK','201 Created','401 Auth','403 Forbidden'],statusTypes:['s-2xx','s-2xx','s-4xx','s-4xx'],
+       source:'tests/api/test_post_chaining.robot, test_crud_chaining.robot'},
+      {name:'Assert GET Status',
+       purpose:'Assert GET response is in the accepted status list [200, 301, 302, 401, 403].',
+       syntax:'Assert GET Status    <response>    <label>',
+       usage:['Run Keyword    Assert GET Status    ${get_resp}    Step 2 GET (Read)'],
+       statuses:['200 OK','301 Redirect','302 Redirect','401 Auth','403 Forbidden'],statusTypes:['s-2xx','s-3xx','s-3xx','s-4xx','s-4xx'],
+       source:'tests/api/test_crud_chaining.robot, test_api_chaining.robot'},
+      {name:'Assert PUT Status',
+       purpose:'Assert PUT response is in the accepted status list [200, 204, 401, 403].',
+       syntax:'Assert PUT Status    <response>    <label>',
+       usage:['Run Keyword    Assert PUT Status    ${put_resp}    Step 3 PUT (Full Update)'],
+       statuses:['200 OK','204 No Content','401 Auth','403 Forbidden'],statusTypes:['s-2xx','s-2xx','s-4xx','s-4xx'],
+       source:'tests/api/test_put_chaining.robot, test_crud_chaining.robot'},
+      {name:'Assert PATCH Status',
+       purpose:'Assert PATCH response is in the accepted status list [200, 204, 401, 403].',
+       syntax:'Assert PATCH Status    <response>    <label>',
+       usage:['Run Keyword    Assert PATCH Status    ${patch_resp}    Step 4 PATCH (Partial)'],
+       statuses:['200 OK','204 No Content','401 Auth','403 Forbidden'],statusTypes:['s-2xx','s-2xx','s-4xx','s-4xx'],
+       source:'tests/api/test_patch_chaining.robot, test_crud_chaining.robot'},
+      {name:'Assert DELETE Status',
+       purpose:'Assert DELETE response is in accepted list [200, 204, 401, 403, 404].',
+       syntax:'Assert DELETE Status    <response>    <label>',
+       usage:['Run Keyword    Assert DELETE Status    ${del_resp}    Step 5 DELETE (Remove)'],
+       statuses:['200 OK','204 No Content','401 Auth','403 Forbidden','404 Gone'],statusTypes:['s-2xx','s-2xx','s-4xx','s-4xx','s-4xx'],
+       source:'tests/api/test_delete_chaining.robot, test_crud_chaining.robot'},
+      {name:'Assert Search GET Status',
+       purpose:'Assert search/autocomplete GET response in [200, 301, 302, 401, 403, 404]. 404 included because search endpoint paths are best-guess patterns.',
+       syntax:'Assert Search GET Status    <response>    <label>',
+       usage:['Run Keyword    Assert Search GET Status    ${search_response}    Step 2 GET /api/search'],
+       statuses:['200 OK','301 Redirect','302 Redirect','401 Auth','403 Forbidden','404 Not Found'],statusTypes:['s-2xx','s-3xx','s-3xx','s-4xx','s-4xx','s-4xx'],
+       source:'tests/api/test_api_chaining.robot'},
+      {name:'Verify JSON Response',
+       purpose:'Assert JSON response body is parseable and not empty.',
+       syntax:'Verify JSON Response    <response>',
+       usage:['Run Keyword If    ${response.status_code} == 200    Verify JSON Response    ${response}'],
+       notes:'Only called when status is 200. Parses response.json() and checks Should Not Be Empty.',
+       source:'tests/api/test_search_api.robot'},
+    ]},
+    {label:'Page-Level Keywords',keywords:[
+      {name:'Verify Homepage Is Loaded',
+       purpose:'Assert the homepage title contains "Purplle" and the search input is visible.',
+       syntax:'Verify Homepage Is Loaded',
+       usage:['Verify Homepage Is Loaded'],
+       source:'resources/pages/home_page.robot'},
+      {name:'Search For Product From Homepage',
+       purpose:'Click the search input, type a keyword, and press RETURN.',
+       syntax:'Search For Product From Homepage    <keyword>',
+       usage:['Search For Product From Homepage    lipstick'],
+       notes:'Note: On Purplle (Angular), pressing RETURN may not navigate. Use Search For from search_page.robot for direct URL navigation.',
+       source:'resources/pages/home_page.robot'},
+      {name:'Search For',
+       purpose:'Navigate directly to the search results URL for a keyword.',
+       syntax:'Search For    <keyword>',
+       usage:['Search For    lipstick','Search For    foundation'],
+       notes:'Uses Go To with /search?q= URL — the reliable way to search on Purplle (Angular app).',
+       source:'resources/pages/search_page.robot'},
+      {name:'Get Number Of Cart Items',
+       purpose:'Return the count of items currently in the cart as an integer.',
+       syntax:'${count}=    Get Number Of Cart Items',
+       usage:['${count}=    Get Number Of Cart Items','Should Be True    ${count} > 0'],
+       source:'resources/pages/cart_page.robot'},
+      {name:'Get Number Of Wishlist Items',
+       purpose:'Return the count of items currently in the wishlist as an integer.',
+       syntax:'${count}=    Get Number Of Wishlist Items',
+       usage:['${count}=    Get Number Of Wishlist Items','Should Be Equal As Integers    ${count}    1'],
+       source:'resources/pages/wishlist_page.robot'},
+    ]},
+  ]
+},
 ];
 
 // ── Build UI ──────────────────────────────────────────────────────────────────
 const content = document.getElementById('content');
 const nav     = document.getElementById('nav');
 let totalKw   = 0;
-
-// Section color map
-const libColor = {selenium:'var(--blue)',requests:'var(--green)',collections:'var(--cyan)',builtin:'var(--orange)',custom:'var(--pink)'};
+const libColor = {
+  selenium:'var(--blue)',requests:'var(--green)',
+  collections:'var(--cyan)',builtin:'var(--orange)',
+  custom:'var(--pink)',string:'var(--teal)'
+};
 
 SECTIONS.forEach(sec => {
-  // Nav section
-  const allKwsInSec = sec.categories.flatMap(c=>c.keywords);
-  totalKw += allKwsInSec.length;
+  const allKws = sec.categories.flatMap(c=>c.keywords);
+  totalKw += allKws.length;
 
+  // Sidebar nav section
   const navSec = document.createElement('div');
-  navSec.className = 'nav-section';
+  navSec.className='nav-section';
   const navHdr = document.createElement('div');
-  navHdr.className = 'nav-section-header';
-  navHdr.innerHTML = `<span class="nav-section-dot" style="background:${libColor[sec.lib]}"></span>${sec.title}<svg class="chevron" width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>`;
+  navHdr.className='nav-section-header';
+  navHdr.innerHTML=`<span class="nav-section-dot" style="background:${libColor[sec.lib]}"></span>${sec.title}<svg class="chevron" width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>`;
   const navKws = document.createElement('div');
-  navKws.className = 'nav-keywords';
-  navKws.style.maxHeight = '600px';
-  allKwsInSec.forEach(kw => {
-    const a = document.createElement('a');
-    a.className = 'nav-keyword';
-    a.href = '#kw-' + slugify(kw.name);
-    a.textContent = kw.name;
-    a.dataset.lib = sec.lib;
+  navKws.className='nav-keywords';
+  navKws.style.maxHeight='1000px';
+  allKws.forEach(kw=>{
+    const a=document.createElement('a');
+    a.className='nav-keyword';a.href='#kw-'+slug(kw.name);
+    a.textContent=kw.name;a.dataset.lib=sec.lib;
     navKws.appendChild(a);
   });
-  navHdr.addEventListener('click', () => {
-    const collapsed = navHdr.classList.toggle('collapsed');
-    navKws.style.maxHeight = collapsed ? '0' : '600px';
+  navHdr.addEventListener('click',()=>{
+    const c=navHdr.classList.toggle('collapsed');
+    navKws.style.maxHeight=c?'0':'1000px';
   });
-  navSec.appendChild(navHdr);
-  navSec.appendChild(navKws);
+  navSec.appendChild(navHdr);navSec.appendChild(navKws);
   nav.appendChild(navSec);
 
   // Section block
-  const block = document.createElement('div');
-  block.className = 'section-block';
-  block.id = 'section-' + sec.lib;
-  block.dataset.lib = sec.lib;
-
-  block.innerHTML = `
+  const block=document.createElement('div');
+  block.className='section-block';block.id='section-'+sec.lib;block.dataset.lib=sec.lib;
+  block.innerHTML=`
     <div class="section-header" data-lib="${sec.lib}">
       <div class="section-icon" data-lib="${sec.lib}">${sec.icon}</div>
-      <div class="section-meta">
-        <h2>${sec.num}. ${sec.title}</h2>
-        <p>${sec.import}</p>
-      </div>
-      <span class="section-badge" data-lib="${sec.lib}">${allKwsInSec.length} keywords</span>
-    </div>
-  `;
-
-  sec.categories.forEach(cat => {
-    const catLabel = document.createElement('div');
-    catLabel.className = 'category-label';
-    catLabel.innerHTML = `<span>${cat.label}</span>`;
-    block.appendChild(catLabel);
-
-    cat.keywords.forEach(kw => {
-      const card = buildCard(kw, sec.lib);
-      block.appendChild(card);
-    });
+      <div class="section-meta"><h2>${sec.num}. ${sec.title}</h2><p>${esc(sec.import)}</p></div>
+      <span class="section-badge" data-lib="${sec.lib}">${allKws.length} keywords</span>
+    </div>`;
+  sec.categories.forEach(cat=>{
+    const lbl=document.createElement('div');lbl.className='category-label';
+    lbl.innerHTML=`<span>${cat.label}</span>`;block.appendChild(lbl);
+    cat.keywords.forEach(kw=>block.appendChild(buildCard(kw,sec.lib)));
   });
-
   content.appendChild(block);
 });
 
-// HTTP Status Reference table
-const statusSec = document.createElement('div');
-statusSec.id = 'section-status';
-statusSec.innerHTML = `
+// HTTP Status Reference
+const statusSec=document.createElement('div');statusSec.id='section-status';
+statusSec.innerHTML=`
 <div class="status-table-section">
   <h3>HTTP Status Code Quick Reference</h3>
-  <p>Expected status codes per HTTP method in this suite. Used by the Assert * Status custom keywords.</p>
+  <p>Expected status codes per HTTP method — used by the Assert * Status custom keywords in tests/api/.</p>
   <div class="method-rows">
-    <div class="method-row">
-      <span class="method-pill m-get">GET</span>
-      <div class="method-codes">
-        <span class="status-badge s-2xx">200 OK</span>
-        <span class="status-badge s-3xx">301 Redirect</span>
-        <span class="status-badge s-3xx">302 Redirect</span>
-        <span class="status-badge s-4xx">401 Auth</span>
-        <span class="status-badge s-4xx">403 Forbidden</span>
-      </div>
-    </div>
-    <div class="method-row">
-      <span class="method-pill m-post">POST</span>
-      <div class="method-codes">
-        <span class="status-badge s-2xx">201 Created</span>
-        <span class="status-badge s-2xx">200 OK</span>
-        <span class="status-badge s-4xx">401 Auth</span>
-        <span class="status-badge s-4xx">403 Forbidden</span>
-      </div>
-      <span class="method-note">201 = correct REST creation code</span>
-    </div>
-    <div class="method-row">
-      <span class="method-pill m-put">PUT</span>
-      <div class="method-codes">
-        <span class="status-badge s-2xx">200 OK</span>
-        <span class="status-badge s-2xx">204 No Content</span>
-        <span class="status-badge s-4xx">401 Auth</span>
-        <span class="status-badge s-4xx">403 Forbidden</span>
-      </div>
-      <span class="method-note">Full resource replace</span>
-    </div>
-    <div class="method-row">
-      <span class="method-pill m-patch">PATCH</span>
-      <div class="method-codes">
-        <span class="status-badge s-2xx">200 OK</span>
-        <span class="status-badge s-2xx">204 No Content</span>
-        <span class="status-badge s-4xx">401 Auth</span>
-        <span class="status-badge s-4xx">403 Forbidden</span>
-      </div>
-      <span class="method-note">Partial field update</span>
-    </div>
-    <div class="method-row">
-      <span class="method-pill m-delete">DELETE</span>
-      <div class="method-codes">
-        <span class="status-badge s-2xx">200 OK</span>
-        <span class="status-badge s-2xx">204 No Content</span>
-        <span class="status-badge s-4xx">401 Auth</span>
-        <span class="status-badge s-4xx">403 Forbidden</span>
-        <span class="status-badge s-4xx">404 Already Gone</span>
-      </div>
-    </div>
+    <div class="method-row"><span class="method-pill m-get">GET</span><div class="method-codes"><span class="status-badge s-2xx">200 OK</span><span class="status-badge s-3xx">301 Redirect</span><span class="status-badge s-3xx">302 Redirect</span><span class="status-badge s-4xx">401 Auth</span><span class="status-badge s-4xx">403 Forbidden</span></div></div>
+    <div class="method-row"><span class="method-pill m-head">HEAD</span><div class="method-codes"><span class="status-badge s-2xx">200 OK</span><span class="status-badge s-3xx">301 Redirect</span><span class="status-badge s-4xx">401 Auth</span></div><span class="method-note">No body returned</span></div>
+    <div class="method-row"><span class="method-pill m-post">POST</span><div class="method-codes"><span class="status-badge s-2xx">201 Created</span><span class="status-badge s-2xx">200 OK</span><span class="status-badge s-4xx">401 Auth</span><span class="status-badge s-4xx">403 Forbidden</span></div><span class="method-note">201 = correct REST creation code</span></div>
+    <div class="method-row"><span class="method-pill m-put">PUT</span><div class="method-codes"><span class="status-badge s-2xx">200 OK</span><span class="status-badge s-2xx">204 No Content</span><span class="status-badge s-4xx">401 Auth</span><span class="status-badge s-4xx">403 Forbidden</span></div><span class="method-note">Full resource replace</span></div>
+    <div class="method-row"><span class="method-pill m-patch">PATCH</span><div class="method-codes"><span class="status-badge s-2xx">200 OK</span><span class="status-badge s-2xx">204 No Content</span><span class="status-badge s-4xx">401 Auth</span><span class="status-badge s-4xx">403 Forbidden</span></div><span class="method-note">Partial field update</span></div>
+    <div class="method-row"><span class="method-pill m-delete">DELETE</span><div class="method-codes"><span class="status-badge s-2xx">200 OK</span><span class="status-badge s-2xx">204 No Content</span><span class="status-badge s-4xx">401 Auth</span><span class="status-badge s-4xx">403 Forbidden</span><span class="status-badge s-4xx">404 Already Gone</span></div></div>
   </div>
   <div class="warning-box">
     <svg width="18" height="18" fill="none" stroke="var(--pink)" stroke-width="2" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
@@ -1225,139 +1070,97 @@ statusSec.innerHTML = `
 </div>`;
 content.appendChild(statusSec);
 
-document.getElementById('kw-count').textContent = totalKw + '+';
+document.getElementById('kw-count').textContent=totalKw;
 
 // ── Card builder ──────────────────────────────────────────────────────────────
-function buildCard(kw, lib) {
-  const id = 'kw-' + slugify(kw.name);
-  const card = document.createElement('div');
-  card.className = 'keyword-card';
-  card.id = id;
-  card.dataset.lib = lib;
-  card.dataset.name = kw.name.toLowerCase();
+function buildCard(kw,lib){
+  const id='kw-'+slug(kw.name);
+  const card=document.createElement('div');
+  card.className='keyword-card';card.id=id;card.dataset.lib=lib;card.dataset.name=kw.name.toLowerCase();
 
-  const headerHTML = `
-    <div class="kw-header" onclick="toggleCard(this)">
+  let statusHTML='';
+  if(kw.statuses){statusHTML='<div class="status-row">'+kw.statuses.map((s,i)=>`<span class="status-badge ${kw.statusTypes?.[i]||'s-2xx'}">${esc(s)}</span>`).join('')+'</div>';}
+
+  const usageLines=kw.usage.map(u=>`<span class="code-line">${esc(u)}</span>`).join('');
+
+  card.innerHTML=`
+    <div class="kw-header" onclick="toggle(this)">
       <span class="kw-badge" data-lib="${lib}">${lib}</span>
-      <span class="kw-name">${escHtml(kw.name)}</span>
-      <span class="kw-purpose-preview">${escHtml(kw.purpose)}</span>
-      <div class="kw-toggle">
-        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
-      </div>
-    </div>`;
-
-  let usageCode = kw.usage.map(u => `<span class="code-line">${escHtml(u)}</span>`).join('');
-
-  let statusHTML = '';
-  if (kw.statuses) {
-    statusHTML = `<div class="status-row">${kw.statuses.map((s,i)=>`<span class="status-badge ${kw.statusTypes?.[i]||'s-2xx'}">${escHtml(s)}</span>`).join('')}</div>`;
-  }
-
-  let sourceHTML = '';
-  if (kw.source) {
-    sourceHTML = `<div class="kw-field full"><div class="kw-field-label label-notes">Source</div><div class="kw-field-value"><code>${escHtml(kw.source)}</code></div></div>`;
-  }
-
-  const bodyHTML = `
-    <div class="kw-body" id="body-${id}">
+      <span class="kw-name">${esc(kw.name)}</span>
+      <span class="kw-purpose-preview">${esc(kw.purpose)}</span>
+      <div class="kw-toggle"><svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
+    </div>
+    <div class="kw-body" id="b-${id}">
       <div class="kw-grid">
         <div class="kw-field">
           <div class="kw-field-label label-purpose">Purpose</div>
-          <div class="kw-field-value">${escHtml(kw.purpose)}${statusHTML ? '<br/><br/>'+statusHTML : ''}</div>
+          <div class="kw-field-value">${esc(kw.purpose)}${statusHTML?'<br><br>'+statusHTML:''}</div>
         </div>
         <div class="kw-field">
           <div class="kw-field-label label-syntax">Syntax</div>
-          <div class="kw-field-value"><code>${escHtml(kw.syntax)}</code></div>
+          <div class="kw-field-value"><code>${esc(kw.syntax)}</code></div>
         </div>
         <div class="kw-field full">
           <div class="kw-field-label label-usage">Usage Examples</div>
-          <div style="position:relative">
-            <div class="code-block">${usageCode}<button class="copy-btn" onclick="copyCode(this)">copy</button></div>
-          </div>
+          <div style="position:relative"><div class="code-block">${usageLines}<button class="copy-btn" onclick="copyCode(this)">copy</button></div></div>
         </div>
-        ${kw.notes ? `<div class="kw-field full"><div class="kw-field-label label-notes">Notes</div><div class="kw-field-value notes-text">${escHtml(kw.notes)}</div></div>` : ''}
-        ${sourceHTML}
+        ${kw.notes?`<div class="kw-field${kw.source?'':' full'}"><div class="kw-field-label label-notes">Notes</div><div class="kw-field-value notes-text">${esc(kw.notes)}</div></div>`:''}
+        ${kw.source?`<div class="kw-field${kw.notes?'':' full'}"><div class="kw-field-label label-source">Source File</div><div class="kw-field-value"><code>${esc(kw.source)}</code></div></div>`:''}
       </div>
     </div>`;
-
-  card.innerHTML = headerHTML + bodyHTML;
   return card;
 }
 
-function toggleCard(hdr) {
+function toggle(hdr){
   hdr.classList.toggle('open');
-  const body = hdr.nextElementSibling;
-  body.classList.toggle('open');
+  hdr.nextElementSibling.classList.toggle('open');
 }
-
-function copyCode(btn) {
-  const block = btn.parentElement.querySelector('.code-block');
-  const text = block.innerText.replace('copy','').trim();
-  navigator.clipboard.writeText(text).then(()=>{
-    btn.textContent = 'copied!';
-    btn.classList.add('copied');
-    setTimeout(()=>{btn.textContent='copy';btn.classList.remove('copied')},1800);
-  });
+function copyCode(btn){
+  const txt=btn.parentElement.querySelector('.code-block').innerText.replace('copy','').trim();
+  navigator.clipboard.writeText(txt).then(()=>{btn.textContent='copied!';btn.classList.add('copied');setTimeout(()=>{btn.textContent='copy';btn.classList.remove('copied')},1800);});
 }
-
-function slugify(s){return s.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')}
-function escHtml(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+function slug(s){return s.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')}
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
 
 // ── Filter chips ──────────────────────────────────────────────────────────────
-document.querySelectorAll('.chip').forEach(chip => {
-  chip.addEventListener('click', () => {
+document.querySelectorAll('.chip').forEach(chip=>{
+  chip.addEventListener('click',()=>{
     document.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));
     chip.classList.add('active');
-    filterByLib(chip.dataset.lib);
+    filterLib(chip.dataset.lib);
   });
 });
-
-function filterByLib(lib) {
-  const sections = document.querySelectorAll('.section-block');
-  const status   = document.getElementById('section-status');
-  sections.forEach(sec => {
-    const match = lib==='all' || sec.dataset.lib===lib;
-    sec.style.display = match ? '' : 'none';
-  });
-  status.style.display = (lib==='all'||lib==='custom') ? '' : 'none';
-  document.querySelectorAll('.nav-keyword').forEach(a=>{
-    a.style.display = lib==='all'||a.dataset.lib===lib ? '' : 'none';
-  });
+function filterLib(lib){
+  document.querySelectorAll('.section-block').forEach(s=>{s.style.display=(lib==='all'||s.dataset.lib===lib)?'':'none'});
+  document.getElementById('section-status').style.display=(lib==='all'||lib==='custom')?'':'none';
+  document.querySelectorAll('.nav-keyword').forEach(a=>{a.style.display=(lib==='all'||a.dataset.lib===lib)?'':'none'});
 }
 
 // ── Search ────────────────────────────────────────────────────────────────────
-document.getElementById('search-input').addEventListener('input', function() {
-  const q = this.value.trim().toLowerCase();
-  let anyVisible = false;
-  document.querySelectorAll('.keyword-card').forEach(card => {
-    const match = !q || card.dataset.name.includes(q) || card.querySelector('.kw-purpose-preview').textContent.toLowerCase().includes(q);
-    card.classList.toggle('hidden', !match);
-    if (match) anyVisible = true;
+document.getElementById('search-input').addEventListener('input',function(){
+  const q=this.value.trim().toLowerCase();
+  let any=false;
+  document.querySelectorAll('.keyword-card').forEach(c=>{
+    const m=!q||c.dataset.name.includes(q)||c.querySelector('.kw-purpose-preview').textContent.toLowerCase().includes(q);
+    c.classList.toggle('hidden',!m);if(m)any=true;
   });
-  // Show/hide section headers based on visible cards
-  document.querySelectorAll('.section-block').forEach(sec=>{
-    const hasVisible = [...sec.querySelectorAll('.keyword-card')].some(c=>!c.classList.contains('hidden'));
-    sec.style.display = hasVisible ? '' : 'none';
+  document.querySelectorAll('.section-block').forEach(s=>{
+    s.style.display=[...s.querySelectorAll('.keyword-card')].some(c=>!c.classList.contains('hidden'))?'':'none';
   });
-  document.getElementById('no-results').style.display = !anyVisible&&q ? 'block' : 'none';
-  // Reset chip filter
+  document.getElementById('no-results').style.display=(!any&&q)?'block':'none';
   document.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));
   document.querySelector('.chip[data-lib="all"]').classList.add('active');
 });
 
-// ── IntersectionObserver for active nav link ──────────────────────────────────
-const kwCards = document.querySelectorAll('.keyword-card');
-const navLinks = document.querySelectorAll('.nav-keyword');
-const obs = new IntersectionObserver(entries=>{
+// ── Active nav link on scroll ─────────────────────────────────────────────────
+const obs=new IntersectionObserver(entries=>{
   entries.forEach(e=>{
-    if(e.isIntersecting){
-      navLinks.forEach(a=>{
-        a.classList.toggle('active',a.getAttribute('href')==='#'+e.target.id);
-      });
-    }
+    if(e.isIntersecting) document.querySelectorAll('.nav-keyword').forEach(a=>{
+      a.classList.toggle('active',a.getAttribute('href')==='#'+e.target.id);
+    });
   });
-},{rootMargin:'-20% 0px -70% 0px'});
-kwCards.forEach(c=>obs.observe(c));
+},{rootMargin:'-15% 0px -70% 0px'});
+document.querySelectorAll('.keyword-card').forEach(c=>obs.observe(c));
 </script>
 </body>
 </html>
