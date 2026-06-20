@@ -1,0 +1,18 @@
+1781896331712	geckodriver	INFO	Listening on 127.0.0.1:55545
+1781896334803	mozrunner::runner	INFO	Running command: "C:\\Users\\Suraj\\.cache\\selenium\\firefox\\win64\\152.0.1\\firefox.exe" "--marionette" "--remote-debuggin ... 6" "--remote-allow-hosts" "localhost" "-no-remote" "-profile" "C:\\Users\\Suraj\\AppData\\Local\\Temp\\rust_mozprofileCz1Iqr"
+Dynamically enable window occlusion 0
+1781896338121	Marionette	INFO	Marionette enabled
+1781896338419	Marionette	INFO	Listening on port 56360
+Read port: 56360
+WebDriver BiDi listening on ws://127.0.0.1:55546
+1781896338477	RemoteAgent	WARN	TLS certificate errors will be ignored for this session
+console.error: "Experiment desktop-release-rollout-show-relay-to-all-browsers-next-sign-up-modal-cta has unknown featureId: email-autocomplete-relay"
+console.error: "Experiment visual-card-updates has unknown featureId: newtabRefinedCardsLayout"
+console.error: "Experiment enable-nimbus-unenrollment-synchronization has unknown featureId: nimbusStore"
+JavaScript warning: https://www.purplle.com/polyfills-6EAL64PA.js, line 1: Script terminated by timeout at:
+W@https://www.purplle.com/polyfills-6EAL64PA.js:1:15488
+
+1781896354414	Marionette	INFO	Stopped listening on port 56360
+Exiting due to channel error.
+Exiting due to channel error.
+Exiting due to channel error.

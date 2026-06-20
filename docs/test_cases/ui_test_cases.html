@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>UI Test Cases — Purplle Robot Framework</title>
+<style>
+:root{--bg:#0d0a14;--surface:#15101f;--surface2:#1e1630;--border:#2d2248;--purple:#9b5de5;--pink:#f72585;--blue:#4361ee;--green:#06d6a0;--cyan:#00b4d8;--orange:#fb8500;--teal:#4cc9f0;--text:#e8e0f5;--muted:#8b7aa8;--code-bg:#0a0714}
+*{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);display:flex;min-height:100vh}
+#sidebar{position:fixed;top:0;left:0;width:270px;height:100vh;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;z-index:100}
+#sidebar-header{padding:20px 18px 14px;background:linear-gradient(135deg,#1a0a2e,#0d0a14);border-bottom:1px solid var(--border);flex-shrink:0}
+#sidebar-header h2{font-size:11.5px;color:var(--purple);letter-spacing:2px;text-transform:uppercase;margin-bottom:4px}
+#sidebar-header p{font-size:10.5px;color:var(--muted)}
+#search-box{margin:10px 14px 8px;display:flex;align-items:center;gap:7px;background:var(--surface2);border:1px solid var(--border);border-radius:7px;padding:7px 11px;flex-shrink:0}
+#search-box svg{flex-shrink:0;opacity:.5}
+#search-input{background:none;border:none;outline:none;color:var(--text);font-size:12px;width:100%}
+#search-input::placeholder{color:var(--muted)}
+#nav{overflow-y:auto;flex:1;padding:6px 0 16px}
+#nav::-webkit-scrollbar{width:3px}
+#nav::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+.nav-group{margin-bottom:2px}
+.nav-group-header{display:flex;align-items:center;gap:8px;padding:8px 16px;cursor:pointer;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);user-select:none;transition:color .2s}
+.nav-group-header:hover{color:var(--text)}
+.nav-group-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.nav-group-header .chev{margin-left:auto;transition:transform .25s}
+.nav-group-header.collapsed .chev{transform:rotate(-90deg)}
+.nav-items{overflow:hidden;transition:max-height .3s}
+.nav-item{display:block;padding:5px 16px 5px 32px;font-size:11.5px;color:var(--muted);text-decoration:none;border-left:2px solid transparent;transition:all .15s;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nav-item:hover{color:var(--text);background:var(--surface2)}
+.nav-item.active{color:var(--text);border-left-color:var(--purple);background:rgba(155,93,229,.08)}
+.stats-bar{flex-shrink:0;padding:10px 16px;border-top:1px solid var(--border);display:flex;gap:8px}
+.stat{text-align:center;flex:1}
+.stat-num{font-size:14px;font-weight:700;color:var(--purple)}
+.stat-lbl{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+#main{margin-left:270px;flex:1}
+#topbar{position:sticky;top:0;z-index:50;background:rgba(13,10,20,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 26px;height:52px;display:flex;align-items:center;gap:12px}
+#topbar h1{font-size:13.5px;font-weight:700;background:linear-gradient(90deg,var(--purple),var(--pink));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;white-space:nowrap}
+.filter-chips{display:flex;gap:6px;margin-left:auto;flex-wrap:wrap}
+.chip{padding:3px 11px;border-radius:20px;font-size:9.5px;font-weight:700;border:1px solid transparent;cursor:pointer;transition:all .2s;text-transform:uppercase;letter-spacing:.5px}
+.chip[data-f="all"]{border-color:var(--purple);color:var(--purple)}.chip[data-f="all"].active{background:var(--purple);color:#fff}
+.chip[data-f="smoke"]{border-color:var(--green);color:var(--green)}.chip[data-f="smoke"].active{background:var(--green);color:#000}
+.chip[data-f="regression"]{border-color:var(--blue);color:var(--blue)}.chip[data-f="regression"].active{background:var(--blue);color:#fff}
+.chip[data-f="negative"]{border-color:var(--pink);color:var(--pink)}.chip[data-f="negative"].active{background:var(--pink);color:#fff}
+.chip[data-f="functional"]{border-color:var(--cyan);color:var(--cyan)}.chip[data-f="functional"].active{background:var(--cyan);color:#000}
+.chip[data-f="integration"]{border-color:var(--orange);color:var(--orange)}.chip[data-f="integration"].active{background:var(--orange);color:#000}
+.chip[data-f="e2e"]{border-color:var(--teal);color:var(--teal)}.chip[data-f="e2e"].active{background:var(--teal);color:#000}
+#content{padding:24px}
+.layer-block{margin-bottom:40px}
+.layer-header{display:flex;align-items:center;gap:14px;padding:16px 22px;border-radius:12px;margin-bottom:18px}
+.layer-header[data-layer="functional"]{background:rgba(0,180,216,.1);border:1px solid rgba(0,180,216,.25)}
+.layer-header[data-layer="integration"]{background:rgba(251,133,0,.1);border:1px solid rgba(251,133,0,.25)}
+.layer-header[data-layer="e2e"]{background:rgba(76,201,240,.1);border:1px solid rgba(76,201,240,.25)}
+.layer-icon{width:44px;height:44px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.layer-icon[data-layer="functional"]{background:rgba(0,180,216,.2);color:var(--cyan)}
+.layer-icon[data-layer="integration"]{background:rgba(251,133,0,.2);color:var(--orange)}
+.layer-icon[data-layer="e2e"]{background:rgba(76,201,240,.2);color:var(--teal)}
+.layer-meta h2{font-size:17px;font-weight:700;margin-bottom:3px}
+.layer-meta p{font-size:11.5px;color:var(--muted)}
+.layer-count{margin-left:auto;padding:3px 12px;border-radius:20px;font-size:10px;font-weight:700;white-space:nowrap}
+.layer-count[data-layer="functional"]{background:rgba(0,180,216,.2);color:var(--cyan)}
+.layer-count[data-layer="integration"]{background:rgba(251,133,0,.2);color:var(--orange)}
+.layer-count[data-layer="e2e"]{background:rgba(76,201,240,.2);color:var(--teal)}
+.module-label{display:flex;align-items:center;gap:8px;margin:18px 0 10px;padding-left:2px}
+.module-label span{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted);white-space:nowrap}
+.module-label::after{content:'';flex:1;height:1px;background:var(--border)}
+.tc-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;margin-bottom:8px;overflow:hidden;transition:border-color .2s;animation:fadeup .3s ease both}
+@keyframes fadeup{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.tc-card:hover{border-color:rgba(155,93,229,.4)}
+.tc-card.hidden{display:none}
+.tc-header{display:flex;align-items:center;gap:10px;padding:12px 16px;cursor:pointer;user-select:none}
+.tc-id{font-family:'Courier New',monospace;font-size:10.5px;font-weight:700;padding:2px 9px;border-radius:5px;background:rgba(155,93,229,.15);color:var(--purple);flex-shrink:0}
+.tc-title{font-size:13px;font-weight:600;flex:1}
+.tc-tags{display:flex;gap:5px;flex-shrink:0}
+.tag{padding:2px 7px;border-radius:4px;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.4px}
+.tag-smoke{background:rgba(6,214,160,.15);color:var(--green)}
+.tag-regression{background:rgba(67,97,238,.15);color:var(--blue)}
+.tag-negative{background:rgba(247,37,133,.15);color:var(--pink)}
+.tc-toggle{width:24px;height:24px;border-radius:6px;display:flex;align-items:center;justify-content:center;background:var(--surface2);border:1px solid var(--border);flex-shrink:0;transition:transform .25s,background .2s}
+.tc-header.open .tc-toggle{transform:rotate(180deg);background:var(--purple)}
+.tc-body{display:none;border-top:1px solid var(--border);padding:14px 16px}
+.tc-body.open{display:block}
+.tc-desc{font-size:12px;color:var(--muted);margin-bottom:12px;line-height:1.5}
+.tc-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.tc-section{padding:12px 14px;background:var(--surface2);border-radius:8px;border:1px solid var(--border)}
+.tc-section.full{grid-column:1/-1}
+.tc-section-label{font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px}
+.label-steps{color:var(--purple)}
+.label-expected{color:var(--green)}
+.label-prereq{color:var(--orange)}
+.steps-list{list-style:none;counter-reset:step}
+.steps-list li{counter-increment:step;display:flex;gap:8px;padding:4px 0;font-size:12px;line-height:1.5;color:var(--text)}
+.steps-list li::before{content:counter(step);width:18px;height:18px;border-radius:50%;background:rgba(155,93,229,.2);color:var(--purple);font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.expected-text{font-size:12px;color:var(--text);line-height:1.5}
+.expected-text .pass{color:var(--green);font-weight:600}
+#no-results{display:none;text-align:center;padding:60px;color:var(--muted)}
+</style>
+</head>
+<body>
+<aside id="sidebar">
+  <div id="sidebar-header">
+    <h2>UI Test Cases</h2>
+    <p>Purplle.com — Manual Test Reference</p>
+  </div>
+  <div id="search-box">
+    <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <input id="search-input" type="text" placeholder="Search test cases…" autocomplete="off"/>
+  </div>
+  <nav id="nav"></nav>
+  <div class="stats-bar">
+    <div class="stat"><div class="stat-num" id="total-count">—</div><div class="stat-lbl">Total</div></div>
+    <div class="stat"><div class="stat-num">11</div><div class="stat-lbl">Modules</div></div>
+    <div class="stat"><div class="stat-num">3</div><div class="stat-lbl">Layers</div></div>
+  </div>
+</aside>
+<main id="main">
+  <div id="topbar">
+    <h1>Purplle UI Test Cases</h1>
+    <div class="filter-chips">
+      <button class="chip active" data-f="all">All</button>
+      <button class="chip" data-f="smoke">Smoke</button>
+      <button class="chip" data-f="regression">Regression</button>
+      <button class="chip" data-f="negative">Negative</button>
+      <button class="chip" data-f="functional">Functional</button>
+      <button class="chip" data-f="integration">Integration</button>
+      <button class="chip" data-f="e2e">E2E</button>
+    </div>
+  </div>
+  <div id="content"><div id="no-results"><p>No test cases match your search.</p></div></div>
+</main>
+<script>
+const LAYERS=[
+{id:'functional',label:'Functional Tests',icon:'🧪',desc:'Single-feature/page tests in isolation',
+ modules:[
+  {id:'homepage',label:'Homepage',file:'tests/functional/test_homepage.robot',tests:[
+    {id:'TC_FUNC_HOME_01',title:'Verify Homepage Title',tags:['smoke'],
+     desc:'Verify the purplle.com homepage loads with the correct browser tab title.',
+     prereq:'Browser open, no login required.',
+     steps:['Navigate to https://www.purplle.com','Wait for the page to fully load','Read the browser tab title'],
+     expected:'Browser tab title contains the text "Purplle"'},
+    {id:'TC_FUNC_HOME_02',title:'Verify Search Bar Is Visible',tags:['smoke'],
+     desc:'Verify the search input field is present in the page header.',
+     steps:['Navigate to https://www.purplle.com','Look at the header/top area of the page'],
+     expected:'Search input field is visible in the page header'},
+    {id:'TC_FUNC_HOME_03',title:'Verify Login Register Link Is Visible',tags:['smoke'],
+     desc:'Verify the Login/Register link is accessible from the header.',
+     steps:['Navigate to https://www.purplle.com','Locate the top-right area of the header'],
+     expected:'"Login / Register" link is visible and clickable in the header'},
+    {id:'TC_FUNC_HOME_04',title:'Verify Cart Icon Is Visible',tags:['smoke'],
+     desc:'Verify the cart/bag icon is present in the header.',
+     steps:['Navigate to https://www.purplle.com','Look at the top-right header area'],
+     expected:'Shopping bag / cart icon is visible in the header'},
+    {id:'TC_FUNC_HOME_05',title:'Verify Logo Is Displayed',tags:['smoke'],
+     desc:'Verify the Purplle logo is displayed in the header.',
+     steps:['Navigate to https://www.purplle.com','Look at the top-left area of the page'],
+     expected:'Purplle logo image is displayed prominently in the header'},
+    {id:'TC_FUNC_HOME_06',title:'Verify All Header Elements Are Present',tags:['regression'],
+     desc:'Verify logo, search bar, login link, and cart icon all exist together simultaneously.',
+     steps:['Navigate to https://www.purplle.com','Inspect the full header row'],
+     expected:'Logo, search input, Login/Register link, and cart icon are all visible at the same time'},
+    {id:'TC_FUNC_HOME_07',title:'Verify Main Navigation Links Are Present',tags:['regression'],
+     desc:'Verify Makeup, Skincare, Offers, and Brands nav links are visible.',
+     steps:['Navigate to https://www.purplle.com','Look at the main navigation bar below the header'],
+     expected:'Makeup, Skincare, Offers, and Brands links are all visible in the nav bar'},
+    {id:'TC_FUNC_HOME_08',title:'Verify Makeup Category Link Is Clickable',tags:['regression'],
+     desc:'Verify clicking the Makeup nav link navigates to the Makeup category page.',
+     steps:['Navigate to https://www.purplle.com','Click "Makeup" in the navigation bar','Wait for page to load'],
+     expected:'Category page loads and contains the heading/text "Makeup"'},
+    {id:'TC_FUNC_HOME_09',title:'Verify Search Navigates To Results Page',tags:['regression'],
+     desc:'Verify that searching for a keyword from the homepage shows product results.',
+     steps:['Navigate to https://www.purplle.com','Click the search bar','Type "lipstick" and press Enter or click search icon','Wait for results to load'],
+     expected:'Search results page displays product cards for lipstick'},
+    {id:'TC_FUNC_HOME_10',title:'Verify Clicking Login Link Opens Login Page',tags:['regression'],
+     desc:'Verify clicking the Login/Register link redirects to the login page.',
+     steps:['Navigate to https://www.purplle.com','Click "Login / Register" link in the header','Wait for page to load'],
+     expected:'Login page opens and shows text "Login" with a mobile number input field visible'},
+  ]},
+  {id:'login',label:'Login',file:'tests/functional/test_login.robot',tests:[
+    {id:'TC_FUNC_LOGIN_01',title:'Verify Login Page Loads Successfully',tags:['smoke'],
+     desc:'Verify the purplle.com login page loads and the mobile input is shown.',
+     steps:['Navigate to https://www.purplle.com/login','Wait for page to load'],
+     expected:'Login page loads successfully; mobile number input field is visible'},
+    {id:'TC_FUNC_LOGIN_02',title:'Verify Mobile Number Input Field Is Present',tags:['smoke'],
+     desc:'Verify the mobile number field is visible on the login page.',
+     steps:['Navigate to https://www.purplle.com/login','Locate the mobile number input field'],
+     expected:'Mobile number input field is visible on the page'},
+    {id:'TC_FUNC_LOGIN_03',title:'Verify Get OTP Button Is Present',tags:['smoke'],
+     desc:'Verify the Get OTP button is visible on the login page.',
+     steps:['Navigate to https://www.purplle.com/login','Locate the OTP request button'],
+     expected:'"Get OTP" button is visible on the login page'},
+    {id:'TC_FUNC_LOGIN_04',title:'Verify Signup Link Is Present',tags:['regression'],
+     desc:'Verify the new user registration link is present on the login page.',
+     steps:['Navigate to https://www.purplle.com/login','Look for signup/new account link'],
+     expected:'A "Sign Up" or new user registration link is visible on the page'},
+    {id:'TC_FUNC_LOGIN_05',title:'Enter Invalid Short Mobile Number And Verify Error',tags:['regression','negative'],
+     desc:'Verify error message appears for an invalid mobile number (fewer than 10 digits).',
+     steps:['Navigate to https://www.purplle.com/login','Enter "12345" (only 5 digits) in the mobile number field','Click the "Get OTP" button'],
+     expected:'An error message is displayed indicating the mobile number is invalid'},
+    {id:'TC_FUNC_LOGIN_06',title:'Submit Without Entering Mobile Number And Verify Error',tags:['regression','negative'],
+     desc:'Verify error message appears when OTP is requested with an empty mobile field.',
+     steps:['Navigate to https://www.purplle.com/login','Leave the mobile number field empty','Click the "Get OTP" button'],
+     expected:'An error message appears prompting the user to enter a mobile number'},
+    {id:'TC_FUNC_LOGIN_07',title:'Enter Alphabetic Characters And Verify Error',tags:['regression','negative'],
+     desc:'Verify error message appears when alphabets are entered in mobile number field.',
+     steps:['Navigate to https://www.purplle.com/login','Type "abcdefghij" (letters only) in the mobile number field','Click the "Get OTP" button'],
+     expected:'An error message is displayed indicating invalid characters in the mobile number field'},
+    {id:'TC_FUNC_LOGIN_08',title:'Verify Mobile Input Accepts 10 Digit Number',tags:['regression'],
+     desc:'Verify a valid 10-digit mobile number can be entered in the field.',
+     steps:['Navigate to https://www.purplle.com/login','Enter "9876543210" (valid 10-digit number) in the mobile field'],
+     expected:'The input field accepts and retains the full 10-digit number "9876543210"'},
+  ]},
+  {id:'search',label:'Search',file:'tests/functional/test_search.robot',tests:[
+    {id:'TC_FUNC_SEARCH_01',title:'Search For A Valid Product And Verify Results',tags:['smoke'],
+     desc:'Search for "lipstick" and verify product result cards are displayed.',
+     steps:['Navigate to https://www.purplle.com/search?q=lipstick','Wait for results page to load'],
+     expected:'Product cards for lipstick are displayed on the search results page'},
+    {id:'TC_FUNC_SEARCH_02',title:'Search For A Brand Name And Verify Results',tags:['smoke'],
+     desc:'Search for "Lakme" brand and verify brand products appear in results.',
+     steps:['Navigate to https://www.purplle.com/search?q=Lakme','Wait for results page to load'],
+     expected:'Product cards for Lakme brand are displayed in search results'},
+    {id:'TC_FUNC_SEARCH_03',title:'Search For A Skincare Product',tags:['regression'],
+     desc:'Search for "moisturizer" and verify skincare products appear.',
+     steps:['Navigate to https://www.purplle.com/search?q=moisturizer','Wait for results to load'],
+     expected:'Skincare/moisturizer product cards are displayed'},
+    {id:'TC_FUNC_SEARCH_04',title:'Search For A Haircare Product',tags:['regression'],
+     desc:'Search for "shampoo" and verify haircare products appear.',
+     steps:['Navigate to https://www.purplle.com/search?q=shampoo','Wait for results to load'],
+     expected:'Haircare/shampoo product cards are displayed'},
+    {id:'TC_FUNC_SEARCH_05',title:'Search For A Fragrance Product',tags:['regression'],
+     desc:'Search for "perfume" and verify fragrance products appear.',
+     steps:['Navigate to https://www.purplle.com/search?q=perfume','Wait for results to load'],
+     expected:'Fragrance/perfume product cards are displayed'},
+    {id:'TC_FUNC_SEARCH_06',title:'Verify No Results Message For Invalid Keyword',tags:['regression','negative'],
+     desc:'Search for a nonsense term and verify a "no results" message is shown.',
+     steps:['Navigate to https://www.purplle.com/search?q=xyzabc123invalidproduct','Wait for page to load'],
+     expected:'"No results found" or similar no-results message is displayed; no product cards visible'},
+    {id:'TC_FUNC_SEARCH_07',title:'Verify Search Suggestions Appear While Typing',tags:['regression'],
+     desc:'Verify autocomplete suggestions appear when the user starts typing in the search bar.',
+     steps:['Navigate to https://www.purplle.com','Click on the search input field in the header','Type "lipst" (partial keyword — do NOT press Enter)','Wait for suggestions to appear below the input'],
+     expected:'Autocomplete suggestion dropdown appears with product/keyword suggestions'},
+    {id:'TC_FUNC_SEARCH_08',title:'Click First Product From Search Results Opens PDP',tags:['regression'],
+     desc:'Verify clicking a search result card navigates to the product detail page.',
+     steps:['Navigate to https://www.purplle.com/search?q=lipstick','Wait for product cards to load','Click on the first product card in the results','Wait for the product detail page to load'],
+     expected:'Product detail page (PDP) opens with product name heading (h1) visible'},
+  ]},
+  {id:'plp',label:'Product Listing',file:'tests/functional/test_product_listing.robot',tests:[
+    {id:'TC_FUNC_PLP_01',title:'Verify Makeup Category Page Loads With Products',tags:['smoke'],
+     desc:'Navigate to Makeup category and verify products are listed.',
+     steps:['Navigate to https://www.purplle.com/makeup','Wait for page to load'],
+     expected:'Makeup category heading is displayed and multiple product cards are visible'},
+    {id:'TC_FUNC_PLP_02',title:'Verify Skincare Category Page Loads With Products',tags:['smoke'],
+     desc:'Navigate to Skincare category and verify products are listed.',
+     steps:['Navigate to https://www.purplle.com/skincare','Wait for page to load'],
+     expected:'Skincare category heading is displayed and product cards are visible'},
+    {id:'TC_FUNC_PLP_03',title:'Verify Hair Category Page Loads With Products',tags:['smoke'],
+     desc:'Navigate to Hair category and verify products are listed.',
+     steps:['Navigate to https://www.purplle.com/hair','Wait for page to load'],
+     expected:'Hair category heading is displayed and product cards are visible'},
+    {id:'TC_FUNC_PLP_04',title:'Verify Product Cards Contain Product Links',tags:['regression'],
+     desc:'Verify that product cards contain links to product detail pages.',
+     steps:['Navigate to https://www.purplle.com/makeup','Wait for product cards to load','Inspect the product cards on the listing page'],
+     expected:'Multiple product cards are present and each contains a clickable link to its detail page'},
+    {id:'TC_FUNC_PLP_05',title:'Verify Sort By Price Low To High Reloads Products',tags:['regression'],
+     desc:'Sort Makeup products by price low to high and verify product list reloads.',
+     steps:['Navigate to https://www.purplle.com/makeup','Wait for products to load','Click the Sort dropdown','Select "Price: Low to High"','Wait for products to reload'],
+     expected:'Product list reloads; product cards are still visible after applying the sort'},
+    {id:'TC_FUNC_PLP_06',title:'Verify Sort By Price High To Low Reloads Products',tags:['regression'],
+     desc:'Sort Makeup products by price high to low and verify product list reloads.',
+     steps:['Navigate to https://www.purplle.com/makeup','Wait for products to load','Click the Sort dropdown','Select "Price: High to Low"','Wait for products to reload'],
+     expected:'Product list reloads; product cards are still visible after sorting'},
+    {id:'TC_FUNC_PLP_07',title:'Verify Sort By Popularity Works',tags:['regression'],
+     desc:'Sort Makeup products by popularity and verify the product list reloads.',
+     steps:['Navigate to https://www.purplle.com/makeup','Wait for products to load','Click the Sort dropdown','Select "Popularity"','Wait for products to reload'],
+     expected:'Products re-sort by popularity; product cards are still visible'},
+    {id:'TC_FUNC_PLP_08',title:'Verify Brand Filter Section Is Present',tags:['regression'],
+     desc:'Verify the Brand filter panel is displayed on the Makeup listing page.',
+     steps:['Navigate to https://www.purplle.com/makeup','Wait for products to load','Look at the filter panel on the side of the page'],
+     expected:'"Brand" filter section heading is visible on the Makeup listing page'},
+    {id:'TC_FUNC_PLP_09',title:'Verify Price Filter Section Is Present',tags:['regression'],
+     desc:'Verify the Price filter panel is displayed on the Skincare listing page.',
+     steps:['Navigate to https://www.purplle.com/skincare','Wait for products to load','Look at the filter panel'],
+     expected:'"Price" filter section heading is visible on the Skincare listing page'},
+    {id:'TC_FUNC_PLP_10',title:'Click First Product Navigates To PDP',tags:['regression'],
+     desc:'Click the first product card on Makeup listing and verify navigation to PDP.',
+     steps:['Navigate to https://www.purplle.com/makeup','Wait for products to load','Click on the first product card','Wait for the product detail page to load'],
+     expected:'Product detail page (PDP) opens with a product name heading (h1) visible'},
+  ]},
+  {id:'pdp',label:'Product Detail',file:'tests/functional/test_product_detail.robot',tests:[
+    {id:'TC_FUNC_PDP_01',title:'Verify Product Name Is Displayed',tags:['smoke'],
+     desc:'Search for lipstick, open first product, verify the product name (h1) is shown.',
+     prereq:'Start from homepage; no login required.',
+     steps:['Navigate to https://www.purplle.com/search?q=lipstick','Wait for product cards to load','Click on the first product card','Wait for PDP to load'],
+     expected:'Product name heading (h1) is visible on the product detail page'},
+    {id:'TC_FUNC_PDP_02',title:'Verify Product Selling Price Is Displayed',tags:['smoke'],
+     desc:'Verify the selling price element is visible on the PDP.',
+     steps:['Open first lipstick product from search results (search "lipstick", click first card)','Look at the price section'],
+     expected:'Selling/offer price value is visible on the PDP'},
+    {id:'TC_FUNC_PDP_03',title:'Verify MRP Is Displayed',tags:['smoke'],
+     desc:'Verify the MRP (Maximum Retail Price) label and value are visible.',
+     steps:['Open first lipstick product from search results','Look at the price section'],
+     expected:'MRP value (typically struck-through original price) is visible on the PDP'},
+    {id:'TC_FUNC_PDP_04',title:'Verify Add To Bag Button Is Present',tags:['smoke'],
+     desc:'Verify the "ADD TO BAG" button is visible on the product detail page.',
+     steps:['Open first lipstick product from search results','Look for the primary call-to-action button'],
+     expected:'"ADD TO BAG" button is visible on the PDP'},
+    {id:'TC_FUNC_PDP_05',title:'Verify Product Brand Is Displayed',tags:['regression'],
+     desc:'Verify the brand name is displayed on the PDP.',
+     steps:['Open first lipstick product from search results','Look for the brand name near the product title'],
+     expected:'Brand name is displayed and visible on the PDP'},
+    {id:'TC_FUNC_PDP_06',title:'Verify Product Images Are Loaded',tags:['regression'],
+     desc:'Verify at least one product image is visible on the PDP.',
+     steps:['Open first lipstick product from search results','Look at the product image/gallery area'],
+     expected:'At least one product image is visible in the image section of the PDP'},
+    {id:'TC_FUNC_PDP_07',title:'Verify Wishlist Icon Is Present',tags:['regression'],
+     desc:'Verify the wishlist (heart) icon is present on the product detail page.',
+     steps:['Open first lipstick product from search results','Look for the heart/bookmark icon near the product'],
+     expected:'Wishlist (heart) icon is present and visible on the PDP'},
+    {id:'TC_FUNC_PDP_08',title:'Verify Product Description Section Is Present',tags:['regression'],
+     desc:'Verify the product description section is loaded on the PDP.',
+     steps:['Search for "serum" and click the first product','Scroll down to find the product description section'],
+     expected:'Product description section is present and visible on the PDP'},
+    {id:'TC_FUNC_PDP_09',title:'Verify Reviews Section Is Present',tags:['regression'],
+     desc:'Verify the reviews/ratings section is visible on the product page.',
+     steps:['Search for "serum" and click the first product','Scroll down to the reviews/ratings section'],
+     expected:'Reviews and ratings section is visible on the PDP'},
+    {id:'TC_FUNC_PDP_10',title:'Verify Similar Products Section Is Present',tags:['regression'],
+     desc:'Verify "Similar Products" or "You May Also Like" section appears on PDP.',
+     steps:['Open first lipstick product from search results','Scroll down past the main product details'],
+     expected:'"Similar Products" or "You May Also Like" section is visible at the bottom of the PDP'},
+  ]},
+  {id:'cart',label:'Cart',file:'tests/functional/test_cart.robot',tests:[
+    {id:'TC_FUNC_CART_01',title:'Verify Cart Page Loads',tags:['smoke'],
+     desc:'Navigate directly to the cart URL and verify the page loads.',
+     steps:['Navigate to https://www.purplle.com/cart','Wait for page to load'],
+     expected:'Cart page loads successfully (page heading visible)'},
+    {id:'TC_FUNC_CART_02',title:'Verify Empty Cart State For Guest User',tags:['smoke'],
+     desc:'Verify guest users see an empty cart message or login prompt.',
+     prereq:'Do NOT log in (guest/unauthenticated session).',
+     steps:['Without logging in, navigate to https://www.purplle.com/cart','Wait for page to load'],
+     expected:'Empty cart message or login-required prompt is visible'},
+    {id:'TC_FUNC_CART_03',title:'Verify Cart Icon Is Visible In Header',tags:['smoke'],
+     desc:'Verify the cart bag icon is present in the site header.',
+     steps:['Navigate to https://www.purplle.com','Look at the top-right of the page header'],
+     expected:'Shopping bag / cart icon is visible in the page header'},
+    {id:'TC_FUNC_CART_04',title:'Verify Clicking Cart Icon Navigates To Cart Page',tags:['regression'],
+     desc:'Verify clicking the header cart icon redirects to the cart page.',
+     steps:['Navigate to https://www.purplle.com','Click the cart/bag icon in the header','Wait for page to load'],
+     expected:'Browser navigates to the cart page (URL contains "/cart")'},
+    {id:'TC_FUNC_CART_05',title:'Verify Continue Shopping Button Is Present On Empty Cart',tags:['regression'],
+     desc:'Verify the "Continue Shopping" call-to-action is visible on an empty cart.',
+     prereq:'Guest user (not logged in).',
+     steps:['Navigate to https://www.purplle.com/cart','Wait for empty cart state to appear'],
+     expected:'"Continue Shopping" button is visible on the empty cart page'},
+    {id:'TC_FUNC_CART_06',title:'Verify Continue Shopping Returns To Homepage',tags:['regression'],
+     desc:'Verify clicking "Continue Shopping" from empty cart navigates back.',
+     steps:['Navigate to https://www.purplle.com/cart (as guest)','Wait for empty cart state','Click the "Continue Shopping" button','Wait for page to load'],
+     expected:'Browser returns to homepage or product listing page containing "Purplle"'},
+    {id:'TC_FUNC_CART_07',title:'Verify Checkout Button Is Absent On Empty Cart',tags:['regression','negative'],
+     desc:'Verify the Proceed to Checkout button is NOT shown on an empty cart.',
+     steps:['Navigate to https://www.purplle.com/cart (as guest)','Wait for empty cart message to appear','Inspect the page for a checkout button'],
+     expected:'"Proceed to Checkout" button is NOT visible anywhere on the empty cart page'},
+  ]},
+  {id:'wishlist',label:'Wishlist',file:'tests/functional/test_wishlist.robot',tests:[
+    {id:'TC_FUNC_WISH_01',title:'Verify Wishlist Page Loads',tags:['smoke'],
+     desc:'Navigate directly to the wishlist URL and verify the page loads.',
+     steps:['Navigate to https://www.purplle.com/profile/myfavourites','Wait for page to load'],
+     expected:'Wishlist page loads successfully'},
+    {id:'TC_FUNC_WISH_02',title:'Verify Wishlist URL Is Correct',tags:['smoke'],
+     desc:'Verify the current URL contains "myfavourites" after navigation.',
+     steps:['Navigate to https://www.purplle.com/profile/myfavourites','Check the browser address bar'],
+     expected:'Current URL contains "myfavourites"'},
+    {id:'TC_FUNC_WISH_03',title:'Verify Empty Wishlist State For Guest User',tags:['regression'],
+     desc:'Verify a guest user sees an empty wishlist message or login prompt.',
+     prereq:'Guest user (not logged in).',
+     steps:['Without logging in, navigate to https://www.purplle.com/profile/myfavourites','Wait for page to load'],
+     expected:'Empty wishlist message or login-required prompt is visible'},
+    {id:'TC_FUNC_WISH_04',title:'Verify Wishlist Page Title Contains Purplle',tags:['regression'],
+     desc:'Verify the browser tab title on the wishlist page contains Purplle.',
+     steps:['Navigate to https://www.purplle.com/profile/myfavourites','Wait for page to load','Check browser tab title'],
+     expected:'Browser tab title contains "Purplle"'},
+    {id:'TC_FUNC_WISH_05',title:'Verify Wishlist Icon Is Present On Product Listing Cards',tags:['regression'],
+     desc:'Navigate to Makeup and verify product cards have a wishlist interaction element.',
+     steps:['Navigate to https://www.purplle.com/makeup','Wait for product cards to load','Inspect the product cards'],
+     expected:'Product listing cards have a wishlist/heart icon visible for interaction'},
+  ]},
+  {id:'navigation',label:'Navigation',file:'tests/functional/test_navigation.robot',tests:[
+    {id:'TC_FUNC_NAV_01',title:'Navigate To Makeup Category Via Nav Bar',tags:['smoke'],
+     desc:'Click Makeup in the main nav and verify the Makeup category page opens.',
+     steps:['Navigate to https://www.purplle.com','Click "Makeup" in the top navigation bar','Wait for page to load'],
+     expected:'Makeup category page opens with page heading (h1) visible'},
+    {id:'TC_FUNC_NAV_02',title:'Navigate To Skincare Category Via Nav Bar',tags:['smoke'],
+     desc:'Click Skincare in the main nav and verify the Skincare category page opens.',
+     steps:['Navigate to https://www.purplle.com','Click "Skincare" in the top navigation bar','Wait for page to load'],
+     expected:'Skincare category page opens with page heading (h1) visible'},
+    {id:'TC_FUNC_NAV_03',title:'Navigate To Hair Category Via Nav Bar',tags:['regression'],
+     desc:'Click Hair in the main nav and verify the Hair category page opens.',
+     steps:['Navigate to https://www.purplle.com','Click "Hair" in the top navigation bar','Wait for page to load'],
+     expected:'Hair category page opens with page heading (h1) visible'},
+    {id:'TC_FUNC_NAV_04',title:'Navigate To Offers Page Via Nav Bar',tags:['regression'],
+     desc:'Click Offers in the main nav and verify the Offers page loads.',
+     steps:['Navigate to https://www.purplle.com','Click "Offers" in the top navigation bar','Wait for page to load'],
+     expected:'Offers page loads with "Offer" text visible on the page'},
+    {id:'TC_FUNC_NAV_05',title:'Navigate To Brands Page Via Nav Bar',tags:['regression'],
+     desc:'Click Brands in the main nav and verify the Brands listing page loads.',
+     steps:['Navigate to https://www.purplle.com','Click "Brands" in the top navigation bar','Wait for page to load'],
+     expected:'Brands listing page loads with "Brand" text visible'},
+    {id:'TC_FUNC_NAV_06',title:'Click Logo Returns To Homepage',tags:['regression'],
+     desc:'From a category page, click the Purplle logo and verify return to homepage.',
+     steps:['Navigate to https://www.purplle.com/makeup','Wait for page to load','Click the Purplle logo in the header','Wait for page to load'],
+     expected:'Browser navigates to https://www.purplle.com/ (exact homepage URL)'},
+    {id:'TC_FUNC_NAV_07',title:'Browser Back Button Returns From Category To Homepage',tags:['regression'],
+     desc:'Navigate to Skincare then use browser back to return to homepage.',
+     steps:['Navigate to https://www.purplle.com','Click "Skincare" in nav bar','Wait for Skincare page to load','Click browser Back button','Wait for homepage to load'],
+     expected:'Browser returns to the homepage displaying Purplle content'},
+    {id:'TC_FUNC_NAV_08',title:'Navigate To New Launches Section',tags:['regression'],
+     desc:'Click New in nav bar and verify New Launches page opens.',
+     steps:['Navigate to https://www.purplle.com','Click "New" or "New Launches" in the navigation bar','Wait for page to load'],
+     expected:'New Launches page loads with a page heading (h1) visible'},
+    {id:'TC_FUNC_NAV_09',title:'Navigate To Splurge Premium Section',tags:['regression'],
+     desc:'Click Splurge in nav bar and verify the premium section loads.',
+     steps:['Navigate to https://www.purplle.com','Click "Splurge" in the navigation bar','Wait for page to load'],
+     expected:'Splurge/premium section page loads with a page heading (h1) visible'},
+    {id:'TC_FUNC_NAV_10',title:'Verify All Main Navigation Links Are Visible Together',tags:['smoke'],
+     desc:'Verify all key nav links are present at the same time from the homepage.',
+     steps:['Navigate to https://www.purplle.com','Inspect the main navigation bar'],
+     expected:'Makeup, Skincare, Offers, and Brands links are all visible simultaneously in the nav bar'},
+  ]},
+ ]
+},
+{id:'integration',label:'Integration Tests',icon:'🔗',desc:'Multi-module flow tests spanning two or more pages',
+ modules:[
+  {id:'search-pdp',label:'Search → PDP',file:'tests/integration/test_search_to_pdp_flow.robot',tests:[
+    {id:'TC_INT_SEARCH_PDP_01',title:'Search Leads To Product Results',tags:['integration'],
+     desc:'Verify the complete flow: homepage search bar → search results with product cards.',
+     steps:['Navigate to https://www.purplle.com','Verify homepage loads','Use the homepage search bar to search for "lipstick"','Wait for search results page to load'],
+     expected:'Search results page loads and product cards are visible'},
+    {id:'TC_INT_SEARCH_PDP_02',title:'Search Result Click Opens Correct PDP',tags:['integration'],
+     desc:'Verify clicking a search result card navigates to a product detail page with a name heading.',
+     steps:['Navigate to https://www.purplle.com','Navigate to search results for "foundation"','Click the first product card in results','Wait for PDP to load'],
+     expected:'PDP opens; product name (h1) is visible and not empty'},
+    {id:'TC_INT_SEARCH_PDP_03',title:'PDP Elements Are Present After Search Navigation',tags:['integration'],
+     desc:'After navigating from search to PDP, verify name, price, and Add to Bag are all present.',
+     steps:['Search for "serum" and click first result','Wait for PDP to load','Inspect the PDP for key elements'],
+     expected:'Product detail page shows: product name (h1), selling price, and "ADD TO BAG" button'},
+    {id:'TC_INT_SEARCH_PDP_04',title:'Search For Multiple Keywords And Verify Each Opens A PDP',tags:['integration'],
+     desc:'Search for two different keywords and verify both open a valid product detail page.',
+     steps:['Navigate to https://www.purplle.com','Search for "kajal" → click first product → verify PDP loads','Go back to homepage','Search for "sunscreen" → click first product → verify PDP loads'],
+     expected:'Both searches successfully open distinct product detail pages with product names visible'},
+    {id:'TC_INT_SEARCH_PDP_05',title:'Navigate Back From PDP To Search Results',tags:['integration'],
+     desc:'Verify the browser back button from PDP returns to the search results page.',
+     steps:['Search for "lipstick" and verify results appear','Click the first product card','Verify PDP loads','Click browser Back button','Wait for search results to reload'],
+     expected:'Search results page is restored with the first product card visible'},
+  ]},
+  {id:'plp-pdp',label:'PLP → PDP',file:'tests/integration/test_plp_to_pdp_flow.robot',tests:[
+    {id:'TC_INT_PLP_PDP_01',title:'Makeup PLP Loads And First Product Opens Correct PDP',tags:['integration'],
+     desc:'Navigate to Makeup category, click first product, verify PDP loads with a product name.',
+     steps:['Navigate to https://www.purplle.com/makeup','Wait for products to load','Click the first product card','Wait for PDP to load'],
+     expected:'PDP loads; product name is visible and not empty'},
+    {id:'TC_INT_PLP_PDP_02',title:'Skincare PLP Loads And First Product Opens PDP With Price',tags:['integration'],
+     desc:'Navigate to Skincare, click first product, verify PDP shows price and Add to Bag.',
+     steps:['Navigate to https://www.purplle.com/skincare','Wait for products to load','Click the first product card','Wait for PDP to load'],
+     expected:'PDP shows product name, selling price, and "ADD TO BAG" button'},
+    {id:'TC_INT_PLP_PDP_03',title:'Navigate Back From PDP Returns To PLP With Products Intact',tags:['integration'],
+     desc:'Open a product from Makeup PLP, go back, verify PLP still shows products.',
+     steps:['Navigate to https://www.purplle.com/makeup','Click the first product card','Verify PDP loads','Click browser Back button','Wait for Makeup PLP to reload'],
+     expected:'Makeup product listing page is restored with product cards visible'},
+    {id:'TC_INT_PLP_PDP_04',title:'Apply Sort Then Click Product Opens Correct PDP',tags:['integration'],
+     desc:'Sort Makeup products by price low-to-high, then click first result and verify PDP.',
+     steps:['Navigate to https://www.purplle.com/makeup','Sort products by "Price: Low to High"','Wait for products to reload','Click the first sorted product card','Wait for PDP to load'],
+     expected:'PDP loads with product name and selling price visible'},
+    {id:'TC_INT_PLP_PDP_05',title:'Product Brand On PDP Links Back To Brand Listing',tags:['integration'],
+     desc:'Open a product from Makeup PLP and verify the brand link on PDP is clickable.',
+     steps:['Navigate to https://www.purplle.com/makeup','Click the first product card','Verify PDP loads','Note the brand name on the PDP','Click on the brand name/link'],
+     expected:'Clicking the brand name navigates to a brand-specific listing page with a heading (h1) visible'},
+  ]},
+  {id:'home-cat',label:'Homepage → Category',file:'tests/integration/test_homepage_to_category_flow.robot',tests:[
+    {id:'TC_INT_HOME_CAT_01',title:'Homepage Nav Click Opens Makeup PLP With Products',tags:['integration'],
+     desc:'From homepage, click Makeup nav link and verify the category page shows products.',
+     steps:['Navigate to https://www.purplle.com','Verify homepage loads','Click "Makeup" in the navigation bar','Wait for Makeup category page to load'],
+     expected:'Makeup category heading is displayed and product cards are visible'},
+    {id:'TC_INT_HOME_CAT_02',title:'Homepage Nav Click Opens Skincare PLP With Products',tags:['integration'],
+     desc:'From homepage, click Skincare nav link and verify the category page shows products.',
+     steps:['Navigate to https://www.purplle.com','Verify homepage loads','Click "Skincare" in the navigation bar','Wait for Skincare category page to load'],
+     expected:'Skincare category heading is displayed and product cards are visible'},
+    {id:'TC_INT_HOME_CAT_03',title:'Switch Categories From One To Another Via Nav Bar',tags:['integration'],
+     desc:'Navigate from homepage to Makeup, then switch to Skincare via the nav bar.',
+     steps:['Navigate to https://www.purplle.com','Click "Makeup" in nav bar','Verify Makeup products load','Click "Skincare" in nav bar (from Makeup page)','Wait for Skincare page to load'],
+     expected:'Skincare category heading is displayed with Skincare products visible (switched categories successfully)'},
+    {id:'TC_INT_HOME_CAT_04',title:'Homepage Search Bar Leads To Filtered Product Results',tags:['integration'],
+     desc:'Use the homepage search to search "kajal" and verify products appear.',
+     steps:['Navigate to https://www.purplle.com','Verify homepage loads','Use the search bar to search for "kajal"','Wait for search results to load'],
+     expected:'Search results page displays product cards for kajal'},
+    {id:'TC_INT_HOME_CAT_05',title:'Login Link From Homepage Navigates To Login Page',tags:['integration'],
+     desc:'Click the Login/Register header link and verify the login page loads.',
+     steps:['Navigate to https://www.purplle.com','Verify homepage loads','Click "Login / Register" link in the header','Wait for login page to load'],
+     expected:'Login page opens with mobile number input field visible'},
+    {id:'TC_INT_HOME_CAT_06',title:'Cart Icon From Homepage Navigates To Cart Page',tags:['integration'],
+     desc:'Click the cart icon in the header and verify the cart page loads.',
+     steps:['Navigate to https://www.purplle.com','Verify homepage loads','Click the cart/bag icon in the header','Wait for cart page to load'],
+     expected:'Cart page loads (URL contains "/cart")'},
+  ]},
+  {id:'filter',label:'Search & Filter',file:'tests/integration/test_search_filter_flow.robot',tests:[
+    {id:'TC_INT_FILTER_01',title:'Search Then Sort Results By Price Low To High',tags:['integration'],
+     desc:'Search for "foundation", apply Price Low-to-High sort, verify products still appear.',
+     steps:['Navigate to search results for "foundation"','Verify product cards are visible','Click Sort dropdown and select "Price: Low to High"','Wait for products to reload'],
+     expected:'Product cards are still displayed after applying the sort filter'},
+    {id:'TC_INT_FILTER_02',title:'Search Then Sort Results By Price High To Low',tags:['integration'],
+     desc:'Search for "foundation", apply Price High-to-Low sort, verify products still appear.',
+     steps:['Navigate to search results for "foundation"','Verify product cards are visible','Click Sort dropdown and select "Price: High to Low"','Wait for products to reload'],
+     expected:'Product cards are still displayed after applying the sort filter'},
+    {id:'TC_INT_FILTER_03',title:'Category Page Brand Filter Narrows Product List',tags:['integration'],
+     desc:'Navigate to Makeup, expand Brand filter, select Lakme, verify filtered results load.',
+     steps:['Navigate to https://www.purplle.com/makeup','Wait for products to load','Expand the Brand filter panel','Click the "Lakme" brand checkbox/option','Wait for filtered products to reload'],
+     expected:'Product list updates to show only Lakme brand products; product cards still visible'},
+    {id:'TC_INT_FILTER_04',title:'Category Page Price Filter Section Expands',tags:['integration'],
+     desc:'Navigate to Makeup, expand the Price filter panel and verify it opens.',
+     steps:['Navigate to https://www.purplle.com/makeup','Wait for products to load','Click on the "Price" filter heading/accordion','Wait for price filter options to appear'],
+     expected:'Price filter panel expands and price range options are visible'},
+    {id:'TC_INT_FILTER_05',title:'Sort And Then Open First Product Shows Correct PDP',tags:['integration'],
+     desc:'Sort Makeup by popularity, then click the first product and verify PDP loads.',
+     steps:['Navigate to https://www.purplle.com/makeup','Sort products by "Popularity"','Wait for products to reload','Click the first product card','Verify PDP loads'],
+     expected:'PDP loads with "ADD TO BAG" button visible'},
+  ]},
+ ]
+},
+{id:'e2e',label:'End-to-End Tests',icon:'🚀',desc:'Complete realistic user journeys from start to finish',
+ modules:[
+  {id:'guest-browse',label:'Guest Browse Journey',file:'tests/e2e/test_guest_browse_journey.robot',tests:[
+    {id:'TC_E2E_GUEST_01',title:'Guest User Full Browse Journey — Homepage To Cart',tags:['smoke','e2e'],
+     desc:'Complete end-to-end journey for an unauthenticated user: Homepage → Makeup → PDP → Cart (empty state).',
+     prereq:'Guest user — NOT logged in.',
+     steps:['Navigate to https://www.purplle.com and verify homepage loads','Click "Makeup" in nav bar and verify category heading + product cards appear','Click first Makeup product and verify PDP loads','Verify product price and "ADD TO BAG" button are visible on PDP','Verify wishlist icon is visible','Navigate to https://www.purplle.com/cart','Verify cart page loads'],
+     expected:'Cart page shows empty cart state for guest (empty cart message visible)'},
+    {id:'TC_E2E_GUEST_02',title:'Guest User Browse Journey — Homepage To Wishlist',tags:['regression','e2e'],
+     desc:'End-to-end journey: Homepage → Skincare → PDP → Wishlist (empty/login state).',
+     prereq:'Guest user — NOT logged in.',
+     steps:['Navigate to https://www.purplle.com and verify homepage','Click "Skincare" in nav bar and verify products load','Click first Skincare product and verify PDP loads','Navigate to https://www.purplle.com/profile/myfavourites'],
+     expected:'Wishlist page loads — showing empty wishlist or login prompt for guest user'},
+    {id:'TC_E2E_GUEST_03',title:'Guest User Multi-Category Browse Journey',tags:['regression','e2e'],
+     desc:'Guest browses three categories (Makeup, Skincare, Hair) and views a product from each.',
+     prereq:'Guest user — NOT logged in.',
+     steps:['Navigate to homepage → click "Makeup" → verify products → click first product → verify PDP','Return to homepage → click "Skincare" → verify products → click first product → verify PDP','Return to homepage → click "Hair" → verify products → click first product → verify PDP'],
+     expected:'All three category PDPs load successfully with product name headings visible'},
+  ]},
+  {id:'search-journey',label:'Search Journey',file:'tests/e2e/test_search_and_view_journey.robot',tests:[
+    {id:'TC_E2E_SEARCH_01',title:'Full Search To Product View Journey',tags:['smoke','e2e'],
+     desc:'Complete journey: Homepage → Search "lipstick" → View results → Sort → Open product → Verify PDP.',
+     steps:['Navigate to https://www.purplle.com and verify homepage','Use search bar to search for "lipstick" and verify results appear','Apply "Price: Low to High" sort and verify products still visible','Click the first sorted product card','Verify PDP loads — check product name (not empty), price, "ADD TO BAG" button, and product image'],
+     expected:'PDP fully loads with all key elements: name, price, Add to Bag, and product image visible'},
+    {id:'TC_E2E_SEARCH_02',title:'Search Multiple Products And Compare PDP Details',tags:['regression','e2e'],
+     desc:'Search for two different products, open each, and verify PDP data is populated for both.',
+     steps:['Search for "foundation" → open first product → note product name (must not be empty)','Return to homepage → search for "moisturizer" → open first product → note product name','Compare the two product names'],
+     expected:'Both products show unique names; the two product names are different from each other'},
+    {id:'TC_E2E_SEARCH_03',title:'Search Keyword Journey With Suggestion Click',tags:['regression','e2e'],
+     desc:'Start typing in search, click an autocomplete suggestion, verify product results appear.',
+     steps:['Navigate to https://www.purplle.com and verify homepage','Click the search input and type "kajal"','If autocomplete suggestions appear: click the first suggestion; otherwise press Enter','Wait for search results to load'],
+     expected:'Search results page displays product cards (regardless of whether suggestion was clicked or Enter was pressed)'},
+    {id:'TC_E2E_SEARCH_04',title:'No Results Journey Shows Helpful State',tags:['negative','regression','e2e'],
+     desc:'Search for a nonsense keyword, verify no-results state appears, then search again with a valid term.',
+     steps:['Navigate to https://www.purplle.com','Search for "xyzinvalidkeyword999"','Verify no-results message is shown','Search for "lipstick" from the same search bar/URL','Wait for results to load'],
+     expected:'Step 3: No-results message visible. Step 5: Product cards for lipstick appear (recovery from invalid search works)'},
+  ]},
+  {id:'cat-journey',label:'Category Navigation',file:'tests/e2e/test_category_navigation_journey.robot',tests:[
+    {id:'TC_E2E_CAT_01',title:'Full Category Browse With Sort And Product View Journey',tags:['smoke','e2e'],
+     desc:'Complete journey: Homepage → Makeup → Sort by Price Low-High → Open Product → Verify PDP → Go Back.',
+     steps:['Navigate to https://www.purplle.com and verify homepage','Click "Makeup" in nav — verify category heading and products appear','Sort by "Price: Low to High" — verify products reload','Click first product — verify PDP loads with name and price visible','Click browser Back — verify Makeup product listing is restored'],
+     expected:'Full round-trip: Makeup listing → Sorted listing → PDP → Back to listing — all steps succeed'},
+    {id:'TC_E2E_CAT_02',title:'Multi-Category Switch Journey With Product Views',tags:['regression','e2e'],
+     desc:'Journey: View Makeup products → click product → switch to Skincare via nav → click product → navigate to Offers.',
+     steps:['Navigate to homepage → click "Makeup" → verify products','Click first Makeup product → verify PDP','From PDP, click "Skincare" in nav bar → verify Skincare products','Click first Skincare product → verify PDP','Navigate to "Offers" via nav bar','Verify Offers page loads with "Offer" text visible'],
+     expected:'All category switches and PDP navigations succeed; Offers page loads as the final destination'},
+    {id:'TC_E2E_CAT_03',title:'Category Filter And Search Combined Journey',tags:['regression','e2e'],
+     desc:'Journey: Navigate to Makeup → Filter by brand → Return to homepage → Search for same brand.',
+     steps:['Navigate to https://www.purplle.com','Click "Makeup" in nav bar','Expand the Brand filter panel','Return to homepage by clicking the Purplle logo','Use the search bar to search for "Lakme"','Wait for results to load'],
+     expected:'Lakme brand search results page displays product cards'},
+    {id:'TC_E2E_CAT_04',title:'Brands Page Browse Journey',tags:['regression','e2e'],
+     desc:'Journey: Homepage → Brands page via nav → Verify brand listing page loads.',
+     steps:['Navigate to https://www.purplle.com and verify homepage','Click "Brands" in the navigation bar','Wait for Brands page to load'],
+     expected:'Brands page loads with "Brand" text and a page heading (h1) visible'},
+  ]},
+ ]
+},
+];
+
+const content=document.getElementById('content');
+const nav=document.getElementById('nav');
+let total=0;
+const layerColor={'functional':'var(--cyan)','integration':'var(--orange)','e2e':'var(--teal)'};
+
+LAYERS.forEach(layer=>{
+  const allTests=layer.modules.flatMap(m=>m.tests);
+  total+=allTests.length;
+  // Nav group
+  const ng=document.createElement('div');ng.className='nav-group';
+  const nh=document.createElement('div');nh.className='nav-group-header';
+  nh.innerHTML=`<span class="nav-group-dot" style="background:${layerColor[layer.id]}"></span>${layer.label}<svg class="chev" width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>`;
+  const ni=document.createElement('div');ni.className='nav-items';ni.style.maxHeight='1200px';
+  layer.modules.forEach(m=>{
+    const a=document.createElement('a');a.className='nav-item';a.href='#mod-'+m.id;
+    a.dataset.layer=layer.id;a.textContent=m.label+' ('+m.tests.length+')';
+    ni.appendChild(a);
+  });
+  nh.addEventListener('click',()=>{const c=nh.classList.toggle('collapsed');ni.style.maxHeight=c?'0':'1200px'});
+  ng.appendChild(nh);ng.appendChild(ni);nav.appendChild(ng);
+  // Layer block
+  const lb=document.createElement('div');lb.className='layer-block';lb.id='layer-'+layer.id;lb.dataset.layer=layer.id;
+  lb.innerHTML=`<div class="layer-header" data-layer="${layer.id}"><div class="layer-icon" data-layer="${layer.id}">${layer.icon}</div><div class="layer-meta"><h2>${layer.label}</h2><p>${layer.desc}</p></div><span class="layer-count" data-layer="${layer.id}">${allTests.length} test cases</span></div>`;
+  layer.modules.forEach(m=>{
+    const ml=document.createElement('div');ml.className='module-label';ml.id='mod-'+m.id;
+    ml.innerHTML=`<span>${m.label} <span style="color:var(--border);font-weight:400">${m.file}</span></span>`;
+    lb.appendChild(ml);
+    m.tests.forEach((tc,i)=>{lb.appendChild(buildCard(tc,layer.id,i*30))});
+  });
+  content.appendChild(lb);
+});
+document.getElementById('total-count').textContent=total;
+
+function buildCard(tc,layer,delay){
+  const card=document.createElement('div');
+  card.className='tc-card';card.id='tc-'+tc.id;card.dataset.layer=layer;card.dataset.title=tc.title.toLowerCase();
+  card.dataset.id=tc.id.toLowerCase();card.dataset.tags=tc.tags.join(' ');
+  card.style.animationDelay=delay+'ms';
+  const tagHTML=tc.tags.filter(t=>['smoke','regression','negative'].includes(t)).map(t=>`<span class="tag tag-${t}">${t}</span>`).join('');
+  card.innerHTML=`
+    <div class="tc-header" onclick="tog(this)">
+      <span class="tc-id">${esc(tc.id)}</span>
+      <span class="tc-title">${esc(tc.title)}</span>
+      <div class="tc-tags">${tagHTML}</div>
+      <div class="tc-toggle"><svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
+    </div>
+    <div class="tc-body">
+      <p class="tc-desc">${esc(tc.desc)}</p>
+      <div class="tc-grid">
+        ${tc.prereq?`<div class="tc-section full"><div class="tc-section-label label-prereq">Pre-conditions</div><p class="expected-text">${esc(tc.prereq)}</p></div>`:''}
+        <div class="tc-section"><div class="tc-section-label label-steps">Test Steps</div><ol class="steps-list">${tc.steps.map(s=>`<li>${esc(s)}</li>`).join('')}</ol></div>
+        <div class="tc-section"><div class="tc-section-label label-expected">Expected Result</div><p class="expected-text"><span class="pass">✓ </span>${esc(tc.expected)}</p></div>
+      </div>
+    </div>`;
+  return card;
+}
+
+function tog(h){h.classList.toggle('open');h.nextElementSibling.classList.toggle('open')}
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+
+// Filter chips
+document.querySelectorAll('.chip').forEach(c=>{
+  c.addEventListener('click',()=>{
+    document.querySelectorAll('.chip').forEach(x=>x.classList.remove('active'));
+    c.classList.add('active');filter(c.dataset.f);
+  });
+});
+function filter(f){
+  document.querySelectorAll('.tc-card').forEach(c=>{
+    const show=f==='all'||c.dataset.layer===f||c.dataset.tags.includes(f);
+    c.classList.toggle('hidden',!show);
+  });
+  document.querySelectorAll('.layer-block').forEach(b=>{
+    b.style.display=[...b.querySelectorAll('.tc-card')].some(c=>!c.classList.contains('hidden'))?'':'none';
+  });
+}
+
+// Search
+document.getElementById('search-input').addEventListener('input',function(){
+  const q=this.value.trim().toLowerCase();
+  let any=false;
+  document.querySelectorAll('.tc-card').forEach(c=>{
+    const m=!q||c.dataset.title.includes(q)||c.dataset.id.includes(q)||c.textContent.toLowerCase().includes(q);
+    c.classList.toggle('hidden',!m);if(m)any=true;
+  });
+  document.querySelectorAll('.layer-block').forEach(b=>{
+    b.style.display=[...b.querySelectorAll('.tc-card')].some(c=>!c.classList.contains('hidden'))?'':'none';
+  });
+  document.getElementById('no-results').style.display=(!any&&q)?'block':'none';
+  document.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));
+  document.querySelector('.chip[data-f="all"]').classList.add('active');
+});
+
+// Scroll spy
+const obs=new IntersectionObserver(e=>{
+  e.forEach(x=>{if(x.isIntersecting){const id=x.target.id.replace('mod-','');document.querySelectorAll('.nav-item').forEach(a=>{a.classList.toggle('active',a.getAttribute('href')==='#'+x.target.id)})}});
+},{rootMargin:'-10% 0px -80% 0px'});
+document.querySelectorAll('.module-label').forEach(m=>obs.observe(m));
+</script>
+</body>
+</html>

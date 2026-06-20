@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>API Test Cases — Purplle Robot Framework</title>
+<style>
+:root{--bg:#0d0a14;--surface:#15101f;--surface2:#1e1630;--border:#2d2248;--purple:#9b5de5;--pink:#f72585;--blue:#4361ee;--green:#06d6a0;--cyan:#00b4d8;--orange:#fb8500;--teal:#4cc9f0;--red:#ef233c;--yellow:#ffbe0b;--text:#e8e0f5;--muted:#8b7aa8;--code-bg:#0a0714}
+*{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);display:flex;min-height:100vh}
+#sidebar{position:fixed;top:0;left:0;width:270px;height:100vh;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;z-index:100}
+#sidebar-header{padding:20px 18px 14px;background:linear-gradient(135deg,#1a0a2e,#0d0a14);border-bottom:1px solid var(--border);flex-shrink:0}
+#sidebar-header h2{font-size:11.5px;color:var(--purple);letter-spacing:2px;text-transform:uppercase;margin-bottom:4px}
+#sidebar-header p{font-size:10.5px;color:var(--muted)}
+#search-box{margin:10px 14px 8px;display:flex;align-items:center;gap:7px;background:var(--surface2);border:1px solid var(--border);border-radius:7px;padding:7px 11px;flex-shrink:0}
+#search-box svg{flex-shrink:0;opacity:.5}
+#search-input{background:none;border:none;outline:none;color:var(--text);font-size:12px;width:100%}
+#search-input::placeholder{color:var(--muted)}
+#nav{overflow-y:auto;flex:1;padding:6px 0 16px}
+#nav::-webkit-scrollbar{width:3px}
+#nav::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+.nav-group{margin-bottom:2px}
+.nav-group-header{display:flex;align-items:center;gap:8px;padding:8px 16px;cursor:pointer;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);user-select:none;transition:color .2s}
+.nav-group-header:hover{color:var(--text)}
+.nav-group-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.nav-group-header .chev{margin-left:auto;transition:transform .25s}
+.nav-group-header.collapsed .chev{transform:rotate(-90deg)}
+.nav-items{overflow:hidden;transition:max-height .3s}
+.nav-item{display:block;padding:5px 16px 5px 32px;font-size:11.5px;color:var(--muted);text-decoration:none;border-left:2px solid transparent;transition:all .15s;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nav-item:hover{color:var(--text);background:var(--surface2)}
+.nav-item.active{color:var(--text);border-left-color:var(--purple);background:rgba(155,93,229,.08)}
+.stats-bar{flex-shrink:0;padding:10px 16px;border-top:1px solid var(--border);display:flex;gap:8px}
+.stat{text-align:center;flex:1}
+.stat-num{font-size:14px;font-weight:700;color:var(--purple)}
+.stat-lbl{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+#main{margin-left:270px;flex:1}
+#topbar{position:sticky;top:0;z-index:50;background:rgba(13,10,20,.92);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 26px;height:52px;display:flex;align-items:center;gap:12px}
+#topbar h1{font-size:13.5px;font-weight:700;background:linear-gradient(90deg,var(--purple),var(--pink));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;white-space:nowrap}
+.filter-chips{display:flex;gap:6px;margin-left:auto;flex-wrap:wrap}
+.chip{padding:3px 11px;border-radius:20px;font-size:9.5px;font-weight:700;border:1px solid transparent;cursor:pointer;transition:all .2s;text-transform:uppercase;letter-spacing:.5px}
+.chip[data-f="all"]{border-color:var(--purple);color:var(--purple)}.chip[data-f="all"].active{background:var(--purple);color:#fff}
+.chip[data-f="smoke"]{border-color:var(--green);color:var(--green)}.chip[data-f="smoke"].active{background:var(--green);color:#000}
+.chip[data-f="regression"]{border-color:var(--blue);color:var(--blue)}.chip[data-f="regression"].active{background:var(--blue);color:#fff}
+.chip[data-f="chaining"]{border-color:var(--orange);color:var(--orange)}.chip[data-f="chaining"].active{background:var(--orange);color:#000}
+.chip[data-f="security"]{border-color:var(--red);color:var(--red)}.chip[data-f="security"].active{background:var(--red);color:#fff}
+.chip[data-f="performance"]{border-color:var(--yellow);color:var(--yellow)}.chip[data-f="performance"].active{background:var(--yellow);color:#000}
+#content{padding:24px}
+.group-block{margin-bottom:40px}
+.group-header{display:flex;align-items:center;gap:14px;padding:16px 22px;border-radius:12px;margin-bottom:18px;background:rgba(155,93,229,.08);border:1px solid rgba(155,93,229,.2)}
+.group-icon{width:44px;height:44px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;background:rgba(155,93,229,.15)}
+.group-meta h2{font-size:17px;font-weight:700;margin-bottom:3px}
+.group-meta p{font-size:11.5px;color:var(--muted)}
+.group-count{margin-left:auto;padding:3px 12px;border-radius:20px;font-size:10px;font-weight:700;background:rgba(155,93,229,.2);color:var(--purple);white-space:nowrap}
+.module-label{display:flex;align-items:center;gap:8px;margin:18px 0 10px;padding-left:2px}
+.module-label span{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted);white-space:nowrap}
+.module-label::after{content:'';flex:1;height:1px;background:var(--border)}
+.tc-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;margin-bottom:8px;overflow:hidden;transition:border-color .2s;animation:fadeup .3s ease both}
+@keyframes fadeup{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.tc-card:hover{border-color:rgba(155,93,229,.4)}
+.tc-card.hidden{display:none}
+.tc-header{display:flex;align-items:center;gap:10px;padding:12px 16px;cursor:pointer;user-select:none}
+.tc-id{font-family:'Courier New',monospace;font-size:10.5px;font-weight:700;padding:2px 9px;border-radius:5px;background:rgba(155,93,229,.15);color:var(--purple);flex-shrink:0}
+.tc-title{font-size:13px;font-weight:600;flex:1}
+.tc-tags{display:flex;gap:5px;flex-shrink:0;flex-wrap:wrap;justify-content:flex-end}
+.tag{padding:2px 7px;border-radius:4px;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.4px}
+.tag-smoke{background:rgba(6,214,160,.15);color:var(--green)}
+.tag-regression{background:rgba(67,97,238,.15);color:var(--blue)}
+.tag-chaining{background:rgba(251,133,0,.15);color:var(--orange)}
+.tag-security{background:rgba(239,35,60,.15);color:var(--red)}
+.tag-performance{background:rgba(255,190,11,.15);color:var(--yellow)}
+.tag-api{background:rgba(155,93,229,.15);color:var(--purple)}
+.tc-toggle{width:24px;height:24px;border-radius:6px;display:flex;align-items:center;justify-content:center;background:var(--surface2);border:1px solid var(--border);flex-shrink:0;transition:transform .25s,background .2s}
+.tc-header.open .tc-toggle{transform:rotate(180deg);background:var(--purple)}
+.tc-body{display:none;border-top:1px solid var(--border);padding:14px 16px}
+.tc-body.open{display:block}
+.tc-desc{font-size:12px;color:var(--muted);margin-bottom:12px;line-height:1.5}
+.tc-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.tc-section{padding:12px 14px;background:var(--surface2);border-radius:8px;border:1px solid var(--border)}
+.tc-section.full{grid-column:1/-1}
+.tc-section-label{font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px}
+.label-steps{color:var(--purple)}
+.label-expected{color:var(--green)}
+.label-endpoint{color:var(--cyan)}
+.label-method{color:var(--orange)}
+.label-note{color:var(--yellow)}
+.steps-list{list-style:none;counter-reset:step}
+.steps-list li{counter-increment:step;display:flex;gap:8px;padding:4px 0;font-size:12px;line-height:1.5;color:var(--text)}
+.steps-list li::before{content:counter(step);width:18px;height:18px;border-radius:50%;background:rgba(155,93,229,.2);color:var(--purple);font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.method-row{display:flex;align-items:center;gap:10px;margin-bottom:8px;flex-wrap:wrap}
+.method-badge{padding:3px 10px;border-radius:5px;font-size:11px;font-weight:800;font-family:'Courier New',monospace;letter-spacing:.5px}
+.badge-GET{background:rgba(0,180,216,.15);color:var(--cyan)}
+.badge-POST{background:rgba(6,214,160,.15);color:var(--green)}
+.badge-PUT{background:rgba(251,133,0,.15);color:var(--orange)}
+.badge-PATCH{background:rgba(155,93,229,.15);color:var(--purple)}
+.badge-DELETE{background:rgba(239,35,60,.15);color:var(--red)}
+.endpoint-code{font-family:'Courier New',monospace;font-size:11px;color:var(--muted);word-break:break-all}
+.status-list{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}
+.status-badge{padding:2px 8px;border-radius:4px;font-size:10.5px;font-weight:700;font-family:'Courier New',monospace}
+.s2{background:rgba(6,214,160,.15);color:var(--green)}
+.s3{background:rgba(255,190,11,.15);color:var(--yellow)}
+.s4{background:rgba(239,35,60,.15);color:var(--red)}
+.expected-text{font-size:12px;color:var(--text);line-height:1.5}
+.expected-text .pass{color:var(--green);font-weight:600}
+.chain-flow{display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin:8px 0;padding:8px 12px;background:var(--code-bg);border-radius:6px;border:1px solid var(--border)}
+.chain-step{padding:3px 8px;border-radius:4px;font-size:10.5px;font-weight:700;font-family:'Courier New',monospace}
+.chain-arrow{color:var(--muted);font-size:12px}
+.note-text{font-size:11.5px;color:var(--yellow);line-height:1.5;font-style:italic}
+#no-results{display:none;text-align:center;padding:60px;color:var(--muted)}
+.http-ref{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px 24px;margin-top:30px}
+.http-ref h3{font-size:13px;font-weight:700;margin-bottom:14px;color:var(--text)}
+.http-ref table{width:100%;border-collapse:collapse;font-size:11.5px}
+.http-ref th{text-align:left;padding:6px 10px;color:var(--muted);font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;border-bottom:1px solid var(--border)}
+.http-ref td{padding:7px 10px;border-bottom:1px solid rgba(45,34,72,.5)}
+.http-ref tr:last-child td{border-bottom:none}
+.warn-box{margin-top:14px;padding:10px 14px;border-radius:7px;background:rgba(239,35,60,.08);border:1px solid rgba(239,35,60,.25);font-size:11px;color:var(--red)}
+</style>
+</head>
+<body>
+<aside id="sidebar">
+  <div id="sidebar-header">
+    <h2>API Test Cases</h2>
+    <p>Purplle.com — HTTP-level Test Reference</p>
+  </div>
+  <div id="search-box">
+    <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+    <input id="search-input" type="text" placeholder="Search test cases…" autocomplete="off"/>
+  </div>
+  <nav id="nav"></nav>
+  <div class="stats-bar">
+    <div class="stat"><div class="stat-num" id="total-count">—</div><div class="stat-lbl">Total</div></div>
+    <div class="stat"><div class="stat-num">10</div><div class="stat-lbl">Modules</div></div>
+    <div class="stat"><div class="stat-num">5</div><div class="stat-lbl">Methods</div></div>
+  </div>
+</aside>
+<main id="main">
+  <div id="topbar">
+    <h1>Purplle API Test Cases</h1>
+    <div class="filter-chips">
+      <button class="chip active" data-f="all">All</button>
+      <button class="chip" data-f="smoke">Smoke</button>
+      <button class="chip" data-f="regression">Regression</button>
+      <button class="chip" data-f="chaining">Chaining</button>
+      <button class="chip" data-f="security">Security</button>
+      <button class="chip" data-f="performance">Performance</button>
+    </div>
+  </div>
+  <div id="content"><div id="no-results"><p>No test cases match your search.</p></div></div>
+</main>
+<script>
+const MODULES=[
+{id:'search-api',label:'Search API',file:'tests/api/test_search_api.robot',icon:'🔍',tests:[
+  {id:'TC_API_SEARCH_01',title:'Search API Returns 200/301/302 For Valid Keyword',tags:['smoke','api'],
+   method:'GET',endpoint:'/api/search?q=lipstick',
+   desc:'Verify the search endpoint responds with a success or redirect for a valid product keyword.',
+   steps:['Send GET /api/search?q=lipstick with JSON Accept header','Capture the HTTP status code'],
+   expected:'Status code is 200, 301, or 302 (success or redirect — no 4xx/5xx)',
+   accepted_codes:['200','301','302']},
+  {id:'TC_API_SEARCH_02',title:'Search API Returns 200/301/302 For Brand Name',tags:['smoke','api'],
+   method:'GET',endpoint:'/api/search?q=Lakme',
+   desc:'Verify the search endpoint responds correctly for a brand name keyword.',
+   steps:['Send GET /api/search?q=Lakme with JSON Accept header','Capture the HTTP status code'],
+   expected:'Status code is 200, 301, or 302',
+   accepted_codes:['200','301','302']},
+  {id:'TC_API_SEARCH_03',title:'Search API Response Body Is Valid JSON',tags:['regression','api'],
+   method:'GET',endpoint:'/api/search?q=foundation',
+   desc:'When the search endpoint returns 200, verify the response body is parseable as JSON and is non-empty.',
+   steps:['Send GET /api/search?q=foundation','If status is 200: attempt to parse response body as JSON','Verify the parsed JSON is not empty'],
+   expected:'If status 200: response body parses as valid JSON; JSON object is not empty',
+   note:'If status is 301/302 (redirect), JSON check is skipped — redirect is still a passing condition',
+   accepted_codes:['200']},
+  {id:'TC_API_SEARCH_04',title:'Search API Returns 200/301/302 For Skincare Keyword',tags:['regression','api'],
+   method:'GET',endpoint:'/api/search?q=serum',
+   desc:'Verify the search endpoint responds correctly for the skincare keyword "serum".',
+   steps:['Send GET /api/search?q=serum with JSON Accept header','Capture the HTTP status code'],
+   expected:'Status code is 200, 301, or 302',
+   accepted_codes:['200','301','302']},
+  {id:'TC_API_SEARCH_05',title:'Autocomplete Endpoint Responds For Partial Keyword',tags:['regression','api'],
+   method:'GET',endpoint:'/api/autocomplete?q=lips',
+   desc:'Verify the autocomplete/suggest endpoint responds for a partial keyword "lips". 404 is acceptable if endpoint is not implemented at this path.',
+   steps:['Send GET /api/autocomplete?q=lips with JSON Accept header','Capture the HTTP status code'],
+   expected:'Status code is 200 (suggestions returned) or 404 (endpoint not at this path)',
+   accepted_codes:['200','404'],
+   note:'Verify the actual autocomplete endpoint path via DevTools Network tab'},
+  {id:'TC_API_SEARCH_06',title:'Search API Does Not Return 5xx Server Error',tags:['smoke','api'],
+   method:'GET',endpoint:'/api/search?q=lipstick',
+   desc:'Verify the search endpoint never returns a 5xx server error for a valid query.',
+   steps:['Send GET /api/search?q=lipstick','Capture the HTTP status code'],
+   expected:'Status code is less than 500 (any non-server-error response is acceptable)',
+   accepted_codes:['<500']},
+  {id:'TC_API_SEARCH_07',title:'Homepage Returns HTTP 200',tags:['smoke','api'],
+   method:'GET',endpoint:'/',
+   desc:'Basic connectivity check — verify the homepage returns HTTP 200.',
+   steps:['Send GET / to https://www.purplle.com','Capture the HTTP status code'],
+   expected:'Status code is exactly 200',
+   accepted_codes:['200']},
+]},
+{id:'product-api',label:'Product API',file:'tests/api/test_product_api.robot',icon:'📦',tests:[
+  {id:'TC_API_PRODUCT_01',title:'Categories Endpoint Responds Without Server Error',tags:['smoke','api'],
+   method:'GET',endpoint:'/api/categories',
+   desc:'Verify the categories API endpoint does not return a 5xx server error.',
+   steps:['Send GET /api/categories with JSON Accept header','Capture the HTTP status code'],
+   expected:'Status code is less than 500 (auth-gated 401/403 is acceptable)',
+   accepted_codes:['<500'],
+   note:'Verify actual endpoint path from browser DevTools Network tab'},
+  {id:'TC_API_PRODUCT_02',title:'Products Endpoint Responds Without Server Error',tags:['smoke','api'],
+   method:'GET',endpoint:'/api/products',
+   desc:'Verify the products list API endpoint does not return a 5xx server error.',
+   steps:['Send GET /api/products with JSON Accept header','Capture the HTTP status code'],
+   expected:'Status code is less than 500',
+   accepted_codes:['<500']},
+  {id:'TC_API_PRODUCT_03',title:'Products Endpoint With Category Filter Responds',tags:['regression','api'],
+   method:'GET',endpoint:'/api/products?category=makeup',
+   desc:'Verify the products endpoint with a category query parameter responds without server error.',
+   steps:['Send GET /api/products?category=makeup with JSON Accept header','Capture the HTTP status code'],
+   expected:'Status code is less than 500',
+   accepted_codes:['<500']},
+  {id:'TC_API_PRODUCT_04',title:'Cart Endpoint Returns Expected Status For Guest',tags:['regression','api'],
+   method:'GET',endpoint:'/api/cart',
+   desc:'Verify the cart API endpoint returns a non-5xx status code for an unauthenticated request. 401/403 is expected for guest.',
+   steps:['Send GET /api/cart without authentication token','Capture the HTTP status code'],
+   expected:'Status code is less than 500 (401/403 expected for guest — means auth is working correctly)',
+   accepted_codes:['401','403'],
+   note:'401/403 means the auth layer is correctly rejecting unauthenticated requests — this is a PASS'},
+  {id:'TC_API_PRODUCT_05',title:'Wishlist Endpoint Returns Expected Status For Guest',tags:['regression','api'],
+   method:'GET',endpoint:'/api/wishlist',
+   desc:'Verify the wishlist API endpoint returns a non-5xx status code for an unauthenticated request.',
+   steps:['Send GET /api/wishlist without authentication token','Capture the HTTP status code'],
+   expected:'Status code is less than 500 (401/403 expected for guest)',
+   accepted_codes:['401','403'],
+   note:'401/403 from an auth-gated endpoint is CORRECT behaviour, not a failure'},
+  {id:'TC_API_PRODUCT_06',title:'Homepage Response Time Is Under 10 Seconds',tags:['performance','api'],
+   method:'GET',endpoint:'/',
+   desc:'Verify the homepage HTTP response arrives within 10 seconds (basic performance check).',
+   steps:['Send GET / and record the response elapsed time in seconds'],
+   expected:'response.elapsed.total_seconds() is less than 10',
+   accepted_codes:['200']},
+  {id:'TC_API_PRODUCT_07',title:'HTTPS Connection Is Enforced',tags:['security','api'],
+   method:'GET',endpoint:'/',
+   desc:'Verify the site is served over HTTPS by checking the final response URL starts with https.',
+   steps:['Send GET https://www.purplle.com/ with SSL verification enabled (verify=True)','Check the final response URL after any redirects'],
+   expected:'response.url starts with "https" (not "http")'},
+]},
+{id:'get-chaining',label:'GET Chaining',file:'tests/api/test_api_chaining.robot',icon:'🔗',tests:[
+  {id:'TC_API_CHAIN_01',title:'GET Chain — Homepage Status Feeds Into Search URL',tags:['chaining','api'],
+   method:'GET',endpoint:'/ → /api/search?q={extracted-url}',
+   desc:'Chain: send GET / → verify homepage status → extract URL from response → send GET /api/search with that URL as the query.',
+   chain:['GET /','/api/search?q={url-from-response}'],
+   steps:['Send GET https://www.purplle.com/','Verify status is 200; capture response.url','Extract the URL value (base URL string)','Send GET /api/search?q={extracted-url}','Verify status is 200, 301, or 302'],
+   expected:'Both requests succeed without 5xx errors; the search request uses the URL from the first response'},
+  {id:'TC_API_CHAIN_02',title:'GET Chain — Autocomplete Keyword Feeds Into Full Search',tags:['chaining','api'],
+   method:'GET',endpoint:'/api/autocomplete?q=lip → /api/search?q={suggestion}',
+   desc:'Chain: autocomplete for "lip" → extract first suggested keyword → use it as the query in a full search.',
+   chain:['GET /api/autocomplete?q=lip','GET /api/search?q={suggestion-from-autocomplete}'],
+   steps:['Send GET /api/autocomplete?q=lip','If status 200: parse response JSON and extract the first suggestion text','If status 404: use fallback keyword "lipstick"','Send GET /api/search?q={extracted-or-fallback-keyword}','Verify search status is 200, 301, or 302'],
+   expected:'The full search executed with the autocomplete suggestion (or fallback) returns 200/301/302'},
+  {id:'TC_API_CHAIN_03',title:'GET Chain — Two Sequential Searches Compare Response Times',tags:['chaining','api'],
+   method:'GET',endpoint:'/api/search?q=lipstick → /api/search?q=foundation',
+   desc:'Send two separate search GET requests and verify both complete within 10 seconds; compare response times.',
+   chain:['GET /api/search?q=lipstick','GET /api/search?q=foundation'],
+   steps:['Send GET /api/search?q=lipstick; record response time t1','Verify status is 200/301/302 for first search','Send GET /api/search?q=foundation; record response time t2','Verify status is 200/301/302 for second search','Verify both t1 and t2 are less than 10 seconds'],
+   expected:'Both searches return 200/301/302 and complete in under 10 seconds each'},
+]},
+{id:'post-chaining',label:'POST Chaining',file:'tests/api/test_post_chaining.robot',icon:'📤',tests:[
+  {id:'TC_API_POST_01',title:'POST Chain — Cart → Wishlist → Checkout',tags:['chaining','api'],
+   method:'POST',endpoint:'/api/cart → /api/wishlist → /api/checkout',
+   desc:'Chain three POST requests: add to cart → add to wishlist → attempt checkout. All must return 200/201 (authenticated) or 401/403 (guest auth-gated).',
+   chain:['POST /api/cart','POST /api/wishlist','POST /api/checkout'],
+   steps:['POST to /api/cart with product_id payload','Verify status is in [200, 201, 401, 403] — capture status as cart_status','POST to /api/wishlist with product_id payload','Verify status is in [200, 201, 401, 403] — capture wishlist_status','POST to /api/checkout','Verify status is in [200, 201, 401, 403] — capture checkout_status'],
+   expected:'All three POST requests return a status in [200, 201, 401, 403] — no 5xx server errors. 401/403 is expected for guest user.',
+   note:'Guest user (no auth token) WILL get 401/403 — this is correct behaviour. 5xx would be a real failure.'},
+  {id:'TC_API_POST_02',title:'POST Chain — Two Cart Items Have Consistent Status',tags:['chaining','api'],
+   method:'POST',endpoint:'/api/cart (×2 different products)',
+   desc:'POST two different products to the cart and verify both return the same category of status code (both auth-gated or both succeed).',
+   chain:['POST /api/cart {product_id:1}','POST /api/cart {product_id:2}'],
+   steps:['POST to /api/cart with product_id=1 (or first product); capture status1','Verify status1 in [200, 201, 401, 403]','POST to /api/cart with product_id=2 (or second product); capture status2','Verify status2 in [200, 201, 401, 403]','Compare status1 and status2 — both should be in the same category (both 4xx or both 2xx)'],
+   expected:'Both POST requests return consistent status codes — same category [2xx] or [4xx]. No mixed outcomes.'},
+]},
+{id:'put-chaining',label:'PUT Chaining',file:'tests/api/test_put_chaining.robot',icon:'✏️',tests:[
+  {id:'TC_API_PUT_01',title:'PUT Chain — POST Cart Then Update Quantity Twice',tags:['chaining','api'],
+   method:'POST+PUT+PUT',endpoint:'/api/cart (POST) → /api/cart/{id} (PUT qty=3) → /api/cart/{id} (PUT qty=1)',
+   desc:'Chain: add item to cart via POST → update cart item quantity to 3 via PUT → update quantity back to 1 via PUT.',
+   chain:['POST /api/cart','PUT /api/cart/{id} {qty:3}','PUT /api/cart/{id} {qty:1}'],
+   steps:['POST to /api/cart with a product payload','Verify POST status in [200, 201, 401, 403]; if 200/201 capture item_id from response','PUT to /api/cart/{item_id} with quantity=3','Verify PUT status in [200, 204, 401, 403]','PUT to /api/cart/{item_id} with quantity=1','Verify PUT status in [200, 204, 401, 403]'],
+   expected:'POST, first PUT, and second PUT all return status in their respective accepted ranges. No 5xx errors.',
+   note:'Guest user: all three will likely return 401/403. That is the expected and correct outcome.'},
+  {id:'TC_API_PUT_02',title:'PUT Chain — Update Profile Then Preferences',tags:['chaining','api'],
+   method:'PUT+PUT',endpoint:'/api/profile (PUT) → /api/preferences (PUT)',
+   desc:'Chain two PUT requests: update profile → update user preferences. Both must return status in acceptable range.',
+   chain:['PUT /api/profile {name:"Test User"}','PUT /api/preferences {newsletter:false}'],
+   steps:['PUT to /api/profile with a name/display-name payload','Verify status in [200, 204, 401, 403]; capture profile_status','PUT to /api/preferences with a newsletter opt-out payload','Verify status in [200, 204, 401, 403]; capture pref_status','Compare profile_status and pref_status — both should be in the same category'],
+   expected:'Both PUT requests return status in [200, 204, 401, 403]. No 5xx errors. Statuses are in the same category.'},
+]},
+{id:'patch-chaining',label:'PATCH Chaining',file:'tests/api/test_patch_chaining.robot',icon:'🩹',tests:[
+  {id:'TC_API_PATCH_01',title:'PATCH Chain — POST Cart Then Patch Quantity And Note',tags:['chaining','api'],
+   method:'POST+PATCH+PATCH',endpoint:'/api/cart (POST) → /api/cart/{id} (PATCH qty) → /api/cart/{id} (PATCH note)',
+   desc:'Chain: add item to cart via POST → partially update quantity via PATCH → partially update note via PATCH.',
+   chain:['POST /api/cart','PATCH /api/cart/{id} {qty:2}','PATCH /api/cart/{id} {note:"gift"}'],
+   steps:['POST to /api/cart with product payload','Verify status in [200, 201, 401, 403]; if 200/201 capture item_id','PATCH to /api/cart/{item_id} with quantity=2','Verify status in [200, 204, 401, 403]','PATCH to /api/cart/{item_id} with gift_note="gift"','Verify status in [200, 204, 401, 403]'],
+   expected:'POST and both PATCH requests return statuses in their accepted ranges. No 5xx errors.',
+   note:'PATCH differs from PUT: PATCH updates only the specified fields; PUT replaces the whole resource'},
+  {id:'TC_API_PATCH_02',title:'PATCH Chain — Update Name, Then Email, Then Phone',tags:['chaining','api'],
+   method:'PATCH+PATCH+PATCH',endpoint:'/api/profile (×3 different fields)',
+   desc:'Chain three PATCH requests: update display name → update email → update phone. All must return consistent statuses.',
+   chain:['PATCH /api/profile {name:"Test"}','PATCH /api/profile {email:"t@t.com"}','PATCH /api/profile {phone:"9876543210"}'],
+   steps:['PATCH to /api/profile with {name:"Test User"}','Verify status in [200, 204, 401, 403]; capture s1','PATCH to /api/profile with {email:"test@example.com"}','Verify status in [200, 204, 401, 403]; capture s2','PATCH to /api/profile with {phone:"9876543210"}','Verify status in [200, 204, 401, 403]; capture s3','Verify s1, s2, and s3 are all in the same category'],
+   expected:'All three PATCH requests return statuses in [200, 204, 401, 403]. All are in the same category (all 2xx or all 4xx).'},
+]},
+{id:'delete-chaining',label:'DELETE Chaining',file:'tests/api/test_delete_chaining.robot',icon:'🗑️',tests:[
+  {id:'TC_API_DELETE_01',title:'DELETE Chain — POST Cart Item Then Delete It',tags:['chaining','api'],
+   method:'POST+DELETE',endpoint:'/api/cart (POST) → /api/cart/{id} (DELETE)',
+   desc:'Chain: add item to cart via POST → delete that same item via DELETE. Both must return accepted status.',
+   chain:['POST /api/cart {product_id:X}','DELETE /api/cart/{id}'],
+   steps:['POST to /api/cart with a product payload','Verify POST status in [200, 201, 401, 403]','If POST returned 200/201: capture item_id from response; DELETE /api/cart/{item_id}','Verify DELETE status in [200, 204, 401, 403, 404]'],
+   expected:'POST returns [200/201/401/403]. DELETE returns [200/204/401/403/404]. No 5xx errors.',
+   note:'404 on DELETE is acceptable — if auth blocked the POST, no item was created, so DELETE correctly returns 404'},
+  {id:'TC_API_DELETE_02',title:'DELETE Chain — Cart POST+DELETE Then Wishlist POST+DELETE',tags:['chaining','api'],
+   method:'POST+DELETE+POST+DELETE',endpoint:'/api/cart (POST→DELETE) then /api/wishlist (POST→DELETE)',
+   desc:'4-step chain: POST to cart → DELETE from cart → POST to wishlist → DELETE from wishlist. Verify all return accepted statuses.',
+   chain:['POST /api/cart','DELETE /api/cart/{id}','POST /api/wishlist','DELETE /api/wishlist/{id}'],
+   steps:['POST to /api/cart; verify status in [200, 201, 401, 403]','If POST succeeded (200/201): DELETE /api/cart/{id}; verify [200, 204, 401, 403, 404]','POST to /api/wishlist; verify status in [200, 201, 401, 403]','If POST succeeded (200/201): DELETE /api/wishlist/{id}; verify [200, 204, 401, 403, 404]'],
+   expected:'All four requests return statuses in their respective accepted ranges. No 5xx at any step.'},
+]},
+{id:'post-delete-chaining',label:'POST-DELETE Chaining',file:'tests/api/test_post_delete_chaining.robot',icon:'↩️',tests:[
+  {id:'TC_API_POST_DEL_01',title:'Cart POST and DELETE Are Status-Consistent',tags:['chaining','api'],
+   method:'POST+DELETE',endpoint:'/api/cart (POST then DELETE)',
+   desc:'Verify POST and DELETE to the cart endpoint both return statuses from the same auth category (both succeed or both are auth-gated).',
+   chain:['POST /api/cart','DELETE /api/cart/{id}'],
+   steps:['POST to /api/cart with product payload; capture post_status','Verify post_status in [200, 201, 401, 403]','If 200/201: extract item_id; send DELETE /api/cart/{item_id}; capture del_status','If 401/403: send DELETE /api/cart/999 (non-existent); capture del_status','Verify del_status in [200, 204, 401, 403, 404]'],
+   expected:'POST status and DELETE status are consistent — if POST returned 4xx, DELETE also returns 4xx. No 5xx at any point.'},
+  {id:'TC_API_POST_DEL_02',title:'Wishlist POST and DELETE Are Status-Consistent',tags:['chaining','api'],
+   method:'POST+DELETE',endpoint:'/api/wishlist (POST then DELETE)',
+   desc:'Verify POST and DELETE to the wishlist endpoint both return statuses from the same auth category.',
+   chain:['POST /api/wishlist','DELETE /api/wishlist/{id}'],
+   steps:['POST to /api/wishlist with product payload; capture post_status','Verify post_status in [200, 201, 401, 403]','If 200/201: extract item_id; send DELETE /api/wishlist/{item_id}','If 401/403: skip DELETE (no item was created); record 403 for del_status','Verify del_status in [200, 204, 401, 403, 404]'],
+   expected:'POST and DELETE statuses are consistent for the same auth context. No 5xx errors.'},
+  {id:'TC_API_POST_DEL_03',title:'Two Cart Items Both POST Then Both DELETE Successfully',tags:['chaining','api'],
+   method:'POST×2+DELETE×2',endpoint:'/api/cart (two items added, then both removed)',
+   desc:'Add two different products to the cart, then delete both. Verify all four requests return accepted statuses consistently.',
+   chain:['POST /api/cart {product:1}','POST /api/cart {product:2}','DELETE /api/cart/{id1}','DELETE /api/cart/{id2}'],
+   steps:['POST /api/cart with product_id=1; verify [200,201,401,403]; capture s1 and item_id1','POST /api/cart with product_id=2; verify [200,201,401,403]; capture s2 and item_id2','DELETE /api/cart/{item_id1}; verify [200,204,401,403,404]','DELETE /api/cart/{item_id2}; verify [200,204,401,403,404]','Verify s1 and s2 are in the same category (both 2xx or both 4xx)'],
+   expected:'All four requests (2 POSTs + 2 DELETEs) return accepted statuses. The two POSTs return the same status category.'},
+]},
+{id:'put-patch-chaining',label:'PUT+PATCH Chaining',file:'tests/api/test_put_patch_chaining.robot',icon:'🔄',tests:[
+  {id:'TC_API_PUT_PATCH_01',title:'POST → PUT → PATCH And PUT/PATCH Statuses Match',tags:['chaining','api'],
+   method:'POST+PUT+PATCH',endpoint:'/api/cart (POST) → (PUT qty) → (PATCH note)',
+   desc:'Chain: POST item to cart → PUT full quantity update → PATCH partial note update. Verify PUT and PATCH return the same status.',
+   chain:['POST /api/cart','PUT /api/cart/{id} {qty:5}','PATCH /api/cart/{id} {note:"urgent"}'],
+   steps:['POST to /api/cart; verify [200,201,401,403]','If 200/201: PUT to /api/cart/{id} with full quantity update; capture put_status','PATCH to /api/cart/{id} with gift note; capture patch_status','Verify put_status in [200,204,401,403]','Verify patch_status in [200,204,401,403]','Verify put_status equals patch_status (same endpoint, same auth context)'],
+   expected:'PUT and PATCH statuses are identical (same endpoint, same auth context = same status). No 5xx errors.',
+   note:'PUT replaces the full resource; PATCH partially updates. Both hit the same auth gate so statuses must match.'},
+  {id:'TC_API_PUT_PATCH_02',title:'PUT Profile Then PATCH Name Then PATCH Phone',tags:['chaining','api'],
+   method:'PUT+PATCH+PATCH',endpoint:'/api/profile (PUT full) → (PATCH name) → (PATCH phone)',
+   desc:'Chain: full profile PUT → PATCH only name → PATCH only phone. Verify all return consistent statuses.',
+   chain:['PUT /api/profile {name:"A",email:"a@b.com"}','PATCH /api/profile {name:"B"}','PATCH /api/profile {phone:"9876543210"}'],
+   steps:['PUT to /api/profile with full profile payload; capture put_status','Verify put_status in [200,204,401,403]','PATCH to /api/profile with only name field; capture patch1_status','Verify patch1_status in [200,204,401,403]','PATCH to /api/profile with only phone field; capture patch2_status','Verify patch2_status in [200,204,401,403]','Verify put_status, patch1_status, and patch2_status are all in the same category'],
+   expected:'PUT and both PATCHes return statuses in [200,204,401,403], all in the same category. No 5xx errors.'},
+]},
+{id:'crud-chaining',label:'Full CRUD Chaining',file:'tests/api/test_crud_chaining.robot',icon:'♻️',tests:[
+  {id:'TC_API_CRUD_01',title:'Cart Full CRUD Chain — POST → GET → PUT → PATCH → DELETE',tags:['chaining','api'],
+   method:'POST+GET+PUT+PATCH+DELETE',endpoint:'/api/cart — all 5 HTTP methods in sequence',
+   desc:'Execute the full CRUD cycle on the cart: Create → Read → Update (full) → Update (partial) → Delete.',
+   chain:['POST /api/cart','GET /api/cart','PUT /api/cart/{id}','PATCH /api/cart/{id}','DELETE /api/cart/{id}'],
+   steps:['POST to /api/cart with product payload; verify [200,201,401,403]; capture post_status','GET from /api/cart; verify [200,401,403]; capture get_status','If 200/201 from POST: PUT to /api/cart/{id}; verify [200,204,401,403]','PATCH to /api/cart/{id}; verify [200,204,401,403]','DELETE /api/cart/{id}; verify [200,204,401,403,404]','Verify post_status and get_status are in the same category'],
+   expected:'All 5 operations return statuses in their accepted ranges. POST and GET are consistent (same auth category). No 5xx at any step.'},
+  {id:'TC_API_CRUD_02',title:'Wishlist Full CRUD Chain — POST → GET → PUT → PATCH → DELETE',tags:['chaining','api'],
+   method:'POST+GET+PUT+PATCH+DELETE',endpoint:'/api/wishlist — all 5 HTTP methods in sequence',
+   desc:'Execute the full CRUD cycle on the wishlist: Create → Read → Update (full) → Update (partial) → Delete.',
+   chain:['POST /api/wishlist','GET /api/wishlist','PUT /api/wishlist/{id}','PATCH /api/wishlist/{id}','DELETE /api/wishlist/{id}'],
+   steps:['POST to /api/wishlist with product payload; verify [200,201,401,403]','GET from /api/wishlist; verify [200,401,403]','If 200/201 from POST: PUT to /api/wishlist/{id}; verify [200,204,401,403]','PATCH to /api/wishlist/{id}; verify [200,204,401,403]','DELETE /api/wishlist/{id}; verify [200,204,401,403,404]'],
+   expected:'All 5 operations return statuses in accepted ranges. POST and GET are in the same auth category. No 5xx errors.'},
+  {id:'TC_API_CRUD_03',title:'Profile Full CRUD Chain — POST → GET → PUT → PATCH → DELETE',tags:['chaining','api'],
+   method:'POST+GET+PUT+PATCH+DELETE',endpoint:'/api/profile — all 5 HTTP methods in sequence',
+   desc:'Execute the full CRUD cycle on the user profile: Create (register) → Read → Update (full) → Update (partial) → Delete.',
+   chain:['POST /api/profile','GET /api/profile','PUT /api/profile','PATCH /api/profile','DELETE /api/profile'],
+   steps:['POST to /api/profile (register or create profile); verify [200,201,401,403]','GET from /api/profile; verify [200,401,403]','PUT to /api/profile with full payload; verify [200,204,401,403]','PATCH to /api/profile with partial payload; verify [200,204,401,403]','DELETE /api/profile; verify [200,204,401,403,404]','Verify all statuses are in the same category (all 2xx or all 4xx)'],
+   expected:'All 5 operations succeed or are all auth-gated. No 5xx errors. All statuses in the same category (consistent auth handling).'},
+]},
+];
+
+const content=document.getElementById('content');
+const nav=document.getElementById('nav');
+let total=0;
+
+// Build sidebar nav
+const ng=document.createElement('div');ng.className='nav-group';
+const nh=document.createElement('div');nh.className='nav-group-header';
+nh.innerHTML=`<span class="nav-group-dot" style="background:var(--purple)"></span>API Test Modules<svg class="chev" width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>`;
+const ni=document.createElement('div');ni.className='nav-items';ni.style.maxHeight='1200px';
+MODULES.forEach(m=>{
+  total+=m.tests.length;
+  const a=document.createElement('a');a.className='nav-item';a.href='#mod-'+m.id;a.dataset.module=m.id;
+  a.textContent=m.icon+' '+m.label+' ('+m.tests.length+')';ni.appendChild(a);
+});
+nh.addEventListener('click',()=>{const c=nh.classList.toggle('collapsed');ni.style.maxHeight=c?'0':'1200px'});
+ng.appendChild(nh);ng.appendChild(ni);nav.appendChild(ng);
+document.getElementById('total-count').textContent=total;
+
+MODULES.forEach((m,mi)=>{
+  const gb=document.createElement('div');gb.className='group-block';gb.id='group-'+m.id;
+  gb.innerHTML=`<div class="group-header"><div class="group-icon">${m.icon}</div><div class="group-meta"><h2>${esc(m.label)}</h2><p class="module-file" style="font-family:monospace;font-size:10.5px">${esc(m.file)}</p></div><span class="group-count">${m.tests.length} test cases</span></div>`;
+  const ml=document.createElement('div');ml.className='module-label';ml.id='mod-'+m.id;
+  ml.innerHTML=`<span>${esc(m.label)}</span>`;gb.appendChild(ml);
+  m.tests.forEach((tc,i)=>{gb.appendChild(buildCard(tc,m.id,i*30))});
+  content.appendChild(gb);
+});
+
+// HTTP quick reference
+const ref=document.createElement('div');ref.className='http-ref';
+ref.innerHTML=`<h3>HTTP Status Code Reference — Per Method</h3>
+<table>
+<tr><th>Method</th><th>Purpose</th><th>Accepted Codes</th></tr>
+<tr><td><span class="method-badge badge-GET">GET</span></td><td>Read / retrieve</td><td><span class="status-badge s2">200</span> <span class="status-badge s3">301 302</span> <span class="status-badge s4">401 403</span></td></tr>
+<tr><td><span class="method-badge badge-POST">POST</span></td><td>Create new resource</td><td><span class="status-badge s2">200 201</span> <span class="status-badge s4">401 403</span></td></tr>
+<tr><td><span class="method-badge badge-PUT">PUT</span></td><td>Replace full resource</td><td><span class="status-badge s2">200 204</span> <span class="status-badge s4">401 403</span></td></tr>
+<tr><td><span class="method-badge badge-PATCH">PATCH</span></td><td>Partial update</td><td><span class="status-badge s2">200 204</span> <span class="status-badge s4">401 403</span></td></tr>
+<tr><td><span class="method-badge badge-DELETE">DELETE</span></td><td>Remove resource</td><td><span class="status-badge s2">200 204</span> <span class="status-badge s4">401 403 404</span></td></tr>
+</table>
+<div class="warn-box">⚠️ Never assert <code>status_code &lt; 500</code> for POST — this silently passes 400 Bad Request and 404 Not Found (real bugs). Always assert exact accepted codes per method.</div>`;
+content.appendChild(ref);
+
+function buildCard(tc,moduleId,delay){
+  const card=document.createElement('div');
+  card.className='tc-card';card.id='tc-'+tc.id;
+  card.dataset.module=moduleId;card.dataset.title=tc.title.toLowerCase();
+  card.dataset.id=tc.id.toLowerCase();card.dataset.tags=tc.tags.join(' ');
+  card.style.animationDelay=delay+'ms';
+  const tagHTML=tc.tags.filter(t=>['smoke','regression','chaining','security','performance'].includes(t)).map(t=>`<span class="tag tag-${t}">${t}</span>`).join('');
+  const methodParts=tc.method.split('+');
+  const methodBadges=methodParts.map(m=>`<span class="method-badge badge-${m}">${m}</span>`).join('');
+  const chainHTML=tc.chain?`<div class="chain-flow">${tc.chain.map((s,i)=>`<span class="chain-step" style="background:rgba(155,93,229,.1);color:var(--purple)">${esc(s)}</span>${i<tc.chain.length-1?'<span class="chain-arrow">→</span>':''}`).join('')}</div>`:'';
+  const acceptedHTML=tc.accepted_codes?`<div class="status-list">${tc.accepted_codes.map(s=>{const cls=s.startsWith('<')?'s4':s[0]==='2'?'s2':s[0]==='3'?'s3':'s4';return`<span class="status-badge ${cls}">${esc(s)}</span>`}).join('')}</div>`:'';
+  card.innerHTML=`
+    <div class="tc-header" onclick="tog(this)">
+      <span class="tc-id">${esc(tc.id)}</span>
+      <span class="tc-title">${esc(tc.title)}</span>
+      <div class="tc-tags">${tagHTML}</div>
+      <div class="tc-toggle"><svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></div>
+    </div>
+    <div class="tc-body">
+      <p class="tc-desc">${esc(tc.desc)}</p>
+      <div class="tc-grid">
+        <div class="tc-section full">
+          <div class="tc-section-label label-endpoint">Endpoint &amp; Method</div>
+          <div class="method-row">${methodBadges}<span class="endpoint-code">${esc(tc.endpoint)}</span></div>
+          ${chainHTML}
+          ${acceptedHTML}
+        </div>
+        <div class="tc-section"><div class="tc-section-label label-steps">Test Steps</div><ol class="steps-list">${tc.steps.map(s=>`<li>${esc(s)}</li>`).join('')}</ol></div>
+        <div class="tc-section"><div class="tc-section-label label-expected">Expected Result</div><p class="expected-text"><span class="pass">✓ </span>${esc(tc.expected)}</p>${tc.note?`<p class="note-text" style="margin-top:8px">ℹ️ ${esc(tc.note)}</p>`:''}</div>
+      </div>
+    </div>`;
+  return card;
+}
+
+function tog(h){h.classList.toggle('open');h.nextElementSibling.classList.toggle('open')}
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+
+// Filter chips
+document.querySelectorAll('.chip').forEach(c=>{
+  c.addEventListener('click',()=>{
+    document.querySelectorAll('.chip').forEach(x=>x.classList.remove('active'));
+    c.classList.add('active');filterCards(c.dataset.f);
+  });
+});
+function filterCards(f){
+  document.querySelectorAll('.tc-card').forEach(c=>{
+    const show=f==='all'||c.dataset.tags.includes(f);
+    c.classList.toggle('hidden',!show);
+  });
+  document.querySelectorAll('.group-block').forEach(b=>{
+    b.style.display=[...b.querySelectorAll('.tc-card')].some(c=>!c.classList.contains('hidden'))?'':'none';
+  });
+}
+
+// Search
+document.getElementById('search-input').addEventListener('input',function(){
+  const q=this.value.trim().toLowerCase();
+  let any=false;
+  document.querySelectorAll('.tc-card').forEach(c=>{
+    const m=!q||c.dataset.title.includes(q)||c.dataset.id.includes(q)||c.textContent.toLowerCase().includes(q);
+    c.classList.toggle('hidden',!m);if(m)any=true;
+  });
+  document.querySelectorAll('.group-block').forEach(b=>{
+    b.style.display=[...b.querySelectorAll('.tc-card')].some(c=>!c.classList.contains('hidden'))?'':'none';
+  });
+  document.getElementById('no-results').style.display=(!any&&q)?'block':'none';
+  document.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));
+  document.querySelector('.chip[data-f="all"]').classList.add('active');
+});
+
+// Scroll spy
+const obs=new IntersectionObserver(e=>{
+  e.forEach(x=>{if(x.isIntersecting){const id=x.target.id.replace('mod-','');document.querySelectorAll('.nav-item').forEach(a=>{a.classList.toggle('active',a.getAttribute('href')==='#'+x.target.id)})}});
+},{rootMargin:'-10% 0px -80% 0px'});
+document.querySelectorAll('.module-label').forEach(m=>obs.observe(m));
+</script>
+</body>
+</html>
